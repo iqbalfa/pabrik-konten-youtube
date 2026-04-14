@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opsi 5 — Clean Slate</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Manrope',sans-serif; background:#FAFAFA; color:#18181B; display:flex; min-height:100vh; }
+
+  .sidebar {
+    width:260px; background:#18181B; color:#A1A1AA;
+    padding:24px 20px; display:flex; flex-direction:column; gap:16px; flex-shrink:0;
+  }
+  .sidebar h1 { font-size:16px; font-weight:700; color:#18181B; letter-spacing:-0.02em; }
+  .sidebar .sub { font-size:11px; color:#71717A; }
+  .sidebar .badge { font-size:9px; background:rgba(255,255,255,0.08); padding:2px 8px; border-radius:4px; display:inline-block; }
+  .sidebar .section-label { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#71717A; margin-top:12px; }
+  .sidebar input {
+    width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.05); color:white; font-size:12px; font-family:inherit;
+  }
+  .sidebar .step {
+    display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:8px;
+    font-size:12px; font-weight:500; color:#A1A1AA;
+  }
+  .sidebar .step.active {
+    background:#18181B; color:white; font-weight:600;
+  }
+  .sidebar .step-num {
+    width:20px; height:20px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:10px; font-weight:700;
+    background:rgba(255,255,255,0.08); flex-shrink:0;
+  }
+  .sidebar .step.active .step-num { background:rgba(255,255,255,0.2); }
+
+  .main { flex:1; padding:40px; overflow-y:auto; }
+  .main h2 { font-size:22px; font-weight:700; margin-bottom:4px; letter-spacing:-0.02em; }
+  .main .subtitle { font-size:13px; color:#71717A; margin-bottom:28px; }
+
+  .card {
+    background:#FFFFFF; border:1px solid #E4E4E7; border-radius:16px;
+    padding:28px; display:flex; flex-direction:column; gap:20px;
+  }
+  .card label {
+    font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em;
+    color:#71717A;
+  }
+  .card input, .card textarea, .card select {
+    width:100%; padding:10px 14px; border:1px solid #E4E4E7; border-radius:10px;
+    font-size:13px; font-family:inherit; color:#18181B; background:#FFFFFF;
+    outline:none; transition:border 150ms;
+  }
+  .card input:focus, .card textarea:focus, .card select:focus {
+    border-color:#18181B; box-shadow:0 0 0 3px #18181B22;
+  }
+  .card textarea { height:100px; resize:none; }
+
+  .warning {
+    display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px;
+    font-size:12px; font-weight:500;
+    background:#EF444415; color:#EF4444; border:1px solid #EF444430;
+  }
+
+  .actions { display:flex; gap:10px; margin-top:16px; }
+  .btn-primary {
+    padding:10px 20px; border-radius:10px; border:none; cursor:pointer;
+    font-size:13px; font-weight:600; font-family:inherit;
+    background:#18181B; color:white; transition:background 150ms;
+  }
+  .btn-primary:hover { background:#27272A; }
+  .btn-secondary {
+    padding:10px 20px; border-radius:10px; border:1px solid #E4E4E7;
+    background:#FFFFFF; color:#18181B; cursor:pointer;
+    font-size:13px; font-weight:600; font-family:inherit; transition:all 150ms;
+  }
+  .btn-secondary:hover { background:#FAFAFA; }
+
+  .progress {
+    height:3px; background:#E4E4E7; border-radius:2px; margin:8px 0 4px; overflow:hidden;
+  }
+  .progress-fill {
+    height:100%; width:0%; background:#18181B; border-radius:2px;
+  }
+
+  .opt-header {
+    text-align:center; padding:16px; background:#18181B; color:white;
+    font-weight:700; font-size:14px;
+  }
+</style>
+</head>
+<body>
+<div class="opt-header">Opsi 5 — Clean Slate — Minimalis abu-abu, kontras maksimal, font Manrope</div>
+<div style="display:flex; min-height:calc(100vh - 48px);">
+  <aside class="sidebar">
+    <div style="display:flex;justify-content:space-between;align-items:start">
+      <div><h1>PABRIK KONTEN</h1><p class="sub">YouTube Para-Ilmu</p></div>
+      <span class="badge">v1.0</span>
+    </div>
+    <div class="progress"><div class="progress-fill"></div></div>
+    <p style="font-size:10px;color:#71717A">Langkah 1 dari 5 &nbsp;0%</p>
+
+    <p class="section-label">Bahasa Sistem</p>
+    <div style="display:flex;gap:4px">
+      <button style="flex:1;padding:6px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;background:#18181B;color:white;font-size:11px;font-weight:600;cursor:pointer">ID</button>
+      <button style="flex:1;padding:6px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;background:transparent;color:#A1A1AA;font-size:11px;font-weight:600;cursor:pointer">EN</button>
+    </div>
+
+    <p class="section-label">Gemini API Key</p>
+    <input type="password" placeholder="AIza...">
+    <p style="font-size:9px;color:#71717A">Dapatkan di aistudio.google.com/apikey</p>
+
+    <p class="section-label">Workflow</p>
+    <div class="step active"><span class="step-num">1</span>Input</div>
+    <div class="step"><span class="step-num">2</span>Ideasi</div>
+    <div class="step"><span class="step-num">3</span>Naskah</div>
+    <div class="step"><span class="step-num">4</span>Judul & Thumbnail</div>
+    <div class="step"><span class="step-num">5</span>Metadata</div>
+  </aside>
+
+  <main class="main">
+    <h2>Input Referensi</h2>
+    <p class="subtitle">Masukkan materi mentah untuk diolah menjadi Naskah Viral atau Judul Clickbait.</p>
+
+    <div class="card">
+      <div>
+        <label>Nama Channel</label>
+        <input type="text" placeholder="Masukkan nama channel Anda...">
+      </div>
+      <div>
+        <label>Text / Link Referensi Utama</label>
+        <textarea placeholder="Paste artikel, transkrip, atau catatan kasar di sini..."></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <label>Kata Kunci Wajib</label>
+          <input type="text" placeholder="Finansial, Saham, Pajak...">
+        </div>
+        <div>
+          <label>Target Panjang Kata</label>
+          <select><option>1250 Kata (Cepat)</option><option>1600 Kata (Standar)</option></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning">Masukkan Gemini API Key di sidebar kiri untuk mulai generate.</div>
+
+    <div class="actions">
+      <button class="btn-primary">Generate Judul & Thumbnail</button>
+      <button class="btn-secondary">Mulai Full Proses Naskah &rarr;</button>
+    </div>
+  </main>
+</div>
+</body>
+</html>
