@@ -224,27 +224,36 @@ Lakukan penulisan naskah penuh sesuai instruksi sistem.
 
   let response = await generateContent(PROMPT_FULL_SCRIPT, prompt, "gemini-3.1-pro-preview");
   let cleanedResponse = cleanScriptResponse(response);
+  // Count from raw response (before cleaning) for accurate tracking
+  let rawWordCount = countWords(response);
   let wordCount = countWords(cleanedResponse);
 
   let retries = 0;
-  const maxRetries = 2;
-  const minTarget = Math.floor(targetWordCount * 0.95); // 5% margin of error
+  const maxRetries = 5;
+  const minTarget = Math.floor(targetWordCount * 0.90); // 10% tolerance below
+  const maxTarget = Math.ceil(targetWordCount * 1.15);  // 15% tolerance above
 
+  console.log(`[Script] Initial: ${wordCount} words (raw: ${rawWordCount}). Target: ${targetWordCount} [${minTarget}-${maxTarget}]`);
+
+  // --- EXPAND LOOP: if under minTarget ---
   while (wordCount < minTarget && retries < maxRetries) {
-      console.log(`[Auto-Loop] Full Script is ${wordCount} words. Target: ${targetWordCount}. Expanding...`);
-      
+      console.log(`[Auto-Expand] Script is ${wordCount} words. Target: ${targetWordCount}. Expanding (try ${retries + 1}/${maxRetries})...`);
+
+      const wordsToAdd = targetWordCount - wordCount;
       const expandPrompt = `
 Kamu sebelumnya menulis naskah penuh sebanyak ${wordCount} kata.
-Target yang diminta adalah minimal ${minTarget} kata.
+Target AKHIR adalah ${targetWordCount} kata (boleh antara ${minTarget} sampai ${maxTarget} kata).
+Kamu perlu menambah sekitar ${wordsToAdd} kata lagi.
 
 TUGAS:
-Tulis ulang dan PERPANJANG seluruh naskah di bawah ini agar mencapai minimal ${minTarget} kata.
+Tulis ulang SELURUH naskah di bawah ini menjadi versi yang lebih panjang, dengan target AKHIR ${targetWordCount} kata. JANGAN melebihi ${maxTarget} kata.
 
 CARA MEMPERPANJANG (tanpa terlihat seperti filler):
 1. Tambahkan 1-2 studi kasus nyata atau contoh konkret di setiap poin.
 2. Tambahkan analogi yang relevan dan mudah dipahami.
 3. Jelaskan "Kenapa hal ini bisa terjadi?" lebih mendalam (Root Cause).
 4. Berikan counter-argument: apa yang orang awam pikirkan vs kenyataannya.
+5. Perdalam penjelasan setiap poin dengan detail tambahan yang informatif.
 
 [ATURAN MUTLAK]:
 1. TETAP TTS-FRIENDLY: DILARANG tanda kurung (), strip panjang —, titik dua :.
@@ -252,6 +261,7 @@ CARA MEMPERPANJANG (tanpa terlihat seperti filler):
 3. INTEGRASI POIN NATURAL: Jangan format list kaku. Sebutkan poin secara verbal.
 4. PISAHKAN PARAGRAF: Pisahkan setiap poin dengan baris kosong.
 5. DILARANG MENGULANG KALIMAT YANG SAMA. Tambahkan substansi baru.
+6. TARGET JUMLAH KATA: ${targetWordCount} kata. Hitung dengan cermat. Jangan terlalu pendek, jangan terlalu panjang.
 ${styleContext}
 ${langInstruction}
 
@@ -260,14 +270,61 @@ Naskah sebelumnya:
 ${cleanedResponse}
 """
 
-Tulis ulang versi panjangnya sekarang:
+Tulis ulang versi panjangnya sekarang (target ${targetWordCount} kata):
 `;
       response = await generateContent(PROMPT_FULL_SCRIPT, expandPrompt, "gemini-3.1-pro-preview");
       cleanedResponse = cleanScriptResponse(response);
+      rawWordCount = countWords(response);
       wordCount = countWords(cleanedResponse);
       retries++;
+      console.log(`[Auto-Expand] Result: ${wordCount} words (raw: ${rawWordCount})`);
   }
 
+  // --- CONDENSE LOOP: if over maxTarget ---
+  retries = 0;
+  while (wordCount > maxTarget && retries < maxRetries) {
+      console.log(`[Auto-Condense] Script is ${wordCount} words. Max: ${maxTarget}. Condensing (try ${retries + 1}/${maxRetries})...`);
+
+      const condensePrompt = `
+Kamu sebelumnya menulis naskah penuh sebanyak ${wordCount} kata.
+Target AKHIR adalah ${targetWordCount} kata (boleh antara ${minTarget} sampai ${maxTarget} kata).
+Naskahmu terlalu panjang — perlu diringkas sekitar ${wordCount - targetWordCount} kata.
+
+TUGAS:
+Tulis ulang SELURUH naskah di bawah ini menjadi versi yang lebih ringkas, dengan target AKHIR ${targetWordCount} kata. JANGAN kurang dari ${minTarget} kata.
+
+CARA MERINGKAS (tanpa kehilangan substansi):
+1. Potong kalimat yang redundant atau bertele-tele.
+2. Gabungkan paragraf yang membahas hal serupa.
+3. Singkatkan contoh — tetap informatif tapi lebih padat.
+4. Buang filler words yang tidak menambah makna.
+5. Pertahankan semua poin pembahasan — JANGAN hapus poin apapun.
+
+[ATURAN MUTLAK]:
+1. TETAP TTS-FRIENDLY: DILARANG tanda kurung (), strip panjang —, titik dua :.
+2. PERTAHANKAN GAYA BAHASA DAN TONE yang sama persis dengan naskah asli.
+3. INTEGRASI POIN NATURAL: Jangan format list kaku. Sebutkan poin secara verbal.
+4. PISAHKAN PARAGRAF: Pisahkan setiap poin dengan baris kosong.
+5. TARGET JUMLAH KATA: ${targetWordCount} kata. Hitung dengan cermat.
+${styleContext}
+${langInstruction}
+
+Naskah sebelumnya:
+"""
+${cleanedResponse}
+"""
+
+Tulis ulang versi ringkasnya sekarang (target ${targetWordCount} kata):
+`;
+      response = await generateContent(PROMPT_FULL_SCRIPT, condensePrompt, "gemini-3.1-pro-preview");
+      cleanedResponse = cleanScriptResponse(response);
+      rawWordCount = countWords(response);
+      wordCount = countWords(cleanedResponse);
+      retries++;
+      console.log(`[Auto-Condense] Result: ${wordCount} words (raw: ${rawWordCount})`);
+  }
+
+  console.log(`[Script] Final: ${wordCount} words. Target was: ${targetWordCount} [${minTarget}-${maxTarget}]`);
   return cleanedResponse;
 };
 
