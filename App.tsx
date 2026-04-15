@@ -11,7 +11,7 @@ import { translations } from './translations';
 import { WRITING_STYLE_PRESETS, VISUAL_STYLE_PRESETS, HOOK_DEFAULTS, OUTRO_DEFAULTS, ChannelName } from './presets';
 import { useAutoSave, getAutoSavedState, clearAutoSavedState } from './hooks/useAutoSave';
 
-const WPM = 130; // Words per minute
+const WPM = 150; // Words per minute
 const minutesToWords = (minutes: number) => minutes * WPM;
 
 const initialState: AppState = {
