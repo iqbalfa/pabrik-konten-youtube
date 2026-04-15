@@ -282,9 +282,14 @@ const App: React.FC = () => {
         GeminiService.generateTags(contentContext, state.finalTitle, state.language, state.channelName, state.writingStyle)
       ]);
 
+      // Append relevant tags (5-10) at the end of description
+      const tagList = tags.split(',').map(t => t.trim()).filter(Boolean).slice(0, 10);
+      const tagsFormatted = tagList.map(t => `#${t.replace(/\s+/g, '')}`).join(' ');
+      const descWithTags = `${desc}\n\n${tagsFormatted}`;
+
       setState(prev => ({
         ...prev,
-        finalDescription: desc,
+        finalDescription: descWithTags,
         finalTags: tags,
         isLoading: false
       }));
