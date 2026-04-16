@@ -122,7 +122,7 @@ export const buildKnowledgeBaseContext = (
 
   if (!parts.length) return '';
 
-  return `\n\n${parts.join('\n\n---\n\n')}\n\n[GUNAKAN KONTEKS DI ATAS]: Referensi data real-time ini untuk membuat konten yang RELEVAN dengan situasi Indonesia saat ini. Gunakan frasa, sentimen, dan framing yang sedang trending. Jangan ulang fakta yang sudah umum — ambil angle yang belum banyak dibahas.`;
+  return `\n\n[SUASANA KONTEKS INDONESIA KETIKA ini DITULIS]\n\n${parts.join('\n\n')}\n\nCatatan: Angle, diksi, dan framing naskah sebaiknya mencerminkan apa yang sedang hangat dibicarakan masyarakat Indonesia saat ini — bukan mengulang hal yang sudah basi. Kalau ada fakta atau perspektif dari konteks di atas yang bikin narasi lebih nampol, gunakan dengan cara yang natural.`;
 };
 
 /**
