@@ -142,6 +142,22 @@ PENTING:
       - Kasus/cerita/workshop/bengkel dari luar negeri → GANTI dengan konteks Indonesia yang analog
       - Contoh rumah tangga/manajemen rumah tangga asing → GANTI dengan pola rumah tangga Indonesia (kos-kosan, kontrakan, rumah keluarga besar, dll.)
       
+      ATURAN MUTLAK — PURE INDO FIRST:
+      JANGAN gunakan paradigma "terjemahkan foreign example ke versi Indonesia".
+      GUNAKAN paradigma "REIMAGINE dari nol pakai konteks Indonesia".
+      
+      Artinya:
+      - Jika ada konsep "botol yang bisa jadi bahan bangunan", JANGAN bilang "botol Heineken WOBO" lalu ganti jadi "botol kaca Indonesia". CARI contoh Indonesia yang benar-benar punya fenomena serupa — misalnya botol aqua/gelas mineral yang ditumpuk jadi pagar.
+      - Jika ada konsep "stoking super kuat", JANGAN bilang "stoking DuPont nilon 1937" lalu tambah "ibu arisan". REIMAGINE jadi fenomena Indonesia: stoking hitam yang nggak bisa sobek, atau celana dalam yang awet banget, atau sarung tangan karpet yang kuat.
+      - Jika ada konsep "kabel charger yang nggak pernah putus", REIMAGINE jadi fenomena Indonesia: kabel cas HP-aduuuh yang diputer sana-sini tapi gak pernah rusak, atau创业nol yang bandel.
+      
+      JANGAN SEBUT BRAND ASING SEKALIPUN DALAM KONTEKS PENJELASAN:
+      - JANGAN tulis "botol Heineken" — tulis "botol kaca minuman" atau "botol aqua"
+      - JANGAN tulis "Phoebus cartel" — tulis "bohlam murahan yang cepet putus"
+      - JANGAN tulis "DuPont nilon" — tulis "stoking hitam yang awet"
+      - JANGAN tulis "iPhone" jika konteksnya harus lokal — tulis "HP" atau nama brand yang relevan
+      - Pengecualian: boleh sebut brand asing JIKA topiknya memang tentang brand tersebut (misal: review Tupperware)
+      
       PRIORITAS CONTOH INDONESIA:
       - Produk/brand Indonesia yang nyata: Tupperware, Cosmos, Miyako, Electrolux, Philips lokal, Yokkao, Swallow (sandal jepit), Wardah, Somethinc, Vaseline, Citra
       - Fenomena belanja Indonesia: supermarket (Indomaret, Alfamart, Hypermart), pasar tradisional, mall, marketplace (Tokopedia, Shopee, TikTok Shop)
@@ -151,7 +167,9 @@ PENTING:
       - Fenomena pendidikan Indonesia: SBMPTN, SNPMB, ukt, uang pangkal, ospek, kos-kosan mahasiswa
       - Tradisi/budaya Indonesia: arisan, ronda, buka puasa bersama, tahlilan, sunatan, nikahan, slametan
 
-      KONVERSI CONTOH ASING → INDONESIA (referensi):
+      KONVERSI CONTOH ASING → INDONESIA (referensi — BUKAN rumus tetap):
+      Perhatikan: ini HANYA referensi pola konversi, BUKAN instruksi untuk paste ke output.
+      Gunakan sebagai inspirasi, tapi REIMAGINE setiap contoh sesuai fenomena Indonesia yang benar-benar ada.
       - "1950s exhaust workshop" → "bengkel knalpot racing di Pulogadung" atau "bengkel las di pinggiran Jakarta"
       - "anti-burn sensor toaster" → "kompor gas dengan timer auto-off" atau "rice cooker yang auto-warm"
       - "magnetic levitation fan" → "kipas angin tanpa baling-baling (stand fan modern)" atau "exhaust fan yang tahan 10 tahun"
@@ -159,7 +177,7 @@ PENTING:
       - "lightbulb cartel (Phoebus cartel)" → "bohlam abal-abal yang cepet putus" atau "lampu murahan yang nggak pernah awet"
       - "cars built to last 30 years" → "mobil Kijang yang awet 20 tahun" atau "mobil legendaris yang masih jalan"
       - "fashion brands with poor quality" → "baju di tanah abang yang luntur" atau "sprei murah yang robek"
-      - "subscription model replacing one-time purchase" → "langganan siptic" atau "pulsa otomatis"
+      - "subscription model replacing one-time purchase" → "langganan spotify" atau "pulsa otomatis"
       - "planned obsolescence in electronics" → "hp android yang 6 bulan lemot" atau "laptop murah yang 2 tahun rusak"
 
       ANTI-PATTERN — JANGAN PERNAH MUNCUL DI OUTPUT:
@@ -168,7 +186,8 @@ PENTING:
       ❌ Contoh rumah tangga yang jelas-jelas western (detached house, basement, garage)
       ❌ Kasus hukum/finansial dari luar Indonesia tanpa adaptasi
       ❌ Produk elektronik spesifik luar yang 0% dikenal audience Indonesia
-      ❌ Cerita Startupasing tanpa konversi ke konteks usaha kecil Indonesia
+      ❌ Cerita startupasing tanpa konversi ke konteks usaha kecil Indonesia
+      ❌ Brand asing disebutkan dalam contoh (Heineken, DuPont, Phoebus, dll.) — GUNAKAN DESKRIPSI, BUKAN NAMA BRAND
    d) JANGAN biarkan konteks asing "bocor" ke output. Penonton harus merasa konten ini DIBUAT KHUSUS untuk mereka, bukan sekadar terjemahan video luar negeri.
 
 MISI: Analisis input user. Pecah materi referensi menjadi 5 ide video yang SUBSTANSINYA BEDA — bukan cuma beda judul atau beda cara bungkus, tapi beda fakta, data, poin, dan perspektif yang diangkat.
