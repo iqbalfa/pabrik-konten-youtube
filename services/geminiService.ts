@@ -142,14 +142,11 @@ export const generateIdeas = async (referenceText: string, fileContents: string[
   const styleContext = writingStyle ? `\n\n[STYLE PENULISAN]: ${writingStyle}` : '';
   const langInstruction = `\n\n[IMPORTANT]: Generate the output in ${language === 'en' ? 'English' : 'Bahasa Indonesia'}.`;
   
-  // Fetch knowledge base context (real-time news + netizen voice)
+  // Inject knowledge base context (bundled JSON, no fetch needed)
   let kbContext = '';
   if (useKnowledgeBase && language === 'id') {
-    try {
-      kbContext = await buildKnowledgeBaseContext(referenceText);
-    } catch (e) {
-      console.warn('[KB] Failed to fetch knowledge base context:', e);
-    }
+    kbContext = buildKnowledgeBaseContext(referenceText);
+    console.log('[KB] Context injected:', kbContext.length, 'chars');
   }
   
   // Inject content filters based on preset name
@@ -175,15 +172,11 @@ export const generateFullScript = async (idea: VideoIdea, targetWordCount: numbe
   const styleContext = writingStyle ? `\n\n[STYLE PENULISAN]: ${writingStyle}` : '';
   const langInstruction = `\n\n[IMPORTANT]: Generate the output in ${language === 'en' ? 'English' : 'Bahasa Indonesia'}.`;
   
-  // Fetch knowledge base context for script generation
+  // Inject knowledge base context for script generation
   let kbContext = '';
   if (useKnowledgeBase && language === 'id') {
-    try {
-      const refForKB = `${idea.title} ${idea.hook} ${idea.points.join(' ')}`;
-      kbContext = await buildKnowledgeBaseContext(refForKB);
-    } catch (e) {
-      console.warn('[KB] Failed to fetch knowledge base context:', e);
-    }
+    const refForKB = `${idea.title} ${idea.hook} ${idea.points.join(' ')}`;
+    kbContext = buildKnowledgeBaseContext(refForKB);
   }
   
   // Hook & Closing allocation based on toggles

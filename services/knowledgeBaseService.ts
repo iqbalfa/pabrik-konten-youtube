@@ -1,9 +1,11 @@
 /**
- * Knowledge Base Service
- * Fetches real-time Indonesian news & YouTube comments from GitHub Pages.
+ * Knowledge Base Service — Direct JSON import (no fetch, no CORS issues)
+ * Data stored in /data/ directory, bundled at build time.
  */
 
-const KB_BASE_URL = 'https://iqbalfa.github.io/knowledge-base';
+import newsData from '../data/news_latest.json';
+import trendingData from '../data/news_trending.json';
+import youtubeData from '../data/youtube_comments.json';
 
 interface NewsArticle {
   id: string;
@@ -41,64 +43,17 @@ interface YouTubeVideo {
   comments: YouTubeComment[];
 }
 
-interface NewsData {
-  updated: string;
-  source: string;
-  count: number;
-  items: NewsArticle[];
-}
-
-interface TrendingData {
-  updated: string;
-  topics: TrendingTopic[];
-}
-
-interface YouTubeData {
-  updated: string;
-  source: string;
-  video_count: number;
-  total_comments: number;
-  videos: YouTubeVideo[];
-}
-
-const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
-
-async function fetchKB<T>(endpoint: string): Promise<T | null> {
-  const cached = cache.get(endpoint);
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    return cached.data as T;
-  }
-
-  try {
-    const resp = await fetch(`${KB_BASE_URL}/${endpoint}`);
-    if (!resp.ok) return null;
-    const data = await resp.json();
-    cache.set(endpoint, { data, timestamp: Date.now() });
-    return data as T;
-  } catch (e) {
-    console.warn(`[KB] Failed to fetch ${endpoint}:`, e);
-    return null;
-  }
-}
-
 /**
  * Build context string for LLM prompts from knowledge base data.
  * Filters by topic relevance if referenceText is provided.
  */
-export const buildKnowledgeBaseContext = async (
+export const buildKnowledgeBaseContext = (
   referenceText: string = ''
-): Promise<string> => {
+): string => {
   const parts: string[] = [];
 
-  // Fetch all data in parallel
-  const [news, trending, youtube] = await Promise.all([
-    fetchKB<NewsData>('data/news/latest.json'),
-    fetchKB<TrendingData>('data/news/trending.json'),
-    fetchKB<YouTubeData>('data/youtube/comments.json'),
-  ]);
-
   // --- Trending Topics ---
+  const trending = trendingData as { updated: string; topics: TrendingTopic[] };
   if (trending?.topics?.length) {
     const topTopics = trending.topics.slice(0, 8);
     const topicLines = topTopics.map(t =>
@@ -108,6 +63,7 @@ export const buildKnowledgeBaseContext = async (
   }
 
   // --- Relevant News (keyword match with reference) ---
+  const news = newsData as { updated: string; count: number; items: NewsArticle[] };
   if (news?.items?.length && referenceText) {
     const refWords = referenceText.toLowerCase().split(/\s+/).filter(w => w.length > 3);
     const relevant = news.items
@@ -126,6 +82,7 @@ export const buildKnowledgeBaseContext = async (
   }
 
   // --- Netizen Voice (top comments from relevant videos) ---
+  const youtube = youtubeData as { updated: string; videos: YouTubeVideo[] };
   if (youtube?.videos?.length) {
     // Get all comments, sort by engagement
     const allComments: (YouTubeComment & { videoTitle: string })[] = [];
@@ -169,13 +126,20 @@ export const buildKnowledgeBaseContext = async (
 };
 
 /**
- * Check if knowledge base is available
+ * Get KB data summary for UI display
  */
-export const checkKBAvailability = async (): Promise<boolean> => {
-  try {
-    const resp = await fetch(`${KB_BASE_URL}/data/news/latest.json`, { method: 'HEAD' });
-    return resp.ok;
-  } catch {
-    return false;
-  }
+export const getKBSummary = () => {
+  const news = newsData as { updated: string; count: number };
+  const trending = trendingData as { updated: string; topics: TrendingTopic[] };
+  const youtube = youtubeData as { updated: string; video_count: number; total_comments: number };
+
+  return {
+    newsCount: news?.count || 0,
+    newsUpdated: news?.updated || 'N/A',
+    trendingTopics: trending?.topics?.length || 0,
+    trendingUpdated: trending?.updated || 'N/A',
+    youtubeVideos: youtube?.video_count || 0,
+    youtubeComments: youtube?.total_comments || 0,
+    youtubeUpdated: youtube?.updated || 'N/A',
+  };
 };
