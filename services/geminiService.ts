@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { PROMPT_IDEAS, PROMPT_TITLES, PROMPT_DESCRIPTION, PROMPT_TAGS, PROMPT_FULL_SCRIPT, PROMPT_HOOK_GUIDELINES, PROMPT_RETENTION_GUIDELINES, CONTENT_FILTERS } from "../constants";
 import { VideoIdea, TitleThumbnailPair } from "../types";
+import { buildKnowledgeBaseContext } from "./knowledgeBaseService";
 
 const API_KEY_STORAGE = 'gemini_api_key';
 
@@ -131,7 +132,7 @@ const detectPresetName = (writingStyle: string): string => {
   return 'Ilmu Lidi';
 };
 
-export const generateIdeas = async (referenceText: string, fileContents: string[], keywords: string, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '') => {
+export const generateIdeas = async (referenceText: string, fileContents: string[], keywords: string, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useKnowledgeBase: boolean = true) => {
   const currentYear = new Date().getFullYear();
   const timeContext = `\n\n[KONTEKS WAKTU]: Saat ini adalah tahun ${currentYear}. Jika Anda menggunakan angka tahun di judul atau naskah, WAJIB gunakan tahun ${currentYear} atau setelahnya. JANGAN gunakan tahun 2023, 2024, atau 2025.`;
   
@@ -141,12 +142,22 @@ export const generateIdeas = async (referenceText: string, fileContents: string[
   const styleContext = writingStyle ? `\n\n[STYLE PENULISAN]: ${writingStyle}` : '';
   const langInstruction = `\n\n[IMPORTANT]: Generate the output in ${language === 'en' ? 'English' : 'Bahasa Indonesia'}.`;
   
+  // Fetch knowledge base context (real-time news + netizen voice)
+  let kbContext = '';
+  if (useKnowledgeBase && language === 'id') {
+    try {
+      kbContext = await buildKnowledgeBaseContext(referenceText);
+    } catch (e) {
+      console.warn('[KB] Failed to fetch knowledge base context:', e);
+    }
+  }
+  
   // Inject content filters based on preset name
   const presetName = detectPresetName(writingStyle);
   const contentFilters = CONTENT_FILTERS[presetName] || CONTENT_FILTERS['Ilmu Lidi'];
   const systemPrompt = PROMPT_IDEAS.replace('${contentFilters}', contentFilters);
   
-  const prompt = `Referensi Utama:\n${referenceText}${filesContext}${keywordsContext}${channelContext}${styleContext}${timeContext}\n\nLakukan instruksi di system instruction.${langInstruction}`;
+  const prompt = `Referensi Utama:\n${referenceText}${filesContext}${keywordsContext}${channelContext}${styleContext}${timeContext}${kbContext}\n\nLakukan instruksi di system instruction.${langInstruction}`;
   
   let responseText = await generateContent(systemPrompt, prompt, "gemini-3.1-pro-preview");
   
@@ -158,11 +169,22 @@ export const generateIdeas = async (referenceText: string, fileContents: string[
   return responseText;
 };
 
-export const generateFullScript = async (idea: VideoIdea, targetWordCount: number, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useHook: boolean = true, useOutro: boolean = true) => {
+export const generateFullScript = async (idea: VideoIdea, targetWordCount: number, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useHook: boolean = true, useOutro: boolean = true, useKnowledgeBase: boolean = true) => {
   const pointsList = idea.points.map((p, i) => `Poin ${i + 1}: ${p}`).join('\n');
   const channelContext = channelName ? `\n\n[NAMA CHANNEL]: ${channelName}` : '';
   const styleContext = writingStyle ? `\n\n[STYLE PENULISAN]: ${writingStyle}` : '';
   const langInstruction = `\n\n[IMPORTANT]: Generate the output in ${language === 'en' ? 'English' : 'Bahasa Indonesia'}.`;
+  
+  // Fetch knowledge base context for script generation
+  let kbContext = '';
+  if (useKnowledgeBase && language === 'id') {
+    try {
+      const refForKB = `${idea.title} ${idea.hook} ${idea.points.join(' ')}`;
+      kbContext = await buildKnowledgeBaseContext(refForKB);
+    } catch (e) {
+      console.warn('[KB] Failed to fetch knowledge base context:', e);
+    }
+  }
   
   // Hook & Closing allocation based on toggles
   const hookWords = useHook ? 150 : 0;
@@ -210,7 +232,7 @@ ${wordCountInstruction}${structureInstruction}
 [ATURAN PENULISAN POIN & TANDA BACA]
 1. TRANSISI POIN: Agar penonton bisa mengikuti alur, sebutkan perpindahan poin secara eksplisit tapi natural di dalam kalimat (contoh: "masuk ke poin pertama...", "alasan kedua adalah...", "yang ketiga..."). JANGAN gunakan format header kaku seperti "Poin 1: [Judul]". Variasikan kalimat transisinya agar tidak repetitif atau terdengar seperti template robot.
 2. DILARANG KERAS menggunakan tanda kurung () dalam naskah. Jika ada penjelasan tambahan, gunakan kata sambung yang natural (seperti 'yaitu', 'artinya', atau koma) alih-alih menggunakan tanda kurung.
-
+${kbContext}
 ${channelContext}
 ${styleContext}
 ${langInstruction}

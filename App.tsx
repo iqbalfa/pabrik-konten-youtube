@@ -205,7 +205,7 @@ const App: React.FC = () => {
       error: null
     }));
     try {
-      const ideasText = await GeminiService.generateIdeas(text, files, keywords, language, channel, style);
+      const ideasText = await GeminiService.generateIdeas(text, files, keywords, language, channel, style, true);
       setState(prev => ({ ...prev, analysis: ideasText, isLoading: false, step: AppStep.SELECT_IDEA }));
     } catch (e) {
       handleError(e);
@@ -229,7 +229,7 @@ const App: React.FC = () => {
   const handleRegenerateIdeas = async () => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const ideasText = await GeminiService.generateIdeas(state.referenceText, state.fileContents, state.keywords || '', state.language, state.channelName, state.writingStyle);
+      const ideasText = await GeminiService.generateIdeas(state.referenceText, state.fileContents, state.keywords || '', state.language, state.channelName, state.writingStyle, true);
       setState(prev => ({ ...prev, analysis: ideasText, isLoading: false }));
     } catch (e) {
       handleError(e);
@@ -254,7 +254,8 @@ const App: React.FC = () => {
       state.channelName,
       state.writingStyle,
       state.useHook,
-      state.useOutro
+      state.useOutro,
+      true
     );
   };
 
