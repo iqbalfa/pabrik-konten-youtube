@@ -128,7 +128,7 @@ PENTING:
 2. DILARANG KERAS menggunakan kata kasar/makian seperti "Goblok", "Tolol", "Bego", "Anjing", "Bangsat", dan sejenisnya. Gunakan bahasa yang tegas namun tetap profesional atau sesuai dengan gaya channel.
 3. [LOKALISASI — SANGAT PENTING]: Semua channel ini adalah channel AUDIENS INDONESIA. Jika sumber referensi berbahasa Inggris atau membahas konteks luar negeri, WAJIB:
    a) Terjemahkan SEMUA output ke Bahasa Indonesia — judul, hook, poin, penutup. DILARANG ada kata/istilah bahasa Inggris di output kecuali yang memang sudah sangat umum di Indonesia.
-   b) LOKALISASI, bukan cuma terjemahan. Adaptasi konteks, contoh, dan referensi ke situasi Indonesia:
+   b) LOKALISASI, bukan cuma terjemahan. Adaptasi konteks, istilah, dan referensi ke situasi Indonesia:
       - "credit score" → "SLIK OJK" atau "track record pinjaman di bank"
       - "401k" → "Dana Pensiun (DPLK)" atau "BPJS Ketenagakerjaan"
       - "rent prices in New York" → "harga kos di Jakarta Selatan" atau "harga kontrakan di Bandung"
@@ -137,7 +137,39 @@ PENTING:
       - "minimum wage US" → "UMR Jakarta / UMK"
       - Ganti nama orang/kota/brand asing dengan yang relevan di Indonesia jika memperkuat relatabilitas
       - Ganti contoh budaya asing dengan contoh budaya Indonesia yang setara
-   c) JANGAN biarkan konteks asing "bocor" ke output. Penonton harus merasa konten ini DIBUAT KHUSUS untuk mereka, bukan sekadar terjemahan video luar negeri.
+   c) LOKALISASI CONTOH & SPESIFIK POIN: INI YANG PALING SERING BOCOR. Setiap poin dalam breakdown WAJIB dicek relevansinya dengan audience Indonesia. Jika referensi asli menggunakan:
+      - Produk/brand/barang asing yang tidak familiar di Indonesia → GANTI dengan produk/brand Indonesia yang setara atau fenomena lokal yang relatable
+      - Kasus/cerita/workshop/bengkel dari luar negeri → GANTI dengan konteks Indonesia yang analog
+      - Contoh rumah tangga/manajemen rumah tangga asing → GANTI dengan pola rumah tangga Indonesia (kos-kosan, kontrakan, rumah keluarga besar, dll.)
+      
+      PRIORITAS CONTOH INDONESIA:
+      - Produk/brand Indonesia yang nyata: Tupperware, Cosmos, Miyako, Electrolux, Philips lokal, Yokkao, Swallow (sandal jepit), Wardah, Somethinc, Vaseline, Citra
+      - Fenomena belanja Indonesia: supermarket (Indomaret, Alfamart, Hypermart), pasar tradisional, mall, marketplace (Tokopedia, Shopee, TikTok Shop)
+      - Fenomena rumah tangga Indonesia: kos-kosan, kontrakan, apartemen kecil, warung, angkringan, bakso keliling, gorengan
+      - Fenomena transportasi Indonesia: ojek online (Gojek, Grab), angkot, becak, bajaj, KRL, MRT
+      - Fenomena keuangan Indonesia: tilang, kredit tanpa dp, pinjol, gopek, thr, gaji ke-13, bPJamsostek
+      - Fenomena pendidikan Indonesia: SBMPTN, SNPMB, ukt, uang pangkal, ospek, kos-kosan mahasiswa
+      - Tradisi/budaya Indonesia: arisan, ronda, buka puasa bersama, tahlilan, sunatan, nikahan, slametan
+
+      KONVERSI CONTOH ASING → INDONESIA (referensi):
+      - "1950s exhaust workshop" → "bengkel knalpot racing di Pulogadung" atau "bengkel las di pinggiran Jakarta"
+      - "anti-burn sensor toaster" → "kompor gas dengan timer auto-off" atau "rice cooker yang auto-warm"
+      - "magnetic levitation fan" → "kipas angin tanpa baling-baling (stand fan modern)" atau "exhaust fan yang tahan 10 tahun"
+      - "lifetime warranty on lightbulbs" → "bohlam philips yang awet" atau "lampu LED yang jarang ganti"
+      - "lightbulb cartel (Phoebus cartel)" → "bohlam abal-abal yang cepet putus" atau "lampu murahan yang nggak pernah awet"
+      - "cars built to last 30 years" → "mobil Kijang yang awet 20 tahun" atau "mobil legendaris yang masih jalan"
+      - "fashion brands with poor quality" → "baju di tanah abang yang luntur" atau "sprei murah yang robek"
+      - "subscription model replacing one-time purchase" → "langganan siptic" atau "pulsa otomatis"
+      - "planned obsolescence in electronics" → "hp android yang 6 bulan lemot" atau "laptop murah yang 2 tahun rusak"
+
+      ANTI-PATTERN — JANGAN PERNAH MUNCUL DI OUTPUT:
+      ❌ Nama bengkel/workshop tanpa konteks Indonesia
+      ❌ Brand retail asing yang tidak populer di Indonesia (Walmart, Target, Costco)
+      ❌ Contoh rumah tangga yang jelas-jelas western (detached house, basement, garage)
+      ❌ Kasus hukum/finansial dari luar Indonesia tanpa adaptasi
+      ❌ Produk elektronik spesifik luar yang 0% dikenal audience Indonesia
+      ❌ Cerita Startupasing tanpa konversi ke konteks usaha kecil Indonesia
+   d) JANGAN biarkan konteks asing "bocor" ke output. Penonton harus merasa konten ini DIBUAT KHUSUS untuk mereka, bukan sekadar terjemahan video luar negeri.
 
 MISI: Analisis input user. Pecah materi referensi menjadi 5 ide video yang SUBSTANSINYA BEDA — bukan cuma beda judul atau beda cara bungkus, tapi beda fakta, data, poin, dan perspektif yang diangkat.
 
