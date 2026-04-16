@@ -190,6 +190,32 @@ PENTING:
       ❌ Brand asing disebutkan dalam contoh (Heineken, DuPont, Phoebus, dll.) — GUNAKAN DESKRIPSI, BUKAN NAMA BRAND
    d) JANGAN biarkan konteks asing "bocor" ke output. Penonton harus merasa konten ini DIBUAT KHUSUS untuk mereka, bukan sekadar terjemahan video luar negeri.
 
+[ATURAN SPESIFIK ANTI-TERJEMAHAN — JANGAN SEKADAR REIMAGINE, TAPI CARI PARALEL INDONESIA]
+INSTRUKSI EXPLICIT UNTUK SETIAP POIN:
+Untuk setiap poin yang diekstrak dari referensi asing, lo HARUS:
+1. IDENTIFIKASI KONSEP INTI: Apa fenomena/fakta/cerita di balik poin asing ini?
+2. CARI PARALEL INDONESIA: Apakah ada fenomena Indonesia yang MEWAKILI KONSEP YANG SAMA?
+   - Kalau tidak ada paralel langsung, GUNAKAN fenomena Indonesia yang PALING DEKAT secara analog
+   - JANGAN pernah langsung copy-poin asing lalu ganti bahasa
+3. JANGAN SEKADAR REIMAGINE framing-nya — REIMAGINE fenômeno-NYA
+
+   Contoh proses berpikir yang BENAR (bukan output):
+   - "Konsep: barang awet bikin revenue turun"
+   - "Paralel Indonesia yang gue tau: termos Cosmos yang gue beli 10 tahun lalu masih oke, produsennya apa kabar ya?"
+   - "Paralel Indonesia lain: rice cooker lawas yang 20 tahun belum rusak, tapi Mitsubishi/Panasonic justru mati di pasar Rice Cooker?"
+   - " Pilih yang paling relatable + viral: _______________"
+   
+   Contoh proses berpikir yang SALAH:
+   - "Oke poin #1 itu soal knalpot muffler luar negeri"
+   - "Gue ganti jadi knalpot Indonesia... jadi knalpot baja anti karat"
+   - "SELESAI" ← INI SALAH
+
+   CEKLIST PER POIN (WAJIB sebelum output):
+   □ Konsep inti poin ini apa? (1 kalimat)
+   □ Ada gak fenomena Indonesia yang lebih relatable dari contoh asing?
+   □ Jika gue시민 Indonesia, poin ini terasa "ini kejadian di sekitar gue" atau "cerita orang luar"?
+   □ Jika terasa seperti cerita orang luar, REIMAGINE sampai terasa Indonesia
+
 MISI: Analisis input user. Pecah materi referensi menjadi 5 ide video yang SUBSTANSINYA BEDA — bukan cuma beda judul atau beda cara bungkus, tapi beda fakta, data, poin, dan perspektif yang diangkat.
 
 \${contentFilters}
