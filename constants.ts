@@ -482,11 +482,50 @@ export const PROMPT_FULL_SCRIPT = `
 MENGHASILKAN NASKAH LENGKAP (PABRIK KONTEN — FULL SCRIPT)
 TUGAS: Tulis naskah video YouTube lengkap berdasarkan Ide Video dan Poin-Poin yang diberikan.
 
-[LOKALISASI — WAJIB DITERAPKAN]:
-Semua channel ini untuk AUDIENS INDONESIA. Jika ide atau referensi mengandung konteks luar negeri:
-- WAJIB 100% Bahasa Indonesia. DILARANG ada kata/istilah bahasa Inggris kecuali yang memang sudah sangat umum di Indonesia.
-- LOKALISASI konteks: ganti contoh, nama orang/kota/brand, dan referensi budaya asing dengan yang relevan di Indonesia.
-- Penonton harus merasa konten ini DIBUAT KHUSUS untuk mereka, bukan terjemahan video luar negeri.
+[LOKALISASI NARASI — SANGAT PENTING, WAJIB DITERAPKAN DI SETIAP KALIMAT]
+Channel ini untuk AUDIENS INDONESIA. Jika referensi berasal dari konten luar negeri atau berbahasa Inggris, WAJIB:
+
+A. TERJEMAHAN + ADAPTASI, BUKAN CUMA TERJEMAHAN MENTAH:
+   - Terjemahkan SEMUA ke Bahasa Indonesia — narasi 100% Bahasa Indonesia
+   - TAPI jangan cuma terjemahkan kata-per-kata. ADAPTASI konteks, contoh, dan referensi ke situasi Indonesia
+   - Penonton harus merasa konten ini DIBUAT KHUSUS untuk mereka, bukan terjemahan video luar negeri
+
+B. CONTOH PENGAMBILAN KONTEKS (LOKALISASI SPESIFIK):
+   - "credit score" → "SLIK OJK" atau "track record pinjaman di bank"
+   - "401k" → "Dana Pensiun (DPLK)" atau "BPJS Ketenagakerjaan"
+   - "rent prices in New York" → "harga kos di Jakarta Selatan" atau "harga kontrakan di Bandung"
+   - "college tuition" → "biaya kuliah di UI/ITB" atau "ukt semester depan"
+   - "IRS" → "DJP / pajak penghasilan"
+   - "minimum wage US" → "UMR Jakarta / UMK"
+   - "dollars" → "rupiah" (konversi konteks, bukan angka)
+   - Ganti nama orang/kota/brand asing dengan yang relevan di Indonesia jika memperkuat relatabilitas
+   - Ganti contoh budaya asing dengan contoh budaya Indonesia yang setara
+
+C. DILARANG KERAS — KONTEN ASING YANG SERING BOCOR:
+   ❌ Idiom/ungkapan Inggris: "at the end of the day", "little did they know", "turns out", "plot twist" (kecuali "plot twist" yang sudah umum di Indonesia)
+   ❌ Referensi lokasi luar negeri: "di New York", "di London", "di Jepang" — ganti dengan kota Indonesia kecuali topik memang spesifik tentang negara tersebut
+   ❌ Brand luar negeri yang tidak populer di Indonesia: "Walmart", "Target", "McDonald's" (kecuali topiknya memang tentang brand tersebut)
+   ❌ Budaya asing yang tidak relevan: Halloween, Thanksgiving, prom night — ganti dengan tradisi Indonesia (misalnya: mudik, arisan, 17-an)
+   ❌ Sistem asing yang tidak dikenal: US healthcare system, NHS, 401k — ganti dengan sistem Indonesia (BPJS, JKN, BPJS Ketenagakerjaan)
+   ❌ Mata uang asing tanpa konteks Indonesia: "$100" tanpa konversi → ganti nominal rupiah yang relevan
+   ❌ Struktur kalimat "translated English": "Ini adalah hal yang..." (terlalu formal) → "Ini yang..." (natural Indo)
+   ❌ Ekspresi asing yang tidak natural di Indonesia: "Needless to say", "As a matter of fact", "Here's the thing"
+
+D. BAHASA INGGRIS YANG BOLEH (sudah umum di Indonesia):
+   ✅ "Plot twist" (sudah jadi slang Indonesia)
+   ✅ "Viral", "trending", "influencer", "content creator"
+   ✅ "Dark web", "deep web" (tidak ada padanan Indonesia yang umum)
+   ✅ "GPS", "AI", "DNA", "IQ" (akronim internasional)
+   ✅ Nama brand internasional yang topiknya memang tentang brand tersebut
+
+E. CEKLIST LOKALISASI (WAJIB self-check sebelum output):
+   □ Apakah SEMUA narasi dalam Bahasa Indonesia natural, bukan terjemahan mentah?
+   □ Apakah contoh dan referensi relevan dengan kehidupan penonton Indonesia?
+   □ Apakah tidak ada idiom/ungkapan Inggris yang bocor ke narasi?
+   □ Apakah brand, lokasi, dan budaya sudah diadaptasi ke konteks Indonesia?
+   □ Apakah kalimat terdengar seperti orang Indonesia ngomong, bukan seperti subtitle film?
+   □ Apakah penonton akan merasa "ini dibuat khusus untuk gue"?
+   Jika ada yang TIDAK, perbaiki sebelum output final.
 
 PANDUAN HOOK KHUSUS:
 Saat menulis bagian awal naskah (Hook), kamu WAJIB mematuhi PROMPT_HOOK_GUIDELINES. Evaluasi semua 10 kategori hook, pilih yang PALING RELEVAN dengan konteks materi, dan adaptasikan ke gaya bahasa (Writing Style) yang diminta. Pertimbangkan QQPP Method. DILARANG asal pilih!
