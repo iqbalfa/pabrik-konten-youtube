@@ -54,7 +54,7 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
            // Skip if it looks like a stub header without real content
            // e.g. "Pembongkaran" (1 short word, no colon, no description)
            // but NOT "Kipas Angin Leher Patah" (4 meaningful words)
-           const isStub = /^[A-Za-z]+$/.test(cleaned) && cleaned.length < 12;
+           const isStub = /^[A-Za-z]+[:\s]*$/.test(cleaned) && cleaned.length < 15;
            if (!isStub && cleaned.length > 0) {
                points.push(cleaned);
            } else if (isStub) {
