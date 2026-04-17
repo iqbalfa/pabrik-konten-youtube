@@ -51,13 +51,14 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
        }
        if (currentPoint) {
            const cleaned = cleanText(currentPoint);
-           // Skip if: too short (likely just a header with no description like "Pembongkaran")
-           // or is pure number/label with no substantive content
-           const wordCount = cleaned.split(/\s+/).filter(w => w.length > 0).length;
-           if (wordCount >= 3) {
+           // Skip if it looks like a stub header without real content
+           // e.g. "Pembongkaran" (1 short word, no colon, no description)
+           // but NOT "Kipas Angin Leher Patah" (4 meaningful words)
+           const isStub = /^[A-Za-z]+$/.test(cleaned) && cleaned.length < 12;
+           if (!isStub && cleaned.length > 0) {
                points.push(cleaned);
-           } else {
-               console.warn(`[PabrikKonten] Skipping stub point (${wordCount} words): "${cleaned}"`);
+           } else if (isStub) {
+               console.warn(`[PabrikKonten] Skipping stub header: "${cleaned}"`);
            }
        }
 
