@@ -279,6 +279,7 @@ CARA MEMPERPANJANG (tanpa terlihat seperti filler):
 6. TARGET JUMLAH KATA: ${targetWordCount} kata. Hitung dengan cermat. Jangan terlalu pendek, jangan terlalu panjang.
 ${styleContext}
 ${langInstruction}
+${structureInstruction}
 
 Naskah sebelumnya:
 """
@@ -323,6 +324,7 @@ CARA MERINGKAS (tanpa kehilangan substansi):
 5. TARGET JUMLAH KATA: ${targetWordCount} kata. Hitung dengan cermat.
 ${styleContext}
 ${langInstruction}
+${structureInstruction}
 
 Naskah sebelumnya:
 """
