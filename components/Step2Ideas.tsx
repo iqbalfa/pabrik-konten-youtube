@@ -51,9 +51,13 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
        }
        if (currentPoint) {
            const cleaned = cleanText(currentPoint);
-           // Skip if point is empty or just a header with no description
-           if (cleaned.length > 3) {
+           // Skip if: too short (likely just a header with no description like "Pembongkaran")
+           // or is pure number/label with no substantive content
+           const wordCount = cleaned.split(/\s+/).filter(w => w.length > 0).length;
+           if (wordCount >= 3) {
                points.push(cleaned);
+           } else {
+               console.warn(`[PabrikKonten] Skipping stub point (${wordCount} words): "${cleaned}"`);
            }
        }
 
