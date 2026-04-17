@@ -200,9 +200,9 @@ export const generateFullScript = async (idea: VideoIdea, targetWordCount: numbe
 
   // Instruction for skipping hook/outro
   const structureInstruction = !useHook && !useOutro
-    ? '\n[STRUKTUR]: Langsung masuk ke daftar poin. DILARANG bikin hook/pembuka dan penutup. Langsung hajar poin pertama.'
+    ? '\n[STRUKTUR]: Langsung masuk ke daftar poin. DILARANG KERAS bikin hook/pembuka, intro, opening, dan penutup. Naskah WAJIB dimulai langsung dari poin pertama tanpa kalimat pembuka apapun.'
     : !useHook
-    ? '\n[STRUKTUR]: DILARANG bikin hook/pembuka. Langsung masuk ke poin pertama.'
+    ? '\n[STRUKTUR]: DILARANG KERAS bikin hook/pembuka, intro, atau opening. Tidak ada kalimat pembuka. Naskah WAJIB dimulai langsung dari poin pertama. Contoh: Kalimat pertama langsung masuk ke topik tanpa basa-basi.'
     : !useOutro
     ? '\n[STRUKTUR]: Setelah poin terakhir langsung selesai. DILARANG bikin penutup/outro.'
     : '';
@@ -212,11 +212,12 @@ export const generateFullScript = async (idea: VideoIdea, targetWordCount: numbe
 ${parts.join('\n')}
 `;
 
+  const hookContext = useHook ? `Hook: ${idea.hook}` : '';
+
   const prompt = `
 [KONTEKS IDE]
 Judul: ${idea.title}
-Hook: ${idea.hook}
-
+${hookContext}
 [DAFTAR POIN PEMBAHASAN]
 ${pointsList}
 
@@ -230,8 +231,7 @@ ${channelContext}
 ${styleContext}
 ${langInstruction}
 
-${PROMPT_HOOK_GUIDELINES}
-
+${useHook ? PROMPT_HOOK_GUIDELINES + '\n' : ''}
 ${PROMPT_RETENTION_GUIDELINES}
 
 Lakukan penulisan naskah penuh sesuai instruksi sistem.
