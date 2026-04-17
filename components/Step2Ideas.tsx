@@ -9,9 +9,10 @@ interface Props {
   onBack: () => void;
   onRegenerate: () => void;
   language: 'id' | 'en';
+  useHook: boolean;
 }
 
-export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegenerate, language }) => {
+export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegenerate, language, useHook }) => {
   const t = translations[language].step2;
   const tCommon = translations[language];
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -160,12 +161,14 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
                 
                 <div className="space-y-5">
 
+                    {useHook && (
                     <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                       <span className="font-bold block text-[10px] text-gray-400 uppercase tracking-widest mb-2">{t.hookPreviewLabel}</span>
                       <p className="text-sm text-gray-700 leading-relaxed italic">
                         "{idea.hook}"
                       </p>
                     </div>
+                    )}
 
                     {idea.points.length > 0 && (
                       <div className="bg-gray-50/50 p-5 rounded-xl border border-dashed border-gray-300">

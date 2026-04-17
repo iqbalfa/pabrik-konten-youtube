@@ -363,6 +363,7 @@ const App: React.FC = () => {
           onBack={handleBack}
           onRegenerate={handleRegenerateIdeas}
           language={state.language}
+          useHook={state.useHook}
         />
       )}
 
