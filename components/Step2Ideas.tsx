@@ -38,7 +38,12 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
            // Check if line starts with a number followed by dot/dash/etc
            if (/^[\*\-\•\d]+\.?\s+/.test(line)) {
                if (currentPoint) {
-                   points.push(cleanText(currentPoint));
+                   const cleaned = cleanText(currentPoint);
+                   const isStub = /^[A-Za-z]+[:\s]*$/.test(cleaned) && cleaned.length < 15;
+                   const isStubAlt = cleaned.toLowerCase().startsWith('pembongkaran') && cleaned.replace(/[A-Za-z]/g, '').trim() === '';
+                   if (!isStub && !isStubAlt && cleaned.length > 0) {
+                       points.push(cleaned);
+                   }
                }
                currentPoint = line.replace(/^[\*\-\•\d]+\.?\s*/g, '').trim();
            } else {
@@ -51,16 +56,10 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
        }
        if (currentPoint) {
            const cleaned = cleanText(currentPoint);
-           // Skip if it looks like a stub header without real content
-           // e.g. "Pembongkaran" (1 short word, no colon, no description)
-           // but NOT "Kipas Angin Leher Patah" (4 meaningful words)
            const isStub = /^[A-Za-z]+[:\s]*$/.test(cleaned) && cleaned.length < 15;
            const isStubAlt = cleaned.toLowerCase().startsWith('pembongkaran') && cleaned.replace(/[A-Za-z]/g, '').trim() === '';
-           console.log(`[DEBUG] Point: "${cleaned.substring(0, 50)}" (len=${cleaned.length}, isStub=${isStub}, isStubAlt=${isStubAlt})`);
            if (!isStub && !isStubAlt && cleaned.length > 0) {
                points.push(cleaned);
-           } else {
-               console.warn(`[PabrikKonten] Skipping stub header: "${cleaned}"`);
            }
        }
 
