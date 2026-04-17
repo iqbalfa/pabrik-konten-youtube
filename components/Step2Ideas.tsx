@@ -50,7 +50,18 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
            }
        }
        if (currentPoint) {
-           points.push(cleanText(currentPoint));
+           const cleaned = cleanText(currentPoint);
+           // Skip if point is empty or just a header with no description
+           if (cleaned.length > 3) {
+               points.push(cleaned);
+           }
+       }
+
+       // Validate: if title says "8 Barang" but we got 9 points (or empty #1), something is wrong
+       const titleMatch = part.match(/Judul Video:\s*(.*)/)?.[1] || '';
+       const titleNum = parseInt(titleMatch.match(/(\d+)\s+Barang/)?.[1] || '0');
+       if (titleNum > 0 && Math.abs(points.length - titleNum) > 1) {
+           console.warn(`[PabrikKonten] Mismatch: judul "${titleNum} Barang" tapi ada ${points.length} poin parsed. Cek output LLM.`);
        }
 
        const modLevel = part.split(']')[0]?.replace(':', '').trim() || 'Unknown';
