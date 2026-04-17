@@ -28,7 +28,7 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
     const ideaParts = text.split(/\[TINGKAT MODIFIKASI/g).slice(1); 
     
     const parsedIdeas: VideoIdea[] = ideaParts.map((part, idx) => {
-       const rawPointsBlock = part.match(/Poin-Poin.*:\s*([\s\S]*?)Garis Besar Penutup/)?.[1] || '';
+       const rawPointsBlock = part.match(/Poin-Poin[Dd]?[:\s]*(?:[Dd]ata[^\n]*\n)?\s*([\s\S]*?)(?=\nGaris Besar Penutup)/)?.[1] || '';
        
        const rawLines = rawPointsBlock.split('\n').map(p => p.trim()).filter(p => p.length > 0);
        const points: string[] = [];
