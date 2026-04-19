@@ -98,8 +98,8 @@ export const Step3Script: React.FC<Props> = ({ videoTitle, onGenerateFullScript,
 
   // Word count + reading time stats
   const totalWords = sections.reduce((sum, s) => sum + s.content.trim().split(/\s+/).filter(w => w.length > 0).length, 0);
-  const readingMinutes = Math.ceil(totalWords / 150); // ~150 wpm for Indonesian TTS
-  const readingSeconds = Math.round((totalWords / 150) * 60);
+  const readingMinutes = Math.ceil(totalWords / 130); // ~130 wpm for Indonesian TTS
+  const readingSeconds = Math.round((totalWords / 130) * 60);
 
   return (
     <div className="flex flex-col h-full space-y-6 pb-24">

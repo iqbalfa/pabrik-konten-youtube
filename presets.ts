@@ -76,26 +76,28 @@ Kata penutup khas: "Dan itu tadi... sampai jumpa di video berikutnya. Jangan lup
 
 TONE: Empatik, hangat, dan validating — kayak kakak atau sahabat yang beneran peduli. BUKAN therapist kaku yang pakai istilah akademis. BUKAN juga motivator lebay yang teriak "KAMU HEBAT!". Narator adalah orang yang pernah ngalamin hal serupa, lalu belajar psikologi buat ngerti kenapa, dan sekarang share ke lo. Grounded, genuine, kadang bikin lo merasa "kok dia tau banget sih gue kayak gini?"
 
-DIKSI: WAJIB gunakan kata ganti "lo" dan "gue" secara konsisten (mirip Murupuy style). DILARANG menggunakan "Anda", "saya", atau "kamu" kecuali dalam kutipan psikolog/riset. Gunakan bahasa Indonesia casual yang mudah dipahami, tapi tetap punya kedalaman. Hindari istilah psikologi berbahasa Inggris yang nggak perlu — terjemahkan ke bahasa Indonesia yang natural (contoh: "overthinking" → "mikir terus", "anxiety" → "rasa cemas", "toxic" → "racun/beracun"). Kecuali kalau istilah Inggris-nya sudah sangat populer dan lebih pas dipakai.
+TONE OPSIONAL — WARNING/URGENCY: Untuk konten tipe profiling atau "orang yang harus lo jauhi/ketahui", gunakan warning tone: bukan menakut-nakuti berlebihan, tapi ciptakan urgensi — "lo harus tahu ini sebelum terlambat" atau "selama lo gak sadar, lo terus jadi korban." Contoh: "Dalam hidup, ada orang-orang yang harus lo jauhi. Karena selama mereka ada di sekitar lo, lo gak akan pernah bisa bener-bener tenang." Tone ini efektif untuk konten "tipe orang" yang viral — berikan perasaan bahwa informasi ini PENTING untuk diketahui sekarang.
+
+DIKSI: WAJIB gunakan kata ganti "lo" dan "gue" secara konsisten. DILARANG KERAS menggunakan "Anda", "saya", atau "kamu" kecuali dalam kutipan psikolog/riset. Sapaan "bro" boleh dipakai secara natural untuk menambah kedekatan — terutama di closing poin dan penutup. Gunakan bahasa Indonesia casual yang mudah dipahami, tapi tetap punya kedalaman. Hindari istilah psikologi berbahasa Inggris yang nggak perlu — terjemahkan ke bahasa Indonesia yang natural (contoh: "overthinking" → "mikir terus", "anxiety" → "rasa cemas", "toxic" → "racun/beracun"). Kecuali kalau istilah Inggris-nya sudah sangat populer dan lebih pas dipakai.
 
 CIRI KHAS BERCERITA:
 - VALIDASI DULU, BARU JELASKAN: Selalu mulai dengan validasi perasaan/ pengalaman penonton SEBELUM kasih penjelasan psikologi. Contoh: "Kalau lo sering ngerasa... itu bukan salah lo. Ada penjelasan psikologis di balik ini."
 - IDENTITY RECOGNITION: Buat penonton merasa "dikenali". Gunakan pola: "Psikologi orang yang [sifat/kebiasaan]" atau "Kalau lo termasuk orang yang [X], ini yang sebenarnya terjadi di otak lo."
 - REFRAME POSITIF: Setelah jelaskan "masalah", WAJIB berikan reframe yang membuat penonton merasa lebih baik tentang dirinya. Contoh: "Lo bukan malas — lo cuma perfectionist yang takut gagal."
-- ANALOGI SEHARI-HARI: Jelaskan konsep psikologi dengan analogi kehidupan sehari-hari yang gampang dimengerti. Hindari jargon akademis.
+- ANALOGI SEHARI-HARI (STRUKTUR WAJIB): Setiap poin narasi WAJIB punya minimal 1 analogi kehidupan sehari-hari yang hidup dan visual. Analogi bukan pelengkap — itu BACKBONE penjelasan. Buat analogi yang segar, relate, dan mudah dibayangkan. Contoh: "Energy vampire itu kayak colokan yang terus nyedot listrik, gak peduli baterai lo udah sekarat" atau "Tukang drama itu kayak api kecil yang terus nyamber ke mana-mana. Lo diem aja bisa kebakar." Hindari analogi klise — cari yang bikin penonton "oh iya bener juga."
 - CONTOH KONKRET: Setiap poin harus punya 1-2 contoh nyata yang relate ke kehidupan penonton (kerja, sekolah, relationship, kebiasaan sehari-hari).
 
 STRUKTUR NARATIF:
-Babak 1 — Hook (Validasi + Curiosity):
-Mulai dengan langsung address penonton: "Lo pernah nggak sih ngerasa [situasi]?" atau "Kalau lo termasuk orang yang [sifat], tonton ini sampai habis." Buat penonton merasa "ini video tentang gue".
+Babak 1 — Hook (Validasi + Curiosity / Warning):
+Mulai dengan langsung address penonton: "Lo pernah nggak sih ngerasa [situasi]?" atau "Kalau lo termasuk orang yang [sifat], tonton ini sampai habis." Untuk konten tipe/warning, buka dengan urgensi: "Ada [tipe orang] yang harus lo ketahui. Selama lo gak sadar, lo terus jadi korban." Buat penonton merasa "ini video tentang gue" atau "gue harus tahu ini."
 
-Babak 2 — Penjelasan (Fakta → Efek → Reframe):
-Setiap poin: (1) Fakta psikologi / riset yang relevan, (2) Kenapa ini terjadi (mecanisme), (3) Gimana ini ngefek ke kehidupan sehari-hari, (4) Reframe positif atau langkah kecil yang bisa dilakukan.
+Babak 2 — Penjelasan (Fakta → Analogi → Efek → Reframe):
+Setiap poin: (1) Fakta psikologi / riset yang relevan, (2) Analogi sehari-hari yang hidup, (3) Kenapa ini terjadi (mekanisme), (4) Gimana ini ngefek ke kehidupan sehari-hari, (5) Reframe positif atau langkah kecil yang bisa dilakukan, (6) Closing poin dengan "Ingat bro, [pesan empowerment singkat]" — formula closing konsisten yang bikin penonton merasa diperkuat.
 
 Babak 3 — Penutup (Empowerment):
 Akhiri dengan kalimat yang bikin penonton merasa "oke, gue ngerti sekarang, dan gue bisa handle ini." Jangan terlalu panjang. Satu kalimat kuat + CTA natural.
 
-KATA PENUTUP KHAS: "Ingat — lo nggak sendirian. Dan lo lebih kuat dari yang lo kira."`
+KATA PENUTUP KHAS: "Ingat — lo nggak sendirian. Dan lo lebih kuat dari yang lo kira." (Variasi: "Ingat bro, [pesan spesifik sesuai topik].")`
 };
 
 // Master Preset — Visual Style per channel (untuk thumbnail generation)
@@ -130,7 +132,8 @@ export const VISUAL_STYLE_PRESETS: Record<ChannelName, string> = {
 |- Komposisi: Clean, ruang kosong untuk text overlay, depth of field halus
 |- Typography: Font sans-serif modern, minimalis, warna solid tanpa efek berlebih
 |- Aksen: Subtle gradient, soft shadow, elemen simbolis (jantung, otak, muncul/desapare)
-|- Mood: Empatik, hangat — seperti thumbnail podcast personal yang bikin penonton berhenti scroll`
+|- Mood: Empatik, hangat — seperti thumbnail podcast personal yang bikin penonton berhenti scroll
+|- VISUAL THUMBNAIL: 2D fast digital scribble, whiteboard doodle style, dry-erase marker texture, thick messy lines, casual character illustration, pure white background, minimal flat colors, spontaneous energetic drawing, humorous explanation, No text if not mentioned`
 };
 
 // Default Hook & Outro per channel
