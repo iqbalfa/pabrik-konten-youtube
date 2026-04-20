@@ -1,5 +1,5 @@
 
-export const CHANNELS = ['Ilmu Lidi', 'Ilmu Survival', 'Ilmu Nyantuy', 'Ilmu Psikologi Diri'] as const;
+export const CHANNELS = ['Ilmu Lidi', 'Ilmu Survival', 'Ilmu Nyantuy', 'Ilmu Psikologi Diri', 'Richwell Finance'] as const;
 
 export type ChannelName = typeof CHANNELS[number];
 
@@ -97,7 +97,68 @@ Setiap poin: (1) Fakta psikologi / riset yang relevan, (2) Analogi sehari-hari y
 Babak 3 — Penutup (Empowerment):
 Akhiri dengan kalimat yang bikin penonton merasa "oke, gue ngerti sekarang, dan gue bisa handle ini." Jangan terlalu panjang. Satu kalimat kuat + CTA natural.
 
-KATA PENUTUP KHAS: "Ingat — lo nggak sendirian. Dan lo lebih kuat dari yang lo kira." (Variasi: "Ingat bro, [pesan spesifik sesuai topik].")`
+KATA PENUTUP KHAS: "Ingat — lo nggak sendirian. Dan lo lebih kuat dari yang lo kira." (Variasi: "Ingat bro, [pesan spesifik sesuai topik].")
+
+  'Richwell Finance': `STYLE PENULISAN: RICHWELL FINANCE
+
+TONE: Calm authority with surgical precision. Narrator is not hype, not motivational, not alarmist. What they have is numbers — and a narrative that builds a story around those numbers that makes people feel like they've finally heard the truth nobody ran for them. Character: "The person who actually did the math while everyone else was sharing inspirational quotes."
+
+Every statement has evidence. Every claim has a year-by-year breakdown. But it's not dry or academic — because they use real characters (Jake, Marcus, Alex, etc.), those numbers feel human, not spreadsheet.
+
+Mood: like a friend who turns out to be really good at finance and is now explaining why your life hasn't leveled up — with a tone that doesn't judge, but also doesn't coddle with "it's okay, you're doing great."
+
+Dominant emotion: realization, slightly uncomfortable revelation, then empowerment through understanding.
+
+DICTION: Always use specific US/international nomenclature: 401k, S&P 500, Roth IRA, employer match, Federal Reserve, BLS, FICA, HSA, FSA, net worth. Numbers: ALWAYS specific and concrete. No "a lot" or "some money." $225. $6,738. Year 5. 18%. Not "after several years" — Year 10. No hedging. No "might" or "could be." If the math shows it, state it as fact.
+
+SIGNATURE PHRASES (use naturally, not forced):
+- "the crossover point" — signature concept, appears in every video
+- "run the numbers" / "let me run the math"
+- "here's the part nobody shows you"
+- "that doesn't just cost you X — it costs you Y"
+- "financially invisible"
+- "the flat years"
+- "psychologically bulletproof"
+- "you're building a runway"
+- "the plane doesn't take off at the beginning of the runway"
+- "you're laying pavement that nobody will see or congratulate you for"
+- "market's contribution vs your contribution"
+- "below the crossover" / "above the crossover"
+- "free money" (when referring to employer 401k match)
+- "behavioral gap"
+- "subsidizing [credit card company's] quarterly earnings"
+
+STORYTELLING SIGNATURES:
+
+1. TWO CHARACTERS WITH OPPOSING DECISIONS: Two people, same income, same starting line — but different financial decisions. One follows conventional wisdom, one follows the math. Tension is established before the answer is revealed. Example: Jake vs Marcus (debt snowball vs invest through debt). Example: Alex vs Jordan (saves 15% vs normal spending).
+
+2. YEAR-BY-YEAR BREAKDOWN: Numbers run per year: Year 1, Year 2, Year 3... all the way to crossover. Every year has a concrete number — contribution vs market return. This is both a signature narrative AND visual device.
+
+3. THE CROSSOVER POINT: The pivot concept present in every video. The specific turning point where the math starts working for that person. Year 10, Year 11, Year 23. This concept anchors the entire narrative.
+
+4. CHALLENGER FRAME: Never says "conventional wisdom is wrong." Says instead: "Everyone says X. Let me show you what the math actually says." Then runs the numbers and lets the numbers speak.
+
+5. BEHAVIORAL REALITY CHECK: Always a moment where math versus human behavior is separated. JP Morgan study: market returned 10%, average investor earned 3%. "Marcus' plan requires Marcus to behave like a robot. Marcus is a human being."
+
+6. THE PLANE / RUNWAY METAPHOR: Runway metaphor appears consistently: "You're building a runway. The plane doesn't take off at the beginning. It takes off at the end. Every foot of pavement you lay down matters."
+
+7. SENSATION NUMBER: A moment where a surprising figure becomes the headline: "$8,000 emergency turned into a $63,000 loss." "$175 a month savings after a $155K income." "3% investor return vs 10% market return."
+
+STANDARD VIDEO STRUCTURE:
+
+Act 1 — Opening (The Scene): Start with two real characters or one highly relatable character. Situation is familiar but the answer is counterintuitive. Always a tension: "They're both doing everything right. But one is winning and one is treading water."
+
+Act 2 — The Conventional Answer: Meet the person following every rule. 15% savings rate. Budgeting app. Index fund. No debt except mortgage. They're doing everything the financial books tell them to do.
+
+Act 3 — The Calculation: Year by year breakdown. Contributions vs market return. The flat years where the math is humiliating. Crossover point identified and named.
+
+Act 4 — The Revelation: What the finance industry doesn't put on the chart. The crossover. The gap between where you are and where the math starts working. The behavioral gap.
+
+Act 5 — The Three Levers: Three concrete things that actually move the needle: (1) Income architecture (not budgeting), (2) Protecting the base (emergency fund), (3) The crossover sprint (reaching escape velocity faster).
+
+CLOSE — Return to the opening characters. Update their status. Net worth comparison at Year 10. Who's winning, who's not. End on the reframed understanding: "You're not behind. You're doing the hardest part — laying pavement nobody sees or applauds."
+
+STANDARD OUTRO: Always the same structure: "If this changed how you think about [specific topic] — subscribe. We run the numbers that [the financial industry / finance bros / personal finance books] skip over. The real math. Not the highlight reel."`
 };
 
 // Master Preset — Visual Style per channel (untuk thumbnail generation)
@@ -133,7 +194,15 @@ export const VISUAL_STYLE_PRESETS: Record<ChannelName, string> = {
 |- Typography: Font sans-serif modern, minimalis, warna solid tanpa efek berlebih
 |- Aksen: Subtle gradient, soft shadow, elemen simbolis (jantung, otak, muncul/desapare)
 |- Mood: Empatik, hangat — seperti thumbnail podcast personal yang bikin penonton berhenti scroll
-|- VISUAL THUMBNAIL: 2D fast digital scribble, whiteboard doodle style, dry-erase marker texture, thick messy lines, casual character illustration, pure white background, minimal flat colors, spontaneous energetic drawing, humorous explanation, No text if not mentioned`
+|- VISUAL THUMBNAIL: 2D fast digital scribble, whiteboard doodle style, dry-erase marker texture, thick messy lines, casual character illustration, pure white background, minimal flat colors, spontaneous energetic drawing, humorous explanation, No text if not mentioned`,
+
+  'Richwell Finance': `VISUAL STYLE — RICHWELL FINANCE
+|- Warna dominan: Bold, kontras tinggi — kombinasi hitam, kuning neon, hijau wealth (#00D47E), aksen emas/putih
+|- Gaya thumbnail: Over-the-top, angka besar bold + gesture dramatis + ekspresi kaget/menang
+|- Komposisi: Simetris atau rule of thirds, elemen utama (grafik/angka) di tengah
+|- Typography: Font tebal, efek 3D beveled, outline putih/tebal, angka jadi hero element
+|- Aksen: Emoji/icon spontaneous (dollar sign, grafik naik, money bag, fire) untuk sense of urgency
+|- Mood: Chaotic energy finance — "uang lo travaille terus tanpa lo sadari" — like a meme that got a finance degree`
 };
 
 // Default Hook & Outro per channel
@@ -142,6 +211,7 @@ export const HOOK_DEFAULTS: Record<ChannelName, boolean> = {
   'Ilmu Survival': true,
   'Ilmu Nyantuy': false,
   'Ilmu Psikologi Diri': true,
+  'Richwell Finance': true,
 };
 
 export const OUTRO_DEFAULTS: Record<ChannelName, boolean> = {
@@ -149,4 +219,5 @@ export const OUTRO_DEFAULTS: Record<ChannelName, boolean> = {
   'Ilmu Survival': true,
   'Ilmu Nyantuy': false,
   'Ilmu Psikologi Diri': true,
+  'Richwell Finance': true,
 };
