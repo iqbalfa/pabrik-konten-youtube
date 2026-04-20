@@ -98,6 +98,7 @@ Babak 3 — Penutup (Empowerment):
 Akhiri dengan kalimat yang bikin penonton merasa "oke, gue ngerti sekarang, dan gue bisa handle ini." Jangan terlalu panjang. Satu kalimat kuat + CTA natural.
 
 KATA PENUTUP KHAS: "Ingat — lo nggak sendirian. Dan lo lebih kuat dari yang lo kira." (Variasi: "Ingat bro, [pesan spesifik sesuai topik].")
+`,
 
   'Richwell Finance': `STYLE PENULISAN: RICHWELL FINANCE
 
