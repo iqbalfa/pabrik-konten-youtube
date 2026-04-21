@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TitleThumbnailPair, ScriptSection } from '../types';
 import { refineImagePrompt, constructThumbnailPrompt, getThumbnailStyle } from '../services/geminiService';
 import { translations } from '../translations';
+import { VISUAL_STYLE_PRESETS } from '../presets';
 
 interface Props {
   scriptSections: ScriptSection[];
@@ -46,6 +47,16 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
   const [mandatoryKeywords, setMandatoryKeywords] = useState(defaultMandatoryKeywords || '');
   const [specificObject, setSpecificObject] = useState(defaultThumbnailObject || '');
   const [visualStyle, setVisualStyle] = useState(defaultVisualStyle || getThumbnailStyle(writingStyle || ''));
+
+  // Sync visual style when channel changes
+  const prevChannelRef = useRef(channelName);
+  useEffect(() => {
+    if (channelName && channelName !== prevChannelRef.current) {
+      const preset = VISUAL_STYLE_PRESETS[channelName as keyof typeof VISUAL_STYLE_PRESETS];
+      if (preset) setVisualStyle(preset);
+    }
+    prevChannelRef.current = channelName || '';
+  }, [channelName]);
   
   // Ref Inputs
   const [refImages, setRefImages] = useState<File[]>([]);
@@ -324,19 +335,29 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
 
               {/* Visual Style Input */}
               <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">3. {t.visualStyle || 'VISUAL STYLE'}</label>
-                  <select 
+                  <div className="flex items-center justify-between mb-2">
+                      <label className="block text-xs font-bold text-gray-500 uppercase">3. {t.visualStyle || 'VISUAL STYLE'}</label>
+                      <select
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val && val in VISUAL_STYLE_PRESETS) {
+                              setVisualStyle(VISUAL_STYLE_PRESETS[val as keyof typeof VISUAL_STYLE_PRESETS]);
+                            }
+                          }}
+                          value={channelName && channelName in VISUAL_STYLE_PRESETS ? channelName : ''}
+                          className="text-[10px] bg-muted hover:bg-purple-50 px-2 py-1 rounded-md text-gray-600 transition-flat outline-none border-none cursor-pointer font-normal"
+                      >
+                          {Object.keys(VISUAL_STYLE_PRESETS).map(ch => (
+                              <option key={ch} value={ch}>{ch}</option>
+                          ))}
+                      </select>
+                  </div>
+                  <textarea
+                      className="w-full h-32 px-4 py-3 border border-purple-200 rounded-xl text-[10px] font-mono text-foreground placeholder-gray-400 resize-y focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 transition-flat bg-white"
+                      placeholder="Visual style prompt will appear here based on selected channel..."
                       value={visualStyle}
                       onChange={(e) => setVisualStyle(e.target.value)}
-                      className="w-full p-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm font-bold text-gray-900 bg-white"
-                  >
-                      <option value="Modern 2D webcomic style, bold clean line art, stylized character design, flat colors with cel-shading, cinematic dramatic lighting, volumetric atmosphere, rim lighting, deep shadows, ambient occlusion, depth of field, sharp focus on subject, 8k resolution, high quality digital illustration.">Ilmu Lidi (Webcomic 2D)</option>
-                      <option value="Ultra-minimalist 2D cartoon style, crude MS Paint aesthetic, basic flat colors, unpolished rough outlines, intentionally simple drawing, humorous deadpan tone, solid white or basic flat color background, low-effort high-comedy internet meme vibe, lo-fi digital art. No text if not mentioned.">Ilmu Nyantuy (MS Paint Meme)</option>
-                      <option value="Gritty brush-and-ink noir illustration, raw and expressive textured brushstrokes, heavy shadow pooling, stark white minimal background, decaying post-apocalyptic textures, selective crimson red coloring, high contrast, sharp focus, 8k resolution, high quality digital art.">Ilmu Survival (Noir Illustration)</option>
-                      <option value="Hyper-realistic 3D render, Unreal Engine 5 style, octane render, cinematic lighting, highly detailed, 8k resolution, photorealistic.">3D Render (Hyper-realistic)</option>
-                      <option value="Anime style, Studio Ghibli inspired, vibrant colors, detailed background, soft lighting, 2D animation style.">Anime Style</option>
-                      <option value="Minimalist vector art, flat design, bold colors, clean shapes, modern corporate illustration style.">Minimalist Vector</option>
-                  </select>
+                  />
               </div>
           </div>
       </div>
