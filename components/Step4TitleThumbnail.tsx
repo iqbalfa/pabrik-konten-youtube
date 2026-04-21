@@ -46,14 +46,24 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
   // Inputs
   const [mandatoryKeywords, setMandatoryKeywords] = useState(defaultMandatoryKeywords || '');
   const [specificObject, setSpecificObject] = useState(defaultThumbnailObject || '');
-  const [visualStyle, setVisualStyle] = useState(defaultVisualStyle || getThumbnailStyle(writingStyle || ''));
+  // Init visualStyle ONCE on mount — don't recompute on every render
+  const isFirstRenderRef = useRef(true);
+  const [visualStyle, setVisualStyle] = useState(
+    defaultVisualStyle || getThumbnailStyle(writingStyle || '')
+  );
 
-  // Sync visual style when channel changes
+  // Sync visual style when channel changes (only update if user hasn't manually edited)
   const prevChannelRef = useRef(channelName);
   useEffect(() => {
-    if (channelName && channelName !== prevChannelRef.current) {
-      const preset = VISUAL_STYLE_PRESETS[channelName as keyof typeof VISUAL_STYLE_PRESETS];
-      if (preset) setVisualStyle(preset);
+    if (!isFirstRenderRef.current) {
+      // Subsequent renders: sync from preset if channel changed
+      if (channelName && channelName !== prevChannelRef.current) {
+        const preset = VISUAL_STYLE_PRESETS[channelName as keyof typeof VISUAL_STYLE_PRESETS];
+        if (preset) setVisualStyle(preset);
+      }
+    } else {
+      // First render: use prop value, then mark initialized
+      isFirstRenderRef.current = false;
     }
     prevChannelRef.current = channelName || '';
   }, [channelName]);
