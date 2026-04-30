@@ -216,41 +216,65 @@ Untuk setiap poin yang diekstrak dari referensi asing, lo HARUS:
    □ Jika gue시민 Indonesia, poin ini terasa "ini kejadian di sekitar gue" atau "cerita orang luar"?
    □ Jika terasa seperti cerita orang luar, REIMAGINE sampai terasa Indonesia
 
-MISI: Analisis input user. Pecah materi referensi menjadi 5 ide video yang SUBSTANSINYA BEDA — bukan cuma beda judul atau beda cara bungkus, tapi beda fakta, data, poin, dan perspektif yang diangkat.
+MISI: Analisis input user. Pecah materi referensi menjadi 3 ide video yang SUBSTANSINYA BEDA — bukan cuma beda judul atau beda cara bungkus, tapi beda fakta, data, poin, dan perspektif yang diangkat.
 
 \${contentFilters}
 
 [ANTI-REPETITION — ATURAN PALING PENTING]
-DILARANG KERAS menghasilkan 5 ide dengan poin-poin yang sama atau mirip. Setiap angle (1-5) di atas punya [CONTENT FOCUS] yang berbeda. WAJIB ikuti [CONTENT FOCUS] masing-masing agar konten yang diekstrak dari referensi BENAR-BENAR BERBEDA antar ide.
+DILARANG KERAS menghasilkan 3 ide dengan poin-poin yang sama atau mirip. Setiap angle yang dipilih punya [CONTENT FOCUS] yang berbeda. WAJIB ikuti [CONTENT FOCUS] masing-masing agar konten yang diekstrak dari referensi BENAR-BENAR BERBEDA antar ide.
 
-[PERSPECTIVE SHIFTING — TEKNIK REFRAMING KREATIF]
-Tugas lo BUKAN cuma merangkum referensi. Tugas lo adalah MEMBACA ULANG topik dari sudut pandang yang TAK TERDUGA. Gunakan teknik-teknik di bawah ini untuk mengubah topik biasa jadi ide yang terasa SEGAR, PROVOKATIF, dan BEDA:
+[CREATIVE TRANSFORMATION ENGINE — ANTI-PARAFRASE]
+Tugas lo BUKAN membuat variasi judul. Tugas lo adalah mengubah input mentah menjadi KONSEP VIDEO BARU yang masih relevan tapi terasa seperti angle baru.
 
-TEKNIK 1 — DOMAIN SWAP: Ganti "domain" topik dengan domain lain yang lebih dramatis.
-  Contoh: "Berapa tabungan di umur 50?" (finance) → "5 Jurus Bertahan Hidup Saat Kamu Dibuang Sistem di Usia 50" (survival)
-  Cara: Bayangkan topik ini bukan di bidang aslinya, tapi di bidang lain — survival, militer, olahraga, game, politik, dll.
+PROSES WAJIB untuk SETIAP ide:
+1. TOPIK LITERAL — tulis dulu topik mentah user secara sederhana.
+2. HIDDEN ANXIETY — cari rasa takut/konflik/rasa malu/tekanan sosial di balik topik.
+3. CREATIVE TECHNIQUE — pilih SATU teknik transformasi yang berbeda antar ide.
+4. TRANSFORMED CONCEPT — ubah topik menjadi dunia/metafora/konflik baru.
+5. TITLE — baru tulis judul final yang terasa seperti video YouTube, bukan artikel SEO.
+6. WHY NOT PARAPHRASE — jelaskan kenapa ide ini bukan sekadar ganti kata dari input.
 
-TEKNIK 2 — VILLAIN CREATION: Identifikasi "musuh" atau "antagonis" di balik topik.
+TEKNIK TRANSFORMASI YANG BOLEH DIPAKAI:
+- DOMAIN SWAP: ganti domain topik ke survival, perang, game, kriminal, sistem, bunker, bencana, atau perjalanan.
+  Contoh: "Berapa tabungan di umur 50?" → "5 Jurus Bertahan Hidup Saat Kamu Dibuang Sistem di Usia 50"
+- VILLAIN CREATION: jadikan sistem, kebiasaan, algoritma, gengsi, cicilan, atau norma sosial sebagai antagonis.
   Contoh: "Kenapa orang susah menabung?" → "Sistem yang Dirancang Bikin Lo Gak Pernah Kaya"
-  Cara: Tanya "siapa yang DIUNTUNGKAN dari masalah ini?" atau "apa sistem/struktur yang membuat ini terjadi?"
-
-TEKNIK 3 — IDENTITY SHIFT: Ubah posisi penonton dari "orang biasa" jadi karakter dengan peran kuat.
+- IDENTITY SHIFT: ubah penonton jadi karakter utama: survivor, underdog, korban sistem, detektif, pemain yang telat sadar.
   Contoh: "Tips menabung" → "Strategi Perang Finansial untuk Generasi yang Ditinggalkan"
-  Cara: Bayangkan penonton sebagai: korban, pejuang, detektif, whistleblower, underdog, dll.
+- EMOTIONAL AMPLIFICATION: naikkan emosi tersembunyi sampai terasa urgent, getir, gelap, atau absurd.
+  Contoh: "Tips sehat di usia 40" → "Kenapa Tubuh Lo Mulai Mengkhianati Lo di Usia 40"
+- METAPHOR LAYERING: bungkus topik dengan metafora kuat: bunker, badai, jebakan, mesin, labirin, bom waktu, utang tidur.
+  Contoh: "Menabung untuk pensiun" → "Bangun Bunker Finansial Sebelum Hidup Mulai Nagih Balik"
+- TIMELINE DRAMATIZATION: jadikan topik sebagai arc hidup dari awal kecil sampai konsekuensi besar.
+  Contoh: "Perencanaan keuangan" → "20 Tahun Kesalahan Kecil yang Meledak di Usia 50"
+- SYSTEM BETRAYAL: baca topik sebagai momen ketika sistem yang katanya aman ternyata ninggalin penonton.
+  Contoh: "Dana pensiun" → "Lo Kerja 30 Tahun, Tapi Sistem Tetap Ninggalin Lo"
+- STATUS ANXIETY: gali rasa malu/status sosial: kelihatan aman, padahal rapuh; kelihatan sukses, padahal cicilan.
+  Contoh: "Tabungan kurang" → "Saat Teman Lo Pensiun, Lo Baru Sadar Dompet Lo Kosong"
 
-TEKNIK 4 — EMOTIONAL AMPLIFICATION: Ambil emosi default topik, lalu AMPLIFIKASI ke level ekstrem.
-  Contoh: "Tips sehat di usia 40" (tenang) → "Kenapa Tubuh Lo Mulai Mengkhianati Lo di Usia 40" (gelap)
-  Cara: Jika topiknya datar → bikin provokatif. Jika topiknya informatif → bikin urgent. Jika topiknya positif → temukan sisi gelapnya.
+KOMPOSISI 3 IDE WAJIB:
+1. FAITHFUL UPGRADE — masih dekat dengan input, tapi judulnya lebih manusiawi, emosional, dan YouTube-friendly.
+2. RADICAL REFRAME — paling berani: domain swap/metafora/villain/system betrayal. Ini slot untuk contoh seperti "dibuang sistem".
+3. AUDIENCE IDENTITY / SYSTEM REFRAME — penonton jadi karakter utama dalam konflik sosial/ekonomi/psikologis.
 
-TEKNIK 5 — METAPHOR LAYERING: Bungkus topik dengan metafora dari dunia yang berbeda.
-  Contoh: "Menabung untuk pensiun" → "Membangun Bunker Finansial Sebelum Badai Usia 50"
-  Cara: Pilih metafora kuat — perang, konstruksi, alam, olahraga, teknologi — lalu bungkus topik di dalamnya.
+ANTI-PARAPHRASE GATE — DRAFT GAGAL JIKA:
+- Judul masih memakai struktur pertanyaan asli: "Berapa...", "Cara...", "Tips...", "Panduan..." tanpa konflik baru.
+- Judul cuma mengganti kata: "tabungan cocok" → "tabungan ideal".
+- Tidak ada konflik, emosi, metafora, antagonis, atau identitas penonton.
+- Semua ide masih berada di domain literal yang sama tanpa reframe.
+- Terdengar seperti artikel blog SEO, bukan video YouTube.
 
-TEKNIK 6 — TIMELINE DRAMATIZATION: Ubah timeline topik jadi narasi dengan arc (awal-klimaks-resolusi).
-  Contoh: "Perencanaan keuangan" → "Dari Gaji Pertama Sampai Pensiun: Perjalanan yang 90% Orang Gagal di Tengah"
-  Cara: Bayangkan topik ini sebagai CERITA dengan konflik, bukan sebagai informasi.
+CONTOH BEFORE/AFTER:
+- BUKAN: "Berapa Tabungan Ideal di Usia 50 Tahun?"
+  TAPI: "5 Jurus Bertahan Hidup Saat Kamu Dibuang Sistem di Usia 50"
+- BUKAN: "Tips Berhenti Menggunakan Paylater"
+  TAPI: "Lo Gak Belanja, Tapi Masa Depan Lo Sudah Dicicil"
+- BUKAN: "Dampak Kurang Tidur untuk Kesehatan"
+  TAPI: "Tubuh Lo Diam-Diam Nagih Utang Tidur yang Gak Pernah Lo Bayar"
+- BUKAN: "Cara Lebih Percaya Diri"
+  TAPI: "Kenapa Lo Selalu Merasa Kecil Bahkan Saat Gak Ada yang Nyerang"
 
-WAJIB gunakan minimal 1 teknik di atas per ide. Setiap ide WAJIB pakai teknik yang BERBEDA dari ide lain. Jangan semua ide pakai teknik yang sama.
+WAJIB: setiap ide pakai creative_technique yang BERBEDA. Minimal 2 dari 3 ide harus terasa seperti transformasi konsep, bukan variasi literal.
 
 CONTOH SALAH (poin sama, cuma judul beda):
 - Ide 1: "5 Fakta Tentang X" → poin: A, B, C, D, E
@@ -268,7 +292,7 @@ SEBELUM OUTPUT, lakukan CEKLIST INI:
 □ Apakah poin Ide 3 tidak mengulang fakta dari Ide 1 dan 2?
 □ Apakah setiap ide punya PERSPEKTIF yang jelas berbeda?
 □ Apakah setiap ide memberikan VALUE yang berbeda ke penonton?
-□ Apakah minimal 3 dari 5 ide terasa PROVOKATIF, TAK TERDUGA, atau TEGAS berbeda dari topik asli? (Bukan cuma parafrase)
+□ Apakah minimal 2 dari 3 ide terasa PROVOKATIF, TAK TERDUGA, atau TEGAS berbeda dari topik asli? (Bukan cuma parafrase)
 □ Apakah setiap ide menggunakan PERSPECTIVE SHIFTING TECHNIK yang berbeda?
 Jika ada yang tidak terpenuhi, ULANGI dan cari konten berbeda dari referensi.
 
@@ -390,11 +414,21 @@ FORMAT OUTPUT WAJIB:
 [RANGKUMAN REFERENSI]
 (Analisis singkat materi input...)
 
-WAJIB BERIKAN TEPAT 5 IDE VIDEO DENGAN FORMAT BERIKUT UNTUK MASING-MASING IDE:
+WAJIB BERIKAN TEPAT 3 IDE VIDEO DENGAN KOMPOSISI:
+1. FAITHFUL UPGRADE
+2. RADICAL REFRAME
+3. AUDIENCE IDENTITY / SYSTEM REFRAME
 
-[TINGKAT MODIFIKASI: ...] 
-[ANGLE: (sebutkan nama angle dari content filter, misal: "Curiosity Gap")]
-[UNIK: (1 kalimat: apa yang bikin ide ini BEDA dari 4 ide lainnya — value unik apa yang penonton dapat di sini)]
+FORMAT KONSEPTUAL SETIAP IDE:
+
+[TINGKAT MODIFIKASI: FAITHFUL UPGRADE / RADICAL REFRAME / AUDIENCE IDENTITY / SYSTEM REFRAME]
+[ANGLE: (sebutkan nama angle dari content filter/channel)]
+[UNIK: (1 kalimat: value unik ide ini dibanding 2 ide lainnya)]
+[TOPIK LITERAL: (topik mentah input user)]
+[HIDDEN ANXIETY: (ketakutan/konflik/rasa malu/tekanan sosial yang ditemukan)]
+[TEKNIK TRANSFORMASI: (pilih satu teknik dari daftar)]
+[KONSEP TRANSFORMASI: (topik literal → konsep video baru)]
+[BUKAN PARAFRASE KARENA: (alasan konkret kenapa ini bukan sekadar ganti kata)]
 Judul Video: ...
 Narasi Hook: (Validasi Masalah -> Bangun Empati -> Janji Solusi/Keuntungan)
 Poin-Poin Pembongkaran:
@@ -406,7 +440,7 @@ Poin-Poin Pembongkaran:
 5. ...
 Garis Besar Penutup: ...
 
-(ULANGI BLOK [TINGKAT MODIFIKASI: ...] DI ATAS SEBANYAK 5 KALI UNTUK 5 IDE YANG BERBEDA)
+(ULANGI BLOK DI ATAS SEBANYAK 3 KALI. Walau output API berbentuk JSON, isi field harus mengikuti logika transformasi di atas.)
 `;
 
 export const PROMPT_TITLES = `

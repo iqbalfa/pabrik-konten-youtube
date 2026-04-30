@@ -56,6 +56,7 @@ interface LayoutProps {
   onStartNew?: () => void;
   apiKey: string;
   onApiKeyChange: (key: string) => void;
+  onApiKeyClear?: () => void;
   selectedChannel: ChannelName | '';
   onChannelChange: (channel: ChannelName) => void;
   onStepClick: (step: AppStep) => void;
@@ -84,7 +85,7 @@ const Toast: React.FC<{ message: string; type?: 'success' | 'error'; onClose: ()
 export const Layout: React.FC<LayoutProps> = ({
   currentStep, children, isLoading, language, onLanguageChange,
   imageModel, onImageModelChange, onSaveState, onLoadState, onStartNew,
-  apiKey, onApiKeyChange, selectedChannel, onChannelChange, onStepClick,
+  apiKey, onApiKeyChange, onApiKeyClear, selectedChannel, onChannelChange, onStepClick,
   toastMessage, onToastShown
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -213,9 +214,20 @@ export const Layout: React.FC<LayoutProps> = ({
               </button>
             </div>
             {apiKey ? (
-              <p className="text-[10px] text-primary mt-1.5 flex items-center gap-1">
-                <Icons.check /> API Key tersimpan
-              </p>
+              <div className="mt-1.5 flex items-center justify-between gap-2">
+                <p className="text-[10px] text-primary flex items-center gap-1">
+                  <Icons.check /> API Key tersimpan lokal
+                </p>
+                {onApiKeyClear && (
+                  <button
+                    onClick={onApiKeyClear}
+                    className="text-[10px] text-red-400 hover:text-red-300 underline underline-offset-2"
+                    title="Hapus API key dari localStorage browser"
+                  >
+                    Hapus
+                  </button>
+                )}
+              </div>
             ) : (
               <p className="text-[10px] text-gray-600 mt-1.5">
                 Dapatkan gratis di aistudio.google.com/apikey

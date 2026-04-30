@@ -51,6 +51,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
   const [visualStyle, setVisualStyle] = useState(
     defaultVisualStyle || getThumbnailStyle(writingStyle || '')
   );
+  const isIlmuLidiPreset = /ilmu\s*lidi/i.test(`${channelName || ''} ${writingStyle || ''}`);
 
   // Sync visual style when channel changes (only update if user hasn't manually edited)
   const prevChannelRef = useRef(channelName);
@@ -103,6 +104,63 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       return { valid: warnings.length === 0, warnings };
   };
 
+  const normalizeText = (value: string) => value.toLowerCase().replace(/[^a-z0-9à-ÿ\s]/gi, ' ').replace(/\s+/g, ' ').trim();
+  const isBoundaryEmphasis = (overlay: string, emphasis: string) => {
+      const normalizedOverlay = normalizeText(overlay);
+      const normalizedEmphasis = normalizeText(emphasis);
+      if (!normalizedOverlay || !normalizedEmphasis) return false;
+      return normalizedOverlay === normalizedEmphasis ||
+          normalizedOverlay.startsWith(`${normalizedEmphasis} `) ||
+          normalizedOverlay.endsWith(` ${normalizedEmphasis}`);
+  };
+
+  const getValidationBadges = (pair: TitleThumbnailPair) => {
+      const title = pair.title || '';
+      const overlay = pair.thumbnail.fullTextOverlay || '';
+      const normalizedTitle = normalizeText(title);
+      const normalizedOverlay = normalizeText(overlay);
+      const mandatory = mandatoryKeywords.trim();
+      const keywordOk = !mandatory || normalizedTitle.includes(normalizeText(mandatory));
+      const titleOk = title.length > 0 && title.length <= 60;
+      const overlayWords = overlay.trim().split(/\s+/).filter(Boolean).length;
+      const overlayOk = overlayWords >= 2 && overlayWords <= 4;
+      const notDuplicate = normalizedOverlay.length > 0 && !normalizedTitle.includes(normalizedOverlay);
+      const emphasisOk = isBoundaryEmphasis(overlay, pair.thumbnail.emphasisText || '');
+      const feasibility = pair.thumbnail.feasibilityScore || 0;
+      const visualCtr = pair.thumbnail.visualCtrScore || 0;
+      const hasConflict = Boolean(pair.thumbnail.visualMetaphor && pair.thumbnail.conflictObject);
+      const hasCuriosity = Boolean(pair.thumbnail.curiosityObject || pair.thumbnail.stopScrollReason);
+      const risk = (pair.clickbaitRisk || 'MEDIUM').toUpperCase();
+      return [
+          { label: mandatory ? 'Keyword judul' : 'Keyword opsional', ok: keywordOk, value: mandatory || 'Tidak diisi' },
+          { label: 'Mobile title', ok: titleOk, value: `${title.length}/60 char` },
+          { label: 'Text 2-4 kata', ok: overlayOk, value: `${overlayWords || 0} kata` },
+          { label: 'Emphasis tepi', ok: emphasisOk, value: emphasisOk ? 'Awal/akhir' : 'Jangan tengah' },
+          { label: 'Tidak copy judul', ok: notDuplicate, value: notDuplicate ? 'Complementary' : 'Terlalu mirip' },
+          { label: 'Visual CTR', ok: visualCtr >= 78, value: visualCtr ? `${visualCtr}/100` : 'Belum ada' },
+          { label: 'Konflik visual', ok: hasConflict, value: hasConflict ? 'Metafora + objek' : 'Terlalu literal' },
+          { label: 'Curiosity object', ok: hasCuriosity, value: hasCuriosity ? 'Ada' : 'Kurang misteri' },
+          { label: 'Feasibility', ok: feasibility >= 70, value: `${feasibility || '-'}%` },
+          { label: 'Clickbait risk', ok: risk !== 'HIGH', value: risk },
+      ];
+  };
+
+  const quickRemixActions = [
+      { label: 'Stop-scroll+', instruction: 'Buat versi yang lebih stop-scroll: satu konflik visual besar, objek utama lebih ekstrem, dan terbaca dalam 1 detik.' },
+      { label: 'Konflik+', instruction: 'Perkuat konflik visual. Tambahkan ancaman/ketegangan yang konkret, bukan cuma ekspresi wajah.' },
+      { label: 'Curiosity', instruction: 'Tambahkan curiosity object yang aneh/kontras sehingga penonton bertanya apa yang sedang terjadi.' },
+      { label: 'Metafora total', instruction: 'Ganti visual literal menjadi metafora visual total. Jangan sekadar orang + objek biasa.' },
+      { label: 'Lebih gelap', instruction: 'Buat versi lebih gelap, dramatis, dan punya emotional punch lebih kuat, tapi tetap tidak menyesatkan.' },
+      { label: 'Lebih absurd', instruction: 'Buat versi lebih lucu/absurd ala thumbnail viral, tapi pesan utama tetap jelas dalam sekali lihat.' },
+      { label: 'Lebih lokal', instruction: 'Ganti objek visual menjadi lebih Indonesia dan sehari-hari: QRIS, struk minimarket, paket COD, kos-kosan, motor, warung, atau objek lokal relevan.' },
+      { label: 'Topik jelas', instruction: 'Buat topik lebih cepat terbaca secara visual tanpa menambah teks panjang. Fokuskan objek utama dan kurangi detail kecil.' },
+  ];
+
+  const handleQuickRemix = (pairId: string, instruction: string) => {
+      setModifyingPromptId(pairId);
+      setModificationInput(instruction);
+  };
+
   const handleGeneratePairs = async () => {
       setIsGeneratingPairs(true);
       try {
@@ -150,7 +208,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       }
   };
 
-  const handleUpdatePairData = (pairId: string, field: 'emphasisText' | 'normalText' | 'prompt' | 'fullTextOverlay', value: string) => {
+  const handleUpdatePairData = (pairId: string, field: 'emphasisText' | 'normalText' | 'prompt' | 'fullTextOverlay' | 'visualConcept', value: string) => {
       setPairs(prev => prev.map(p => {
           if (p.id !== pairId) return p;
           
@@ -158,18 +216,29 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
 
           if (field === 'prompt') {
               updatedThumbnail.prompt = value;
+          } else if (field === 'visualConcept') {
+              updatedThumbnail.visualConcept = value;
           } else {
               updatedThumbnail[field] = value;
           }
           
           // Automatically regenerate detailed prompt when dependencies change
+          const visualBrief = [
+              updatedThumbnail.visualMetaphor ? `VISUAL METAPHOR: ${updatedThumbnail.visualMetaphor}` : '',
+              updatedThumbnail.conflictObject ? `CONFLICT OBJECT: ${updatedThumbnail.conflictObject}` : '',
+              updatedThumbnail.curiosityObject ? `CURIOSITY OBJECT: ${updatedThumbnail.curiosityObject}` : '',
+              updatedThumbnail.emotionTarget ? `EMOTION TARGET: ${updatedThumbnail.emotionTarget}` : '',
+              updatedThumbnail.stopScrollReason ? `STOP-SCROLL REASON: ${updatedThumbnail.stopScrollReason}` : '',
+              updatedThumbnail.prompt ? `SCENE: ${updatedThumbnail.prompt}` : '',
+          ].filter(Boolean).join('\n');
           updatedThumbnail.detailedPrompt = constructThumbnailPrompt(
-              updatedThumbnail.prompt,
+              visualBrief || updatedThumbnail.prompt,
               updatedThumbnail.actionDescription || '',
               updatedThumbnail.emphasisText,
               updatedThumbnail.normalText,
               updatedThumbnail.fullTextOverlay, // Use the potentially updated field here
-              visualStyle
+              visualStyle,
+              channelName || ''
           );
           
           // Clear finalEngineeredPrompt so UI shows the newly drafted detailedPrompt
@@ -250,10 +319,10 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
   };
 
   return (
-    <div className="space-y-8 pb-32 relative">
+    <div className="space-y-8 pb-44 relative">
       <div className="border-b pb-6 flex justify-between items-end">
         <div>
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t.title} <span className="text-primary">v1.0</span></h2>
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t.title} <span className="text-primary">v1.1 Visual Director</span></h2>
             <p className="text-gray-500 mt-2 font-medium">
                 {t.subtitle}
             </p>
@@ -275,6 +344,9 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                <div>
                    <h3 className="font-bold text-gray-800 uppercase tracking-wide text-sm">{t.configTitle}</h3>
                    <span className="text-xs text-gray-400">{t.configSubtitle}</span>
+               </div>
+               <div className="px-3 py-1.5 rounded-full bg-gray-900 text-white text-[10px] font-black uppercase tracking-wider">
+                   3 CTR Packages
                </div>
           </div>
           
@@ -313,7 +385,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
           <div className="grid md:grid-cols-3 gap-6">
               {/* Background Input */}
               <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">1. {t.refBackground}</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">1. {t.refBackground} <span className="text-red-500">Required</span></label>
                   <div 
                     onClick={() => bgInputRef.current?.click()}
                     className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${bgImage ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-primary hover:bg-blue-50'}`}
@@ -325,11 +397,16 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                           <span className="text-gray-400 text-xs">{t.uploadRef}</span>
                       )}
                   </div>
+                  <p className="mt-2 text-[10px] text-gray-400 leading-relaxed">
+                    {isIlmuLidiPreset
+                      ? 'Khusus Ilmu Lidi: pakai Font___Background_Style.png untuk background biru muda, headline hitam, dan banner merah.'
+                      : 'Dipakai sebagai background + typography style untuk preset/channel ini. Jangan pakai aset Ilmu Lidi untuk channel lain kecuali memang sengaja.'}
+                  </p>
               </div>
 
               {/* Character Input */}
               <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">2. {t.refCharacter}</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">2. {t.refCharacter} <span className="text-gray-400">Optional</span></label>
                   <div 
                     onClick={() => charInputRef.current?.click()}
                     className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-primary hover:bg-blue-50 transition-all"
@@ -341,6 +418,11 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                           <span className="text-gray-400 text-xs">{t.uploadRef}</span>
                       )}
                   </div>
+                  <p className="mt-2 text-[10px] text-gray-400 leading-relaxed">
+                    {isIlmuLidiPreset
+                      ? 'Khusus Ilmu Lidi: upload Ilmu_Lidi.jpeg agar karakter tetap anak 7-10 tahun, semi-chibi, bukan versi dewasa.'
+                      : 'Upload maskot/karakter agar image model menjaga identitas visual channel ini.'}
+                  </p>
               </div>
 
               {/* Visual Style Input */}
@@ -374,7 +456,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
 
       {/* 2. GENERATE BUTTON */}
       {pairs.length === 0 && (
-          <div className="flex justify-center py-10">
+          <div className="flex justify-center py-10 bg-white border border-gray-200 rounded-2xl shadow-sm">
               <button 
                   onClick={handleGeneratePairs}
                   disabled={isGeneratingPairs}
@@ -433,6 +515,15 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                                   </button>
                               </div>
                               
+                              <div className="mb-5 grid grid-cols-2 gap-2">
+                                  {getValidationBadges(pair).map((badge) => (
+                                      <div key={badge.label} className={`rounded-lg border px-2.5 py-2 ${badge.ok ? 'bg-emerald-50 border-emerald-100 text-emerald-800' : 'bg-amber-50 border-amber-200 text-amber-800'}`}>
+                                          <div className="text-[9px] font-black uppercase tracking-wide">{badge.label}</div>
+                                          <div className="text-[10px] font-bold truncate">{badge.ok ? 'OK' : 'Cek'} · {badge.value}</div>
+                                      </div>
+                                  ))}
+                              </div>
+
                               <div className="mb-6 group">
                                   <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">{t.titleLabel}</label>
                                   <h3 className="text-2xl font-black text-gray-900 leading-tight group-hover:text-yellow-600 transition-colors">
@@ -440,7 +531,10 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                                   </h3>
                                   {pair.ctrAnalysis && (
                                       <div className="mt-3 bg-blue-50 border border-blue-100 p-3 rounded-lg">
-                                          <span className="block text-[9px] font-black uppercase text-blue-500 mb-1">CTR Analysis</span>
+                                          <div className="flex items-center justify-between gap-2 mb-1">
+                                              <span className="block text-[9px] font-black uppercase text-blue-500">CTR Analysis</span>
+                                              {pair.clickbaitRisk && <span className="text-[9px] font-black uppercase text-blue-700 bg-white/70 px-2 py-0.5 rounded">Risk: {pair.clickbaitRisk}</span>}
+                                          </div>
                                           <p className="text-xs text-blue-900 leading-relaxed">{pair.ctrAnalysis}</p>
                                       </div>
                                   )}
@@ -455,6 +549,58 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                                       </div>
                                   )}
                               </div>
+
+                              {(pair.thumbnail.visualMetaphor || pair.thumbnail.conflictObject || pair.thumbnail.stopScrollReason) && (
+                                  <div className="mb-6 bg-gradient-to-br from-gray-950 to-slate-900 border border-slate-700 p-4 rounded-xl text-white shadow-sm">
+                                      <div className="flex flex-wrap items-center gap-2 mb-3">
+                                          <span className="px-2.5 py-1 rounded-full bg-primary text-black text-[9px] font-black uppercase tracking-widest">Visual Director</span>
+                                          {pair.thumbnail.visualCtrScore && (
+                                              <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${pair.thumbnail.visualCtrScore >= 78 ? 'bg-emerald-400 text-slate-950' : 'bg-amber-300 text-slate-950'}`}>
+                                                  Stop-scroll {pair.thumbnail.visualCtrScore}/100
+                                              </span>
+                                          )}
+                                          {pair.thumbnail.emotionTarget && (
+                                              <span className="px-2.5 py-1 rounded-full bg-white/10 text-white text-[9px] font-black uppercase tracking-widest border border-white/10">
+                                                  Emosi: {pair.thumbnail.emotionTarget}
+                                              </span>
+                                          )}
+                                      </div>
+                                      <div className="grid gap-3 text-xs">
+                                          {pair.thumbnail.visualMetaphor && (
+                                              <div>
+                                                  <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Visual Metaphor</span>
+                                                  <p className="text-slate-100 leading-relaxed">{pair.thumbnail.visualMetaphor}</p>
+                                              </div>
+                                          )}
+                                          <div className="grid md:grid-cols-2 gap-3">
+                                              {pair.thumbnail.conflictObject && (
+                                                  <div>
+                                                      <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Conflict Object</span>
+                                                      <p className="text-slate-100 leading-relaxed">{pair.thumbnail.conflictObject}</p>
+                                                  </div>
+                                              )}
+                                              {pair.thumbnail.curiosityObject && (
+                                                  <div>
+                                                      <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Curiosity Object</span>
+                                                      <p className="text-slate-100 leading-relaxed">{pair.thumbnail.curiosityObject}</p>
+                                                  </div>
+                                              )}
+                                          </div>
+                                          {pair.thumbnail.stopScrollReason && (
+                                              <div className="border-t border-white/10 pt-3">
+                                                  <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Stop-scroll Reason</span>
+                                                  <p className="text-slate-100 leading-relaxed">{pair.thumbnail.stopScrollReason}</p>
+                                              </div>
+                                          )}
+                                          {pair.thumbnail.thumbnailWeakness && (
+                                              <div className="border-t border-white/10 pt-3">
+                                                  <span className="block text-amber-300 font-black uppercase tracking-widest text-[9px] mb-1">Risiko Lemah</span>
+                                                  <p className="text-amber-50 leading-relaxed">{pair.thumbnail.thumbnailWeakness}</p>
+                                              </div>
+                                          )}
+                                      </div>
+                                  </div>
+                              )}
 
                               <div className="space-y-4 mb-6">
                                   {/* 1. FULL PHRASE INPUT - NEW */}
@@ -471,6 +617,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
 
                                   <div className="bg-red-50 border border-red-100 p-3 rounded-xl shadow-sm">
                                       <span className="block text-[9px] font-black uppercase text-red-400 mb-1">2. {t.emphasisText}</span>
+                                      <p className="text-[9px] text-red-400/80 mb-1">Emphasis harus di awal/akhir frasa, jangan di tengah.</p>
                                       <input 
                                         type="text"
                                         className="w-full bg-transparent border-b border-red-200 text-xl font-bold text-red-600 focus:outline-none focus:border-red-500"
@@ -501,6 +648,15 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                           {/* AREA PROMPT VISUAL EDITABLE */}
                           <div className="pt-6 border-t border-gray-100 mt-auto">
                                <p className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-2">
+                                   {t.thumbnailConcept}
+                               </p>
+                               <textarea
+                                   className="w-full text-xs text-gray-700 bg-amber-50 p-3 rounded-lg border border-amber-200 focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none resize-none h-20 mb-3"
+                                   value={pair.thumbnail.visualConcept || ''}
+                                   onChange={(e) => handleUpdatePairData(pair.id, 'visualConcept', e.target.value)}
+                                   placeholder="Konflik visual + reason-to-click dalam bahasa manusia..."
+                               />
+                               <p className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-2">
                                    {t.visualPrompt}
                                </p>
                                <textarea
@@ -519,6 +675,18 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                                    placeholder={t.engineeredPlaceholder}
                                />
                                
+                               <div className="flex flex-wrap gap-1.5 mb-3">
+                                   {quickRemixActions.map((action) => (
+                                       <button
+                                         key={action.label}
+                                         onClick={(e) => { e.stopPropagation(); handleQuickRemix(pair.id, action.instruction); }}
+                                         className="px-2.5 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-[9px] font-black text-gray-600 uppercase transition-colors"
+                                       >
+                                           {action.label}
+                                       </button>
+                                   ))}
+                               </div>
+
                                {/* MAGIC MODIFY PROMPT */}
                                <div className="bg-blue-50 p-2 rounded-lg border border-blue-100 flex gap-2">
                                    <input 
@@ -597,9 +765,16 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                                       </div>
                                   </div>
                               ) : (
-                                  <div className="text-center p-8 w-full">
-                                      <div className="mb-6 text-gray-600 flex justify-center">
-                                          <svg className="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                  <div className="text-center p-6 w-full">
+                                      <div className="mb-6 w-full aspect-video rounded-xl border border-gray-700 bg-gray-950 relative overflow-hidden">
+                                          <div className="absolute inset-y-0 left-0 w-1/2 bg-gray-800/80 border-r border-dashed border-gray-600 flex flex-col items-center justify-center p-4">
+                                              <span className="text-[10px] font-black uppercase tracking-wider text-gray-500 mb-2">Text Zone</span>
+                                              <div className="bg-red-600 text-white px-3 py-1 rounded font-black text-sm max-w-full truncate">{(pair.thumbnail.fullTextOverlay || 'TEKS THUMB').toUpperCase()}</div>
+                                          </div>
+                                          <div className="absolute inset-y-0 right-0 w-1/2 flex items-center justify-center p-4">
+                                              <div className="w-24 h-24 rounded-full border-2 border-gray-500 flex items-center justify-center text-gray-500 text-[10px] font-bold uppercase">Objek</div>
+                                          </div>
+                                          <div className="absolute bottom-2 right-2 border border-dashed border-red-400 text-red-300 text-[9px] px-1.5 py-0.5 rounded bg-red-950/30">SAFE AREA</div>
                                       </div>
                                       <button
                                           onClick={(e) => { e.stopPropagation(); handleGenerateThumbnailImage(pair.id); }}
@@ -625,7 +800,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                           {/* YouTube Search Preview Mockup */}
                           <div className="mt-6 border-t border-gray-700 pt-6 w-full">
                               <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
-                                  📱 YouTube Search Preview
+                                  YouTube Search Preview
                               </h4>
                               <div className="bg-white border rounded-xl p-4 max-w-md shadow-sm mx-auto">
                                   {/* Thumbnail + Info Row */}
@@ -677,7 +852,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       </div>
 
       {/* FOOTER ACTION */}
-      <div className="fixed bottom-0 right-0 left-0 md:left-64 bg-white/90 backdrop-blur-md border-t border-gray-200 p-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] z-50 flex justify-end items-center gap-4">
+      <div className="fixed bottom-0 right-0 left-0 md:left-72 bg-white/90 backdrop-blur-md border-t border-gray-200 p-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] z-50 flex justify-end items-center gap-4">
             <button 
                 onClick={onBack} 
                 className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 rounded-xl font-bold transition-all shadow-sm active:scale-95"

@@ -3,6 +3,11 @@ import { useEffect, useRef } from 'react';
 const AUTOSAVE_KEY = 'pabrik_konten_autosave';
 const AUTOSAVE_INTERVAL = 30000; // 30 seconds
 
+const sanitizeStateForPersistence = (state: any) => {
+  const { apiKey, ...safeState } = state || {};
+  return safeState;
+};
+
 export const useAutoSave = (state: any, enabled: boolean = true) => {
   const timerRef = useRef<ReturnType<typeof setInterval>>();
 
@@ -12,7 +17,7 @@ export const useAutoSave = (state: any, enabled: boolean = true) => {
     timerRef.current = setInterval(() => {
       try {
         const snapshot = {
-          ...state,
+          ...sanitizeStateForPersistence(state),
           _autoSavedAt: new Date().toISOString(),
         };
         localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(snapshot));

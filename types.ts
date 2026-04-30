@@ -12,8 +12,10 @@ export interface TitleThumbnailPair {
   title: string;
   ctrAnalysis?: string;
   titleWarnings?: string[];
+  clickbaitRisk?: 'LOW' | 'MEDIUM' | 'HIGH' | string;
   thumbnail: {
-     prompt: string; // Short scene description
+     prompt: string; // Short scene description / technical image prompt
+     visualConcept?: string; // Human-readable thumbnail concept
      detailedPrompt?: string; // Full engineered prompt sent to AI
      suggestedText: string;
      emphasisText: string;
@@ -21,6 +23,13 @@ export interface TitleThumbnailPair {
      fullTextOverlay?: string; 
      actionDescription?: string; 
      triggerType?: string; 
+     visualMetaphor?: string;
+     conflictObject?: string;
+     curiosityObject?: string;
+     emotionTarget?: string;
+     stopScrollReason?: string;
+     thumbnailWeakness?: string;
+     visualCtrScore?: number;
      imageUrl?: string;
      status: 'idle' | 'generating' | 'success' | 'error';
      feasibilityScore?: number;
@@ -35,6 +44,13 @@ export interface VideoIdea {
   hook: string;
   points: string[];
   closing: string;
+  angle?: string;
+  uniqueValue?: string;
+  literalTopic?: string;
+  hiddenAnxiety?: string;
+  creativeTechnique?: string;
+  transformedConcept?: string;
+  whyNotParaphrase?: string;
 }
 
 export interface ScriptSection {
@@ -58,13 +74,18 @@ export interface AppState {
   analysis: string;
   finalTitle: string;
   script: ScriptSection[];
+  selectedTitleThumbnailPair?: TitleThumbnailPair | null;
   finalDescription?: string;
   finalTags?: string;
+  finalHashtags?: string;
+  finalPinnedComment?: string;
+  finalChapters?: string;
   isLoading: boolean;
   error: string | null;
   apiKey: string;
   mandatoryKeywords?: string;
   thumbnailObject?: string;
+  useKnowledgeBase: boolean;
   useHook: boolean;
   useOutro: boolean;
 }

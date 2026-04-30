@@ -3,14 +3,15 @@ import { PROMPT_IDEAS, PROMPT_TITLES, PROMPT_DESCRIPTION, PROMPT_TAGS, PROMPT_FU
 import { VideoIdea, TitleThumbnailPair } from "../types";
 import { buildKnowledgeBaseContext } from "./knowledgeBaseService";
 
-const API_KEY_STORAGE = 'gemini_api_key';
+export const API_KEY_STORAGE = 'gemini_api_key';
 
 export const setApiKey = (key: string) => {
   localStorage.setItem(API_KEY_STORAGE, key);
 };
 
 export const getApiKey = (): string | null => {
-  return localStorage.getItem(API_KEY_STORAGE) || process.env.API_KEY || null;
+  const storedKey = typeof localStorage !== 'undefined' ? localStorage.getItem(API_KEY_STORAGE) : null;
+  return storedKey || (import.meta as any).env?.VITE_GEMINI_API_KEY || null;
 };
 
 export const clearApiKey = () => {
@@ -132,6 +133,37 @@ const detectPresetName = (writingStyle: string): string => {
   return 'Ilmu Lidi';
 };
 
+const formatIdeasJsonToLegacyText = (json: any): string => {
+  const summary = String(json?.summary || json?.ringkasan_referensi || '').trim();
+  const ideas = Array.isArray(json?.ideas) ? json.ideas : [];
+  const blocks = ideas.slice(0, 3).map((idea: any, idx: number) => {
+    const points = Array.isArray(idea.points) ? idea.points : [];
+    const modification = String(idea.modification_level || idea.modificationLevel || `Ide ${idx + 1}`).trim();
+    const angle = String(idea.angle || '').trim();
+    const uniqueValue = String(idea.unique_value || idea.uniqueValue || '').trim();
+    const literalTopic = String(idea.literal_topic || idea.literalTopic || '').trim();
+    const hiddenAnxiety = String(idea.hidden_anxiety || idea.hiddenAnxiety || '').trim();
+    const creativeTechnique = String(idea.creative_technique || idea.creativeTechnique || '').trim();
+    const transformedConcept = String(idea.transformed_concept || idea.transformedConcept || '').trim();
+    const whyNotParaphrase = String(idea.why_not_paraphrase || idea.whyNotParaphrase || '').trim();
+
+    return `[TINGKAT MODIFIKASI ${idx + 1}: ${modification}]\n` +
+      `[ANGLE: ${angle}]\n` +
+      `[UNIK: ${uniqueValue}]\n` +
+      `[TOPIK LITERAL: ${literalTopic}]\n` +
+      `[HIDDEN ANXIETY: ${hiddenAnxiety}]\n` +
+      `[TEKNIK TRANSFORMASI: ${creativeTechnique}]\n` +
+      `[KONSEP TRANSFORMASI: ${transformedConcept}]\n` +
+      `[BUKAN PARAFRASE KARENA: ${whyNotParaphrase}]\n\n` +
+      `Judul Video: ${String(idea.title || '').trim()}\n\n` +
+      `Narasi Hook: ${String(idea.hook || '').trim()}\n\n` +
+      `Poin-Poin Pembongkaran:\n${points.map((point: any, pointIdx: number) => `${pointIdx + 1}. ${String(point).trim()}`).join('\n')}\n\n` +
+      `Garis Besar Penutup: ${String(idea.closing || '').trim()}`;
+  });
+
+  return `[RANGKUMAN REFERENSI]\n${summary || 'Ringkasan tidak tersedia.'}\n\n${blocks.join('\n\n')}`;
+};
+
 export const generateIdeas = async (referenceText: string, fileContents: string[], keywords: string, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useKnowledgeBase: boolean = true) => {
   const currentYear = new Date().getFullYear();
   const timeContext = `\n\n[KONTEKS WAKTU]: Saat ini adalah tahun ${currentYear}. Jika Anda menggunakan angka tahun di judul atau naskah, WAJIB gunakan tahun ${currentYear} atau setelahnya. JANGAN gunakan tahun 2023, 2024, atau 2025.`;
@@ -141,42 +173,79 @@ export const generateIdeas = async (referenceText: string, fileContents: string[
   const channelContext = channelName ? `\n\n[NAMA CHANNEL]: ${channelName}` : '';
   const styleContext = writingStyle ? `\n\n[STYLE PENULISAN]: ${writingStyle}` : '';
   const langInstruction = `\n\n[IMPORTANT]: Generate the output in ${language === 'en' ? 'English' : 'Bahasa Indonesia'}.`;
-  
   // Inject knowledge base context (bundled JSON, no fetch needed)
   let kbContext = '';
   if (useKnowledgeBase && language === 'id') {
-    kbContext = buildKnowledgeBaseContext(referenceText);
+    kbContext = buildKnowledgeBaseContext(referenceText, keywords, channelName, useKnowledgeBase);
     console.log('[KB] Context injected:', kbContext.length, 'chars');
   }
   
   // Inject content filters based on preset name
   const presetName = detectPresetName(writingStyle);
   const contentFilters = CONTENT_FILTERS[presetName] || CONTENT_FILTERS['Ilmu Lidi'];
-  const systemPrompt = PROMPT_IDEAS.replace('${contentFilters}', contentFilters);
+  const systemPrompt = `${PROMPT_IDEAS.replace('${contentFilters}', contentFilters)}\n\n[OUTPUT CONTRACT — STRICT JSON]\nReturn only JSON that matches the response schema. Do not output markdown, code fences, or legacy text markers. Keep exactly 3 ideas: 1 Faithful Upgrade, 1 Radical Reframe, 1 Audience Identity/System Reframe. Each idea must contain 5-10 concrete points and the creative transformation metadata fields. Reject your own draft if any title is only a paraphrase of the user input.`;
+  const ideasSchema: Schema = {
+    type: Type.OBJECT,
+    properties: {
+      summary: { type: Type.STRING, description: 'Ringkasan singkat referensi utama dan konteks user.' },
+      ideas: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            modification_level: { type: Type.STRING, description: 'One of: FAITHFUL UPGRADE, RADICAL REFRAME, AUDIENCE IDENTITY / SYSTEM REFRAME.' },
+            angle: { type: Type.STRING, description: 'Nama angle content filter/channel yang dipakai.' },
+            unique_value: { type: Type.STRING, description: 'Satu kalimat: value unik ide ini dibanding ide lain.' },
+            literal_topic: { type: Type.STRING, description: 'Topik literal mentah dari input user.' },
+            hidden_anxiety: { type: Type.STRING, description: 'Ketakutan, konflik, rasa malu, atau tekanan sosial di balik topik.' },
+            creative_technique: { type: Type.STRING, description: 'Teknik transformasi: DOMAIN SWAP, VILLAIN CREATION, IDENTITY SHIFT, EMOTIONAL AMPLIFICATION, METAPHOR LAYERING, TIMELINE DRAMATIZATION, SYSTEM BETRAYAL, STATUS ANXIETY.' },
+            transformed_concept: { type: Type.STRING, description: 'Konsep video baru hasil reframe, bukan parafrase.' },
+            why_not_paraphrase: { type: Type.STRING, description: 'Alasan singkat kenapa ide ini bukan sekadar parafrase input.' },
+            title: { type: Type.STRING },
+            hook: { type: Type.STRING },
+            points: { type: Type.ARRAY, items: { type: Type.STRING } },
+            closing: { type: Type.STRING }
+          },
+          required: ['modification_level', 'angle', 'unique_value', 'literal_topic', 'hidden_anxiety', 'creative_technique', 'transformed_concept', 'why_not_paraphrase', 'title', 'hook', 'points', 'closing']
+        }
+      }
+    },
+    required: ['summary', 'ideas']
+  };
   
   const prompt = `Referensi Utama:\n${referenceText}${filesContext}${keywordsContext}${channelContext}${styleContext}${timeContext}${kbContext}\n\nLakukan instruksi di system instruction.${langInstruction}`;
   
-  let responseText = await generateContent(systemPrompt, prompt, "gemini-3.1-pro-preview");
+  const responseText = await generateContent(systemPrompt, prompt, "gemini-3.1-pro-preview", undefined, "application/json", ideasSchema);
+  let responseJson: any;
+  try {
+    responseJson = JSON.parse(responseText || '{}');
+  } catch {
+    throw new Error('Response JSON ideasi rusak. Coba generate ulang.');
+  }
+  let formattedText = formatIdeasJsonToLegacyText(responseJson);
   
   // Auto-replace outdated years in generated titles
-  responseText = responseText.replace(/Judul Video:\s*(.*)/gi, (match, title) => {
+  formattedText = formattedText.replace(/Judul Video:\s*(.*)/gi, (match, title) => {
       return `Judul Video: ${title.replace(/\b(2023|2024|2025)\b/g, currentYear.toString())}`;
   });
   
-  return responseText;
+  return formattedText;
 };
 
-export const generateFullScript = async (idea: VideoIdea, targetWordCount: number, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useHook: boolean = true, useOutro: boolean = true, useKnowledgeBase: boolean = true) => {
+export const generateFullScript = async (idea: VideoIdea, targetWordCount: number, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useHook: boolean = true, useOutro: boolean = true, originalReferenceText: string = '', originalFileContents: string[] = [], useKnowledgeBase: boolean = true) => {
   const pointsList = idea.points.map((p, i) => `Poin ${i + 1}: ${p}`).join('\n');
   const channelContext = channelName ? `\n\n[NAMA CHANNEL]: ${channelName}` : '';
   const styleContext = writingStyle ? `\n\n[STYLE PENULISAN]: ${writingStyle}` : '';
   const langInstruction = `\n\n[IMPORTANT]: Generate the output in ${language === 'en' ? 'English' : 'Bahasa Indonesia'}.`;
+  const sourceContext = (originalReferenceText.trim() || originalFileContents.length > 0)
+    ? `\n\n[SUMBER REFERENSI ASLI - GROUNDING WAJIB]\n${originalReferenceText.trim()}${originalFileContents.length > 0 ? `\n\n[ISI FILE REFERENSI]\n${originalFileContents.join('\n\n---\n\n')}` : ''}\n\n[ATURAN FAKTUALITAS]\n- Naskah WAJIB menjaga fakta inti dari sumber referensi di atas.\n- DILARANG membuat nama riset, angka statistik, tahun, kasus nyata, brand, lokasi, atau klaim faktual baru jika tidak ada di sumber.\n- Jika butuh contoh tambahan, tulis sebagai analogi atau skenario sehari-hari, bukan sebagai fakta/riset nyata.\n- Jika detail sumber kurang, pilih penjelasan konseptual yang aman daripada mengarang data.`
+    : '';
   
   // Inject knowledge base context for script generation
   let kbContext = '';
   if (useKnowledgeBase && language === 'id') {
-    const refForKB = `${idea.title} ${idea.hook} ${idea.points.join(' ')}`;
-    kbContext = buildKnowledgeBaseContext(refForKB);
+    const refForKB = `${originalReferenceText} ${idea.title} ${idea.hook} ${idea.points.join(' ')}`;
+    kbContext = buildKnowledgeBaseContext(refForKB, '', channelName, useKnowledgeBase);
   }
   
   // Hook & Closing allocation based on toggles
@@ -220,6 +289,7 @@ Judul: ${idea.title}
 ${hookContext}
 [DAFTAR POIN PEMBAHASAN]
 ${pointsList}
+${sourceContext}
 
 ${wordCountInstruction}${structureInstruction}
 
@@ -264,7 +334,7 @@ TUGAS:
 Tulis ulang SELURUH naskah di bawah ini menjadi versi yang lebih panjang, dengan target AKHIR ${targetWordCount} kata. JANGAN melebihi ${maxTarget} kata.
 
 CARA MEMPERPANJANG (tanpa terlihat seperti filler):
-1. Tambahkan 1-2 studi kasus nyata atau contoh konkret di setiap poin.
+1. Tambahkan contoh konkret atau analogi lokal di setiap poin. Jangan mengklaimnya sebagai studi/kasus nyata kecuali memang ada di sumber referensi.
 2. Tambahkan analogi yang relevan dan mudah dipahami.
 3. Jelaskan "Kenapa hal ini bisa terjadi?" lebih mendalam (Root Cause).
 4. Berikan counter-argument: apa yang orang awam pikirkan vs kenyataannya.
@@ -276,7 +346,9 @@ CARA MEMPERPANJANG (tanpa terlihat seperti filler):
 3. INTEGRASI POIN NATURAL: Jangan format list kaku. Sebutkan poin secara verbal.
 4. PISAHKAN PARAGRAF: Pisahkan setiap poin dengan baris kosong.
 5. DILARANG MENGULANG KALIMAT YANG SAMA. Tambahkan substansi baru.
-6. TARGET JUMLAH KATA: ${targetWordCount} kata. Hitung dengan cermat. Jangan terlalu pendek, jangan terlalu panjang.
+6. GROUNDING: Jangan membuat angka, riset, tahun, kasus, lokasi, atau brand baru di luar sumber referensi. Contoh tambahan harus terasa sebagai analogi/skenario, bukan klaim fakta.
+7. TARGET JUMLAH KATA: ${targetWordCount} kata. Hitung dengan cermat. Jangan terlalu pendek, jangan terlalu panjang.
+${sourceContext}
 ${styleContext}
 ${langInstruction}
 ${structureInstruction}
@@ -322,6 +394,7 @@ CARA MERINGKAS (tanpa kehilangan substansi):
 3. INTEGRASI POIN NATURAL: Jangan format list kaku. Sebutkan poin secara verbal.
 4. PISAHKAN PARAGRAF: Pisahkan setiap poin dengan baris kosong.
 5. TARGET JUMLAH KATA: ${targetWordCount} kata. Hitung dengan cermat.
+${sourceContext}
 ${styleContext}
 ${langInstruction}
 ${structureInstruction}
@@ -381,15 +454,63 @@ TUGAS UTAMA: Mengubah konteks video menjadi 3 pasangan Judul + Arah Thumbnail ya
 - Boleh memakai objek konkret atau simbol budaya jika memperkuat klik dan relevansi.
 - DILARANG KERAS menggunakan kata kasar/makian seperti "Goblok", "Tolol", "Bego", "Anjing", "Bangsat", dan sejenisnya. Gunakan bahasa yang tegas namun tetap profesional atau sesuai dengan gaya channel.
 
+### ANTI-PATTERN JUDUL (DILARANG)
+- "Update [Tahun]:" terlalu newsy dan template.
+- "Sedang Trending:" generic.
+- "[Number] Fakta Tentang [X]" paling overused.
+- "Ternyata Ini Faktanya:" klise.
+- "Panduan Lengkap:" terdengar textbook.
+- "Breaking:" bukan channel berita.
+- Jangan membuat judul yang cuma mengganti sinonim dari judul lama.
+
+
 ### PRINSIP THUMBNAIL
 - Thumbnail harus menonjolkan pesan utama, bukan sekadar dekorasi.
 - Harus punya objek utama yang konkret, cepat dikenali, dan simbolik.
-- Teks thumbnail harus pendek, padat, 2-5 kata, dan JANGAN mengulang judul.
+- Teks thumbnail harus pendek, padat, 2-4 kata, terbaca dalam <0.5 detik, dan JANGAN mengulang judul.
 - Teks dan objek harus saling melengkapi, bukan duplikasi.
 - Harus ada satu pusat perhatian yang jelas.
 - Variasi thumbnail harus beda logika, bukan beda kosmetik.
 - Hindari thumbnail generik yang hanya mengandalkan ekspresi wajah kaget atau panik.
 - Gunakan objek atau simbol yang relevan dengan topik dan mudah dikenali audiens.
+
+### VISUAL TRANSFORMATION ENGINE — WAJIB
+Tugas thumbnail BUKAN menggambar topik secara literal. Tugas thumbnail adalah membuat konflik visual yang membuat orang berhenti scroll.
+Untuk setiap variasi, lakukan proses ini sebelum menulis thumbnail_prompt:
+1. LITERAL TOPIC — pahami topik/judul secara sederhana.
+2. HIDDEN ANXIETY — temukan rasa takut, malu, marah, atau rasa tertipu yang bisa divisualkan.
+3. VISUAL METAPHOR — ubah anxiety itu menjadi metafora visual ekstrem tapi tetap jelas.
+4. CONFLICT OBJECT — pilih satu objek utama yang menciptakan konflik, ancaman, atau ketegangan.
+5. CURIOSITY OBJECT — tambahkan satu elemen aneh/kontras yang bikin penonton bertanya "itu apa?".
+6. EMOTIONAL POSE — karakter/subjek harus bereaksi secara spesifik, bukan cuma wajah kaget generik.
+7. STOP-SCROLL TEST — jelaskan kenapa gambar ini kuat dalam 1 detik.
+
+CONTOH TRANSFORMASI VISUAL:
+- Topik tabungan usia 50 → visual_metaphor: sistem sebagai mesin raksasa yang membuang orang keluar; conflict_object: pintu mesin "SISTEM" + dompet kosong; overlay: DIBUANG SISTEM.
+- Topik paylater → visual_metaphor: HP berubah jadi borgol yang mengikat kalender masa depan; conflict_object: rantai dari layar HP; overlay: MASA DEPAN DICICIL.
+- Topik gaji habis → visual_metaphor: rekening/dompet disedot lubang hitam cicilan; conflict_object: struk panjang + QRIS + lubang hitam; overlay: KOK HABIS?
+- Topik kurang tidur → visual_metaphor: tubuh sebagai baterai retak yang ditagih utang tidur; conflict_object: baterai bocor + tagihan tidur; overlay: UTANG TIDUR.
+
+ANTI-GENERIK: Draft gagal jika hanya berisi orang panik, uang melayang, laptop/HP biasa, tanda tanya, atau ikon abstrak tanpa konflik visual konkret.
+
+### RELASI JUDUL + THUMBNAIL (WAJIB)
+Judul dan thumbnail HARUS saling melengkapi, bukan saling mengulang.
+- Judul membuka curiosity gap.
+- Thumbnail memberi visual conflict atau emotional proof.
+- Thumbnail text tidak boleh copy-paste judul.
+- Thumbnail text harus punchy, 2-4 kata, dan lebih terasa seperti reaksi/konflik visual.
+Contoh bagus:
+Judul: "Barang Murah Ini Bikin Dompet Lo Bocor Pelan-Pelan"
+Thumbnail text: "KOK HABIS?"
+Visual: dompet kosong + struk panjang + karakter panik.
+Contoh buruk:
+Thumbnail text: "BARANG MURAH BIKIN DOMPET BOCOR" karena cuma mengulang judul.
+
+### ATURAN VISUAL RELATABLE INDONESIA
+Jika konteks audience Indonesia, pilih objek visual yang langsung familiar bagi penonton Indonesia.
+- Finance/money: dompet kosong, struk Indomaret/Alfamart, QRIS, paylater, pinjol, tagihan listrik/token, paket COD, kos-kosan.
+- Everyday objects: motor Supra, warung, minimarket, gorengan, galon, pulsa, paket Shopee/TikTok Shop.
+- Hindari simbol/brand/contoh luar negeri yang tidak relatable jika ada padanan lokal yang lebih kuat.
 
 ### GAYA BERPIKIR YANG DIINGINKAN
 - Jangan terpaku pada satu emosi tunggal (seperti rasa takut atau serakah) sebagai template.
@@ -403,6 +524,12 @@ Untuk setiap variasi yang dihasilkan, berikan juga field "ctr_analysis" berisi a
 - Apakah ada emosi spesifik yang terpicu?
 - Apakah judul cukup jelas dalam 1 detik?
 - Apakah judul terasa clickbait murahan atau cerdas?
+
+Tambahkan juga scoring visual:
+- visual_ctr_score: angka 1-100 untuk kekuatan visual thumbnail, bukan kualitas judul.
+- stop_scroll_reason: alasan konkret kenapa penonton berhenti scroll.
+- thumbnail_weakness: risiko utama yang bisa membuat thumbnail gagal diklik.
+Skor visual minimal 78. Kalau di bawah itu, revisi konsep sebelum output.
 
 Contoh format ctr_analysis: "Judul ini kuat karena ada kontras antara ekspektasi dan kenyataan yang memicu rasa penasaran. Kata 'bukan yang kamu kira' menciptakan curiosity gap. Cukup jelas dalam 1 detik bahwa ini bahas topik [X]. Terasa cerdas, bukan clickbait murahan."
 
@@ -436,29 +563,45 @@ Jika ada yang TIDAK, ulangi variasi yang terlalu mirip sebelum output final.
 - Jangan deskripsikan background, warna background, atau elemen lingkungan. Fokus pada karakter, aksi, dan objek foreground.
 
 ### INSTRUKSI OUTPUT JSON
+Output adalah CTR package, bukan sekadar pasangan generik.
 - Title: harus channel-fit, natural, click-enticing, dan berbeda framing antar variasi.
-- Thumbnail_prompt: deskripsi adegan visual secara keseluruhan, fokus pada pesan utama dan objek sentral.
-- Full_text_overlay: 2-5 kata, punchy, bukan copy judul.
+- Visual_concept: konsep thumbnail human-readable, 1-2 kalimat. Jelaskan konflik visual dan kenapa mudah diklik.
+- Visual_metaphor: metafora visual utama yang mengubah topik literal menjadi konflik yang clickable.
+- Conflict_object: satu objek utama yang menciptakan ancaman/ketegangan/konflik.
+- Curiosity_object: satu elemen aneh/kontras yang membuat penonton bertanya.
+- Emotion_target: emosi utama yang ditargetkan, misalnya takut, malu, marah, kaget, lega, iri, atau absurd.
+- Stop_scroll_reason: alasan 1 kalimat kenapa visual ini membuat orang berhenti scroll.
+- Thumbnail_weakness: risiko utama kenapa thumbnail ini bisa terasa lemah/generik.
+- Visual_ctr_score: skor visual 1-100; minimal 78, revisi jika lebih rendah.
+- Thumbnail_prompt: prompt teknis image-model yang konkret, fokus pada pesan utama, objek sentral, dan aksi. Wajib memasukkan visual_metaphor, conflict_object, dan curiosity_object secara natural.
+- Full_text_overlay: 2-4 kata, punchy, bukan copy judul.
 - Action_description: aksi karakter harus spesifik dan relevan dengan pesan/topik utama.
-- emphasis_word dan normal_word harus tetap mendukung full_text_overlay dengan logika yang enak dibaca.
+- emphasis_word dan normal_word harus membentuk full_text_overlay dengan urutan baca yang jelas.
+- ATURAN WAJIB EMPHASIS: emphasis_word HANYA boleh berada di AWAL atau AKHIR full_text_overlay, tidak boleh di tengah kalimat.
+- normal_word adalah sisa frasa yang menyambung dengan emphasis_word, bukan gabungan kata yang terpisah.
+- Format valid hanya: "{emphasis_word} {normal_word}" ATAU "{normal_word} {emphasis_word}".
+- Contoh BURUK: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="GAK HARUS", normal_word="RUMAH KPR" karena emphasis di tengah dan normal terpecah.
+- Contoh BAIK: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="KPR", normal_word="RUMAH GAK HARUS" ATAU emphasis_word="RUMAH", normal_word="GAK HARUS KPR".
+- clickbait_risk: LOW, MEDIUM, atau HIGH. HIGH jika terlalu menyesatkan atau terlalu bombastis.
 
 ### TRIGGER TYPES (WAJIB PILIH SALAH SATU)
 Setiap variasi WAJIB menggunakan trigger_type yang berbeda dari variasi lain. Pilih dari kategori berikut:
 
 1. FEAR — Visual yang memicu rasa takut atau waswas. Contoh: ancaman mendekat, bahaya mengintai, wajah ketakutan, objek menyeramkan.
 2. CURIOSITY — Visual yang memicu rasa penasaran. Contoh: objek tertutup/blur, tanda tanya besar, sesuatu yang "tersembunyi" atau belum terbuka.
-3. SHOCK — Visual yang memicu keterkejutan. Contoh: perbandingan drastis before/after, ekspresi kaget ekstrem, fakta mengejutkan dalam angka besar.
+3. SHOCK — Visual yang memicu keterkejutan. Contoh: ekspresi kaget ekstrem, angka besar yang mengejutkan, objek utama yang tampak tidak wajar.
 4. AUTHORITY — Visual yang memancarkan kredibilitas dan kekuasaan. Contoh: angka/data besar, simbol pencapaian, gesture "expert", podium/trophy.
-5. CONTROVERSY — Visual yang memicu perdebatan. Contoh: dua pihak berhadapan, VS layout, opini yang bertentangan, simbol kontroversi.
-6. COMPARISON — Visual yang menunjukkan perbedaan. Contoh: split before/after, kiri vs kanan, murah vs mahal, lama vs baru.
-7. TRANSFORMATION — Visual yang menunjukkan perubahan drastis. Contoh: metamorfosis, glow-up, dari nol ke sukses, timeline perubahan.
-8. NUMBERS — Visual yang memakai angka sebagai daya tarik utama. Contoh: angka besar di tengah frame, uang/pendapatan, countdown, statistik.
-9. EMOTION — Visual yang memicu emosi kuat (haru, bangga, marah). Contoh: wajah emosional, momen dramatis, gesture penuh perasaan.
-10. HUMOR — Visual yang memicu tawa atau senyum. Contoh: situasi absurd, ekspresi lucu, meme-style, ironi visual.
+5. CONTROVERSY — Visual yang memicu perdebatan tanpa layout VS/split-screen. Contoh: satu simbol/opini kontroversial yang dominan, ekspresi tidak percaya, objek pemicu debat.
+6. TRANSFORMATION — Visual yang menunjukkan perubahan drastis tanpa split before/after. Contoh: metamorfosis tunggal, glow-up, objek berubah bentuk, timeline abstrak yang tetap satu komposisi.
+7. NUMBERS — Visual yang memakai angka sebagai daya tarik utama. Contoh: angka besar di tengah frame, uang/pendapatan, countdown, statistik.
+8. EMOTION — Visual yang memicu emosi kuat (haru, bangga, marah). Contoh: wajah emosional, momen dramatis, gesture penuh perasaan.
+9. HUMOR — Visual yang memicu tawa atau senyum. Contoh: situasi absurd, ekspresi lucu, meme-style, ironi visual.
 
 ATURAN TRIGGER TYPE:
 - Ketiga variasi WAJIB pakai trigger_type yang BERBEDA.
 - Pilih trigger_type yang paling sesuai dengan konteks materi, bukan acak.
+- DILARANG memakai trigger_type "COMPARISON".
+- DILARANG split-screen, before-after, kiri-vs-kanan, VS layout, atau komposisi perbandingan dua panel. Area kiri sudah dipakai untuk teks besar; visual utama harus tetap satu scene yang bersih.
 - Jangan pakai "PSIKOLOGI VISUAL" atau label generik lain.
 `;
 
@@ -482,6 +625,102 @@ export const getThumbnailStyle = (writingStyle: string): string => {
   return THUMBNAIL_STYLE_DEFAULT;
 };
 
+const isIlmuLidiChannel = (channelName: string = ""): boolean => /ilmu\s*lidi/i.test(channelName);
+
+const getIlmuLidiPromptLocks = (): string => `
+[ILMU LIDI PRESET LOCK - KHUSUS CHANNEL ILMU LIDI]:
+Reference typography/background yang diunggah untuk preset Ilmu Lidi adalah STYLE LOCK KHUSUS ILMU LIDI, bukan style global semua channel.
+- Background: biru sangat muda / putih kebiruan, bersih, dengan pattern edukasi/finansial tipis low-opacity.
+- Typography: headline uppercase bold sans-serif hitam pekat, sangat besar dan mudah dibaca.
+- Emphasis: kata/angka paling penting putih di dalam banner merah terang.
+- Efek teks: soft drop shadow halus, high contrast, tidak memakai gradient/neon/warna random/font tipis.
+- Layout: teks besar di kiri, karakter/objek utama di kanan, komposisi bersih, tidak penuh.
+- Bottom-right tetap kosong/aman untuk durasi YouTube asli.
+
+[ILMU LIDI CHARACTER LOCK - WAJIB JIKA ADA REFERENSI KARAKTER]:
+Karakter utama adalah maskot anak laki-laki bernama Ilmu Lidi.
+- Usia visual 7-10 tahun, anak-anak, bukan remaja/dewasa.
+- 2D vector cartoon, semi-chibi: kepala besar, tubuh kecil, proporsi anak-anak.
+- Wajah bulat lucu, mata besar bulat ekspresif, pipi pink/blush, senyum/ekspresi penasaran.
+- Rambut hitam tebal cartoonish.
+- Outfit: kaos biru lengan pendek bertuliskan "ILMU LIDI" warna putih, celana pendek khaki, sepatu merah, ransel hijau, membawa teropong.
+- Outline hitam tebal, flat bright colors, clean playful educational mascot.
+NEGATIVE CHARACTER LOCK: no adult face, no teenager look, no mature jawline, no long nose, no broad shoulders, no tall body, no muscular/athletic body, no serious masculine expression, no realistic anatomy, no semi-realistic face, no beard, no mustache.`;
+
+const getGenericPromptLocks = (channelName: string = ""): string => `
+[CHANNEL-SPECIFIC STYLE LOCK]:
+Gunakan referensi gambar sesuai preset/channel "${channelName || 'channel ini'}". Jangan menganggap style Ilmu Lidi sebagai standar global.
+- Jika referensi background/typography berasal dari channel lain, ikuti style channel tersebut, bukan palette biru muda + banner merah Ilmu Lidi.
+- Pertahankan identitas visual channel yang sedang dipilih.
+- Jangan memaksakan headline hitam + banner merah kecuali memang diminta user atau memang muncul di referensi channel tersebut.`;
+
+const getGlobalThumbnailSafetyLocks = (): string => `
+[NO FAKE YOUTUBE UI - FINAL LOCK]:
+DILARANG KERAS membuat elemen UI YouTube palsu: overlay durasi/timestamp seperti 10:23 atau 12:34, play button, progress bar, watermark YouTube, badge channel, tombol subscribe, like/share UI, atau frame player. Sudut kanan bawah HARUS bersih dari objek penting dan teks.
+
+[INDONESIAN VISIBLE TEXT LOCK]:
+Semua teks yang terlihat di gambar final HARUS Bahasa Indonesia dan hanya teks overlay yang ditentukan. DILARANG menambahkan teks Inggris seperti Bill, Debt, Money, Loan, Save, Rich, Poor, Sale, Promo asing, kecuali brand/nama resmi yang memang diminta. Gunakan padanan Indonesia: TAGIHAN, UTANG, UANG, PINJAMAN, HEMAT, KAYA, MISKIN, PROMO.
+
+[NO INCIDENTAL TEXT LOCK]:
+DILARANG menambahkan tulisan lain pada objek, kertas, layar HP, struk, poster, papan, background, stiker, watermark, atau properti. Jika ada struk/kertas/HP, tampilkan sebagai bentuk visual tanpa tulisan terbaca, kecuali kata itu adalah overlay final.`;
+
+const normalizeTextSpaces = (value: string = ""): string => value.replace(/\s+/g, " ").trim();
+const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const normalizeThumbnailTextParts = (
+  fullTextOverlay: string = "",
+  emphasisText: string = "",
+  normalText: string = ""
+): { fullTextOverlay: string; emphasisText: string; normalText: string; emphasisPosition: 'START' | 'END' } => {
+  let overlay = normalizeTextSpaces(fullTextOverlay || `${emphasisText} ${normalText}`);
+  let emphasis = normalizeTextSpaces(emphasisText);
+  let normal = normalizeTextSpaces(normalText);
+
+  if (!overlay) {
+    return { fullTextOverlay: "", emphasisText: "", normalText: "", emphasisPosition: 'END' };
+  }
+
+  const words = overlay.split(/\s+/).filter(Boolean);
+  const rebuildWithBoundaryEmphasis = (preferEnd: boolean = true) => {
+    if (words.length <= 1) {
+      emphasis = words[0] || overlay;
+      normal = "";
+      return;
+    }
+    if (preferEnd) {
+      emphasis = words[words.length - 1];
+      normal = words.slice(0, -1).join(" ");
+    } else {
+      emphasis = words[0];
+      normal = words.slice(1).join(" ");
+    }
+  };
+
+  if (!emphasis || !overlay.toLowerCase().includes(emphasis.toLowerCase())) {
+    rebuildWithBoundaryEmphasis(true);
+  }
+
+  const emphasisPattern = escapeRegExp(emphasis);
+  const startsWithEmphasis = new RegExp(`^${emphasisPattern}(\\s|$)`, 'i').test(overlay);
+  const endsWithEmphasis = new RegExp(`(^|\\s)${emphasisPattern}$`, 'i').test(overlay);
+
+  if (startsWithEmphasis) {
+    normal = normalizeTextSpaces(overlay.replace(new RegExp(`^${emphasisPattern}\\s*`, 'i'), ""));
+    return { fullTextOverlay: overlay, emphasisText: emphasis, normalText: normal, emphasisPosition: 'START' };
+  }
+
+  if (endsWithEmphasis) {
+    normal = normalizeTextSpaces(overlay.replace(new RegExp(`\\s*${emphasisPattern}$`, 'i'), ""));
+    return { fullTextOverlay: overlay, emphasisText: emphasis, normalText: normal, emphasisPosition: 'END' };
+  }
+
+  // If the model puts emphasis in the middle, keep the overlay phrase intact,
+  // then choose an edge word as the emphasis so normalText stays contiguous.
+  // Example: "RUMAH GAK HARUS KPR" + emphasis "GAK HARUS" -> emphasis "KPR", normal "RUMAH GAK HARUS".
+  rebuildWithBoundaryEmphasis(true);
+  return { fullTextOverlay: overlay, emphasisText: emphasis, normalText: normal, emphasisPosition: 'END' };
+};
+
 // --- EXPORTED HELPER FOR PROMPT CONSTRUCTION ---
 export const constructThumbnailPrompt = (
   sceneDescription: string,
@@ -492,20 +731,30 @@ export const constructThumbnailPrompt = (
   visualStyle: string = THUMBNAIL_STYLE_DEFAULT,
   channelName: string = "" // Added support for channelName
 ): string => {
-  const phraseToRender = fullTextOverlay || `${emphasisText} ${normalText}`;
+  const textParts = normalizeThumbnailTextParts(fullTextOverlay, emphasisText, normalText);
+  const phraseToRender = textParts.fullTextOverlay;
+  const safeEmphasisText = textParts.emphasisText;
+  const safeNormalText = textParts.normalText;
+  const emphasisPosition = textParts.emphasisPosition;
+  const channelPresetLocks = isIlmuLidiChannel(channelName)
+    ? getIlmuLidiPromptLocks()
+    : getGenericPromptLocks(channelName);
+  const globalSafetyLocks = getGlobalThumbnailSafetyLocks();
   
   return `ROLE: Seniman Thumbnail YouTube Profesional.
 
 [VISUAL STYLE]:
 ${visualStyle}
 
+${channelPresetLocks}
+
+${globalSafetyLocks}
+
 [REFERENCE USAGE - ATURAN KETAT]:
-Gunakan gambar referensi yang diberikan HANYA untuk:
-- style background
-- nuansa layout
-- treatment tipografi
-- hirarki visual text
-- gaya kotak / block / shadow / emphasis typography
+Jika ada dua jenis referensi, pisahkan perannya dengan tegas:
+- Referensi background/typography: HANYA untuk background, nuansa layout, treatment tipografi, hirarki visual text, gaya block/shadow/emphasis typography sesuai preset channel.
+- Referensi karakter: HANYA untuk identitas karakter, proporsi, outfit, wajah, pose style, dan konsistensi maskot.
+JANGAN mencampur style background ke desain karakter. JANGAN mengubah karakter mengikuti typography reference.
 
 JANGAN menyalin, merender ulang, atau mempertahankan teks yang ada di gambar referensi.
 JANGAN memasukkan kata, huruf, angka, atau frasa apa pun dari gambar referensi ke hasil akhir, kecuali kata tersebut memang identik dengan overlay text yang tertulis di prompt ini.
@@ -549,6 +798,7 @@ Karakter utama WAJIB melakukan aksi ini:
 - Aksi harus membantu thumbnail terasa hidup dan langsung kebaca
 
 [COMPOSITION - ATURAN KETAT]:
+0. DILARANG split-screen, before-after, kiri-vs-kanan, VS layout, atau comparison dua panel. Gunakan satu scene bersih: teks di kiri, karakter/objek di kanan.
 1. ABSOLUTE SPLIT LAYOUT:
    - SISI KIRI (0% sampai 50% lebar): disediakan untuk text overlay final
    - Tidak boleh ada karakter, objek utama, atau aksi penting di area ini
@@ -573,28 +823,33 @@ FULL OVERLAY TEXT:
 
 DETAIL SUSUNAN TEXT:
 1. NORMAL WORD:
-   "${normalText.toUpperCase()}"
+   "${safeNormalText.toUpperCase()}"
    - berfungsi sebagai teks pendamping
    - mengikuti style sekunder dari reference typography
+   - HARUS tetap berupa frasa kontigu, tidak boleh dipecah menjadi kata sebelum + sesudah emphasis
    - ditempatkan agar menyambung secara visual dengan emphasis word
    - harus mengikuti urutan baca alami
 
 2. EMPHASIS WORD:
-   "${emphasisText.toUpperCase()}"
+   "${safeEmphasisText.toUpperCase()}"
    - teks paling dominan
    - mengikuti style emphasis dari reference typography
    - paling menonjol secara visual
-   - ditempatkan di kiri atas atau kiri tengah
+   - posisi emphasis: ${emphasisPosition}
+   - WAJIB berada sebagai blok di awal atau akhir frasa, JANGAN di tengah kalimat
 
 [TEXT SAFETY LOCK - SANGAT PENTING]:
 - Semua overlay text wajib HURUF KAPITAL
 - Jangan ubah isi katanya
 - Jangan tambah kata baru
 - Jangan kurangi kata
+- Susunan visual harus mengikuti full overlay text. Emphasis block berada di ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'} frasa, bukan di tengah.
 - Jangan render tulisan apa pun dari reference image kecuali memang sama persis dengan overlay text final
 - Jika reference image berisi teks, abaikan isinya dan ambil hanya style visualnya
 - Thumbnail final HARUS hanya menampilkan teks yang ditentukan di prompt ini
 - Tidak boleh ada teks lain selain yang disebut di prompt ini
+- Semua teks visible harus Bahasa Indonesia; jangan render kata Inggris generik seperti BILL, DEBT, MONEY, LOAN, SALE, SAVE, RICH, POOR
+- Jangan render angka/timestamp palsu di kanan bawah atau di area mana pun
 - Overlay text adalah elemen layout atau desain, bukan objek fisik di dalam adegan
 - Komposisi visual harus mendukung keterbacaan overlay text secara maksimal
 
@@ -628,15 +883,24 @@ export const generateTitleAndThumbnailPairs = async (
           properties: {
              title: { type: Type.STRING },
              thumbnail_prompt: { type: Type.STRING },
-             full_text_overlay: { type: Type.STRING, description: "STEP 1: Short 2-5 words text overlay." },
+             visual_concept: { type: Type.STRING, description: "Human-readable thumbnail concept separate from technical prompt." },
+             visual_metaphor: { type: Type.STRING, description: "The main visual metaphor that turns the topic into a clickable conflict." },
+             conflict_object: { type: Type.STRING, description: "The single object creating visual threat, tension, or contradiction." },
+             curiosity_object: { type: Type.STRING, description: "The unusual or contrast element that makes viewers ask what is happening." },
+             emotion_target: { type: Type.STRING, description: "Primary emotion targeted by the thumbnail." },
+             stop_scroll_reason: { type: Type.STRING, description: "Why this visual stops viewers in under one second." },
+             thumbnail_weakness: { type: Type.STRING, description: "Main risk that could make this thumbnail weak or generic." },
+             visual_ctr_score: { type: Type.NUMBER, description: "Visual clickability score from 1 to 100. Minimum target is 78." },
+             full_text_overlay: { type: Type.STRING, description: "STEP 1: Short 2-4 words text overlay." },
              action_description: { type: Type.STRING, description: "Specific description of character pose/action." },
-             emphasis_word: { type: Type.STRING, description: "STEP 2: Part of the text for Emphasis Highlight." },
-             normal_word: { type: Type.STRING, description: "STEP 2: Part of the text for Normal Text." },
+             emphasis_word: { type: Type.STRING, description: "STEP 2: Emphasis highlight. Must be the prefix OR suffix of full_text_overlay, never the middle words." },
+             normal_word: { type: Type.STRING, description: "STEP 2: Remaining contiguous text next to emphasis_word. Must not combine separated words from before and after emphasis." },
              trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, etc." },
              feasibility_score: { type: Type.NUMBER },
-             ctr_analysis: { type: Type.STRING, description: "Analisis singkat kenapa judul ini potensi CTR tinggi/sedang. 2-3 kalimat." }
+             ctr_analysis: { type: Type.STRING, description: "Analisis singkat kenapa judul ini potensi CTR tinggi/sedang. 2-3 kalimat." },
+             clickbait_risk: { type: Type.STRING, description: "LOW, MEDIUM, or HIGH" }
           },
-          required: ["title", "thumbnail_prompt", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "ctr_analysis"]
+          required: ["title", "thumbnail_prompt", "visual_concept", "visual_metaphor", "conflict_object", "curiosity_object", "emotion_target", "stop_scroll_reason", "thumbnail_weakness", "visual_ctr_score", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "ctr_analysis", "clickbait_risk"]
         }
       }
     },
@@ -653,6 +917,13 @@ export const generateTitleAndThumbnailPairs = async (
   if (writingStyle && writingStyle.trim() !== '') {
       extraContext += `\n\n[STYLE PENULISAN]: ${writingStyle}`;
   }
+  extraContext += `\n\n[ATURAN WAJIB TEXT OVERLAY]: full_text_overlay harus 2-4 kata. emphasis_word HARUS berupa kata/frasa di AWAL atau AKHIR full_text_overlay, tidak boleh mengambil kata tengah. normal_word adalah sisa frasa yang kontigu. Format valid hanya: "emphasis_word + normal_word" atau "normal_word + emphasis_word". Contoh buruk: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="GAK HARUS", normal_word="RUMAH KPR".`;
+  extraContext += `\n\n[ATURAN WAJIB VISUAL CTR]: thumbnail_prompt harus berupa konflik visual, bukan gambar literal topik. Sertakan visual_metaphor, conflict_object, curiosity_object, emotion_target, stop_scroll_reason, thumbnail_weakness, dan visual_ctr_score. Hindari visual generik seperti orang panik + uang/HP tanpa metafora. Minimal visual_ctr_score 78.`;
+  if (isIlmuLidiChannel(channelName)) {
+      extraContext += `\n\n[ATURAN KHUSUS ILMU LIDI UNTUK THUMBNAIL]: Typography/background reference biru muda + headline hitam + banner merah adalah KHUSUS preset Ilmu Lidi. Thumbnail_prompt harus menjaga karakter Ilmu Lidi sebagai anak laki-laki 7-10 tahun semi-chibi, bukan remaja/dewasa. DILARANG COMPARISON, split-screen, VS layout, before-after, overlay durasi palsu, teks Inggris, dan incidental text pada objek.`;
+  } else {
+      extraContext += `\n\n[ATURAN STYLE CHANNEL]: Jangan memakai style typography/background Ilmu Lidi kecuali user eksplisit memilih/mengunggahnya untuk channel ini. Thumbnail_prompt harus mengikuti identitas channel "${channelName || 'channel ini'}".`;
+  }
 
   // Replace "Omni Channel" with channelName in system instruction if provided
   let systemInstruction = THUMBNAIL_SYSTEM_INSTRUCTION;
@@ -665,7 +936,7 @@ export const generateTitleAndThumbnailPairs = async (
   const currentYear = new Date().getFullYear();
   const timeContext = `\n\n[KONTEKS WAKTU]: Saat ini adalah tahun ${currentYear}. Jika menggunakan angka tahun di judul atau teks, WAJIB gunakan tahun ${currentYear}. JANGAN gunakan tahun 2023, 2024, atau 2025.`;
   const targetLanguage = language === 'en' ? 'ENGLISH' : 'BAHASA INDONESIA';
-  const langInstruction = `\n\n[CRITICAL LANGUAGE REQUIREMENT]: The user has explicitly set the system language to "${targetLanguage}". You MUST generate ALL text fields in the JSON output (title, thumbnail_prompt, full_text_overlay, action_description, emphasis_word, normal_word) ENTIRELY in ${targetLanguage}. DO NOT output Indonesian if the language is set to 'en'. Translate all slang and concepts appropriately.`;
+  const langInstruction = `\n\n[CRITICAL LANGUAGE REQUIREMENT]: The user has explicitly set the system language to "${targetLanguage}". You MUST generate ALL text fields in the JSON output (title, thumbnail_prompt, visual_concept, visual_metaphor, conflict_object, curiosity_object, emotion_target, stop_scroll_reason, thumbnail_weakness, full_text_overlay, action_description, emphasis_word, normal_word) ENTIRELY in ${targetLanguage}. DO NOT output Indonesian if the language is set to 'en'. Translate all slang and concepts appropriately.`;
   systemInstruction += langInstruction + timeContext + `\n\n[PANDUAN JUDUL TAMBAHAN]\n${PROMPT_TITLES}`;
 
   const userPrompt = language === 'en' 
@@ -695,23 +966,51 @@ export const generateTitleAndThumbnailPairs = async (
         safeEmphasis = safeEmphasis.replace(yearRegex, currentYear.toString());
         safeNormal = safeNormal.replace(yearRegex, currentYear.toString());
 
+        const normalizedTextParts = normalizeThumbnailTextParts(safeOverlay, safeEmphasis, safeNormal);
+        safeOverlay = normalizedTextParts.fullTextOverlay;
+        safeEmphasis = normalizedTextParts.emphasisText;
+        safeNormal = normalizedTextParts.normalText;
+
+        const rawTrigger = String(p.trigger_type || "CURIOSITY").toUpperCase();
+        const safeTrigger = rawTrigger.includes("COMPARISON") || rawTrigger.includes("VS") || rawTrigger.includes("BEFORE") || rawTrigger.includes("AFTER")
+            ? "CONTRAST_WITHOUT_SPLIT"
+            : rawTrigger;
+
+        const visualBrief = [
+            p.visual_metaphor ? `VISUAL METAPHOR: ${p.visual_metaphor}` : '',
+            p.conflict_object ? `CONFLICT OBJECT: ${p.conflict_object}` : '',
+            p.curiosity_object ? `CURIOSITY OBJECT: ${p.curiosity_object}` : '',
+            p.emotion_target ? `EMOTION TARGET: ${p.emotion_target}` : '',
+            p.stop_scroll_reason ? `STOP-SCROLL REASON: ${p.stop_scroll_reason}` : '',
+            p.thumbnail_prompt ? `SCENE: ${p.thumbnail_prompt}` : '',
+        ].filter(Boolean).join("\n");
+
         return {
             id: `pair-${Date.now()}-${idx}`,
             title: safeTitle,
             ctrAnalysis: p.ctr_analysis || "Tidak ada analisis.",
+            clickbaitRisk: p.clickbait_risk || "MEDIUM",
             thumbnail: {
                 prompt: p.thumbnail_prompt,
+                visualConcept: p.visual_concept || p.thumbnail_prompt,
+                visualMetaphor: p.visual_metaphor,
+                conflictObject: p.conflict_object,
+                curiosityObject: p.curiosity_object,
+                emotionTarget: p.emotion_target,
+                stopScrollReason: p.stop_scroll_reason,
+                thumbnailWeakness: p.thumbnail_weakness,
+                visualCtrScore: Number(p.visual_ctr_score) || 75,
                 fullTextOverlay: safeOverlay,
                 actionDescription: p.action_description,
                 suggestedText: safeOverlay, // Fallback
                 emphasisText: safeEmphasis,
                 normalText: safeNormal,
-                triggerType: p.trigger_type || "CURIOSITY",
+                triggerType: safeTrigger,
                 status: 'idle',
                 feasibilityScore: p.feasibility_score || 85,
                 // Automatically construct detailed prompt on creation
                 detailedPrompt: constructThumbnailPrompt(
-                    p.thumbnail_prompt, 
+                    visualBrief || p.thumbnail_prompt, 
                     p.action_description, 
                     safeEmphasis, 
                     safeNormal,
@@ -815,10 +1114,7 @@ export const generateRealThumbnailImage = async (
            }
       }
       
-      return {
-          imageUrl: "https://via.placeholder.com/1280x720/000000/FFFFFF?text=No+Image+Data+Returned",
-          engineeredPrompt: fullPrompt + "\n\n[WARN: API returned OK but no image data found]"
-      };
+      throw new Error('Gemini image API returned OK but no image data was found.');
       
     } catch (error: any) {
       lastError = error;
@@ -833,15 +1129,9 @@ export const generateRealThumbnailImage = async (
         continue;
       }
       
-       return {
-           imageUrl: "https://via.placeholder.com/1280x720/000000/FFFFFF?text=Generation+Failed",
-           engineeredPrompt: fullPrompt + `\n\n[ERROR: Generation failed: ${error}]`
-       };
+      throw error;
     }
   }
   
-  return {
-      imageUrl: "https://via.placeholder.com/1280x720/000000/FFFFFF?text=Retry+Limit+Exceeded",
-      engineeredPrompt: fullPrompt + `\n\n[ERROR: Retry limit exceeded. Last error: ${lastError}]`
-  };
+  throw lastError || new Error('Retry limit exceeded while generating thumbnail image.');
 };

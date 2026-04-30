@@ -30,13 +30,18 @@ const initialState: AppState = {
   analysis: '',
   finalTitle: '',
   script: [],
+  selectedTitleThumbnailPair: null,
   finalDescription: '',
   finalTags: '',
+  finalHashtags: '',
+  finalPinnedComment: '',
+  finalChapters: '',
   isLoading: false,
   error: null,
-  apiKey: localStorage.getItem('gemini_api_key') || '',
+  apiKey: GeminiService.getApiKey() || '',
   mandatoryKeywords: '',
   thumbnailObject: '',
+  useKnowledgeBase: false,
   useHook: true,
   useOutro: true,
 };
@@ -60,6 +65,62 @@ const playNotificationSound = () => {
   } catch (e) {
     console.error("Audio play failed", e);
   }
+};
+
+const sanitizeStateForExport = (state: AppState) => {
+  const { apiKey, ...safeState } = state;
+  return { ...safeState, exportedAt: new Date().toISOString(), exportVersion: 2 };
+};
+
+const normalizeTags = (rawTags: string): string => {
+  const seen = new Set<string>();
+  return rawTags
+    .split(/,|\n/)
+    .map(tag => tag.replace(/^#/, '').trim())
+    .filter(tag => tag.length >= 2 && tag.length <= 45)
+    .filter(tag => {
+      const key = tag.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 15)
+    .join(', ');
+};
+
+const buildHashtags = (tags: string, title: string): string => {
+  const candidates = [
+    ...tags.split(',').map(t => t.trim()),
+    ...title.split(/\s+/).filter(w => w.length >= 5).slice(0, 3),
+  ];
+  const seen = new Set<string>();
+  return candidates
+    .map(tag => tag.replace(/^#/, '').replace(/[^\p{L}\p{N}\s]/gu, '').trim())
+    .filter(tag => tag.length >= 3 && tag.length <= 22)
+    .map(tag => `#${tag.replace(/\s+/g, '')}`)
+    .filter(tag => {
+      const key = tag.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 5)
+    .join(' ');
+};
+
+const buildPinnedComment = (title: string): string => {
+  const cleanTitle = title.trim() || 'topik ini';
+  return `Bagian mana dari video ini yang paling bikin lo mikir ulang soal ${cleanTitle}? Tulis di komentar, Hermes bakal pakai insight penonton buat ide video berikutnya.`;
+};
+
+const buildChapters = (sections: ScriptSection[], selectedIdea: VideoIdea | null): string => {
+  const pointTitles = selectedIdea?.points?.length ? selectedIdea.points : sections.map(s => s.title);
+  const items = ['00:00 Opening', ...pointTitles.slice(0, 8).map((point, idx) => {
+    const minute = String((idx + 1) * 2).padStart(2, '0');
+    const clean = point.replace(/\s+/g, ' ').slice(0, 70);
+    return `${minute}:00 ${clean}`;
+  })];
+  return items.join('\n');
 };
 
 const App: React.FC = () => {
@@ -122,7 +183,7 @@ const App: React.FC = () => {
 
   const handleSaveState = () => {
     try {
-      const json = JSON.stringify(state, null, 2);
+      const json = JSON.stringify(sanitizeStateForExport(state), null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const href = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -149,7 +210,7 @@ const App: React.FC = () => {
         if (loadedState.step === undefined || loadedState.referenceText === undefined) {
           throw new Error('Format file tidak valid');
         }
-        setState(loadedState);
+        setState({ ...initialState, ...loadedState, apiKey: GeminiService.getApiKey() || '' });
         showToast('Session berhasil dimuat! Langkah ' + ((loadedState.step || 0) + 1));
       } catch (err) {
         showToast('Format file tidak valid. Gunakan file .json dari Pabrik Konten.', 'error');
@@ -191,7 +252,7 @@ const App: React.FC = () => {
     });
   };
 
-  const handleReferenceSubmit = async (channel: string, style: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en') => {
+  const handleReferenceSubmit = async (channel: string, style: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en', useKnowledgeBase: boolean) => {
     setState(prev => ({
       ...prev,
       isLoading: true,
@@ -200,19 +261,21 @@ const App: React.FC = () => {
       referenceText: text,
       fileContents: files,
       keywords: keywords,
+      mandatoryKeywords: keywords,
       targetWordCount: wordCount,
       language: language,
+      useKnowledgeBase,
       error: null
     }));
     try {
-      const ideasText = await GeminiService.generateIdeas(text, files, keywords, language, channel, style, true);
+      const ideasText = await GeminiService.generateIdeas(text, files, keywords, language, channel, style, useKnowledgeBase);
       setState(prev => ({ ...prev, analysis: ideasText, isLoading: false, step: AppStep.SELECT_IDEA }));
     } catch (e) {
       handleError(e);
     }
   };
 
-  const handleVariantsOnly = (channel: string, style: string, text: string, files: string[], keywords: string, language: 'id' | 'en') => {
+  const handleVariantsOnly = (channel: string, style: string, text: string, files: string[], keywords: string, language: 'id' | 'en', useKnowledgeBase: boolean) => {
     setState(prev => ({
       ...prev,
       channelName: channel,
@@ -220,7 +283,9 @@ const App: React.FC = () => {
       referenceText: text,
       fileContents: files,
       keywords: keywords,
+      mandatoryKeywords: keywords,
       language: language,
+      useKnowledgeBase,
       script: [],
       step: AppStep.TITLE_AND_THUMBNAIL
     }));
@@ -229,7 +294,7 @@ const App: React.FC = () => {
   const handleRegenerateIdeas = async () => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const ideasText = await GeminiService.generateIdeas(state.referenceText, state.fileContents, state.keywords || '', state.language, state.channelName, state.writingStyle, true);
+      const ideasText = await GeminiService.generateIdeas(state.referenceText, state.fileContents, state.keywords || '', state.language, state.channelName, state.writingStyle, state.useKnowledgeBase);
       setState(prev => ({ ...prev, analysis: ideasText, isLoading: false }));
     } catch (e) {
       handleError(e);
@@ -255,7 +320,9 @@ const App: React.FC = () => {
       state.writingStyle,
       state.useHook,
       state.useOutro,
-      true
+      state.referenceText,
+      state.fileContents,
+      state.useKnowledgeBase
     );
   };
 
@@ -267,6 +334,7 @@ const App: React.FC = () => {
     setState(prev => ({
       ...prev,
       finalTitle: pair.title,
+      selectedTitleThumbnailPair: pair,
       step: AppStep.DESCRIPTION_TAGS
     }));
   };
@@ -283,15 +351,19 @@ const App: React.FC = () => {
         GeminiService.generateTags(contentContext, state.finalTitle, state.language, state.channelName, state.writingStyle)
       ]);
 
-      // Append relevant tags (5-10) at the end of description
-      const tagList = tags.split(',').map(t => t.trim()).filter(Boolean).slice(0, 10);
-      const tagsFormatted = tagList.map(t => `#${t.replace(/\s+/g, '')}`).join(' ');
-      const descWithTags = `${desc}\n\n${tagsFormatted}`;
+      const normalizedTags = normalizeTags(tags);
+      const hashtags = buildHashtags(normalizedTags, state.finalTitle);
+      const descWithTags = `${desc.trim()}\n\n${hashtags}`.trim();
+      const pinnedComment = buildPinnedComment(state.finalTitle);
+      const chapters = buildChapters(state.script, state.selectedIdea);
 
       setState(prev => ({
         ...prev,
         finalDescription: descWithTags,
-        finalTags: tags,
+        finalTags: normalizedTags,
+        finalHashtags: hashtags,
+        finalPinnedComment: pinnedComment,
+        finalChapters: chapters,
         isLoading: false
       }));
       showToast('Metadata berhasil dibuat!');
@@ -323,8 +395,13 @@ const App: React.FC = () => {
       onStartNew={handleStartNew}
       apiKey={state.apiKey}
       onApiKeyChange={(key) => {
-        localStorage.setItem('gemini_api_key', key);
+        GeminiService.setApiKey(key);
         setState(prev => ({ ...prev, apiKey: key }));
+      }}
+      onApiKeyClear={() => {
+        GeminiService.clearApiKey();
+        setState(prev => ({ ...prev, apiKey: '' }));
+        showToast('API Key lokal dihapus.');
       }}
       selectedChannel={state.selectedChannel}
       onChannelChange={handleChannelChange}
@@ -405,6 +482,16 @@ const App: React.FC = () => {
           isLoading={state.isLoading}
           language={state.language}
           onToast={showToast}
+          finalTitle={state.finalTitle}
+          scriptSections={state.script}
+          selectedPair={state.selectedTitleThumbnailPair || null}
+          hashtags={state.finalHashtags || ''}
+          pinnedComment={state.finalPinnedComment || ''}
+          chapters={state.finalChapters || ''}
+          onDescriptionChange={(value) => setState(prev => ({ ...prev, finalDescription: value }))}
+          onTagsChange={(value) => setState(prev => ({ ...prev, finalTags: normalizeTags(value), finalHashtags: buildHashtags(value, prev.finalTitle) }))}
+          onPinnedCommentChange={(value) => setState(prev => ({ ...prev, finalPinnedComment: value }))}
+          onChaptersChange={(value) => setState(prev => ({ ...prev, finalChapters: value }))}
         />
       )}
     </Layout>

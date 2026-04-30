@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { translations } from '../translations';
 import { WRITING_STYLE_PRESETS } from '../presets';
+import { getKBIntelligencePreview } from '../services/knowledgeBaseService';
 
 interface Props {
-  onNext: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en') => void;
-  onGenerateVariantsOnly: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, language: 'id' | 'en') => void;
+  onNext: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en', useKnowledgeBase: boolean) => void;
+  onGenerateVariantsOnly: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, language: 'id' | 'en', useKnowledgeBase: boolean) => void;
   language: 'id' | 'en';
   hasApiKey: boolean;
   selectedChannel: string;
@@ -61,6 +62,8 @@ export const Step1Input: React.FC<Props> = ({
   const [fileContents, setFileContents] = useState<string[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [keywords, setKeywords] = useState('');
+  const initialKBPreview = React.useMemo(() => getKBIntelligencePreview('', '', selectedChannel), []);
+  const [useKnowledgeBase, setUseKnowledgeBase] = useState(initialKBPreview.isSafeToInject);
   const [targetWordCount, setTargetWordCount] = useState<number>(18);
   const [isReading, setIsReading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -139,6 +142,29 @@ export const Step1Input: React.FC<Props> = ({
 
   const hasContent = text.trim().length > 0 || fileContents.length > 0;
   const canSubmit = hasContent && hasApiKey;
+  const kbPreview = React.useMemo(
+    () => getKBIntelligencePreview(`${text}\n${fileContents.join('\n')}`, keywords, selectedChannel),
+    [text, fileContents, keywords, selectedChannel]
+  );
+  const kbStatusStyle = kbPreview.status === 'fresh'
+    ? 'bg-green-50 border-green-200 text-green-700'
+    : kbPreview.status === 'aging'
+    ? 'bg-amber-50 border-amber-200 text-amber-700'
+    : 'bg-red-50 border-red-200 text-red-700';
+  const kbStatusLabel = kbPreview.status === 'fresh'
+    ? 'Fresh'
+    : kbPreview.status === 'aging'
+    ? 'Aging'
+    : kbPreview.status === 'stale'
+    ? 'Stale'
+    : 'Unknown';
+
+  const handleKnowledgeBaseToggle = (enabled: boolean) => {
+    setUseKnowledgeBase(enabled);
+    if (enabled && !kbPreview.isSafeToInject && onToast) {
+      onToast('KB lokal sudah stale. Hermes akan pakai hanya sebagai konteks umum, bukan klaim tren saat ini.', 'error');
+    }
+  };
 
   return (
     <div className="space-y-6 pb-24 animate-fade-up">
@@ -264,6 +290,11 @@ export const Step1Input: React.FC<Props> = ({
           {/* Outro toggle */}
           <Toggle checked={useOutro} onChange={onUseOutroChange} label="Outro" />
 
+          {/* Knowledge Base toggle */}
+          {language === 'id' && (
+            <Toggle checked={useKnowledgeBase} onChange={handleKnowledgeBaseToggle} label="KB Lokal" />
+          )}
+
           {/* Separator */}
           <div className="w-px h-6 bg-border hidden md:block" />
 
@@ -319,6 +350,46 @@ export const Step1Input: React.FC<Props> = ({
         )}
       </div>
 
+      {/* Knowledge Base intelligence preview */}
+      {language === 'id' && (
+        <div className={`rounded-xl border px-4 py-3 text-sm ${kbStatusStyle}`}>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+            <div>
+              <div className="font-bold text-xs uppercase tracking-wider">Knowledge Base Intelligence: {kbStatusLabel}</div>
+              <div className="text-xs opacity-90">
+                News {kbPreview.freshness.news.label} · Trending {kbPreview.freshness.trending.label} · Komentar {kbPreview.freshness.youtube.label}
+              </div>
+            </div>
+            <div className="text-xs font-mono bg-white/60 px-2 py-1 rounded-lg border border-current/10">
+              {kbPreview.counts.relevantNews} berita · {kbPreview.counts.relevantComments} komentar · {kbPreview.counts.relevantTrends} tren
+            </div>
+          </div>
+          {!kbPreview.isSafeToInject && (
+            <p className="mt-2 text-xs leading-relaxed">
+              Data melewati batas fresh 7 hari, jadi default KB dimatikan. Jika dinyalakan manual, prompt diberi guardrail agar tidak mengklaimnya sebagai “tren saat ini”.
+            </p>
+          )}
+          {(kbPreview.sample.pain.length > 0 || kbPreview.sample.context.length > 0) && (
+            <div className="mt-3 grid gap-2 md:grid-cols-2 text-xs">
+              {kbPreview.sample.pain.length > 0 && (
+                <div className="bg-white/50 rounded-lg p-2 border border-current/10">
+                  <div className="font-semibold mb-1">Audience pain</div>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    {kbPreview.sample.pain.map((item, idx) => <li key={idx}>{item}</li>)}
+                  </ul>
+                </div>
+              )}
+              {kbPreview.sample.context.length > 0 && (
+                <div className="bg-white/50 rounded-lg p-2 border border-current/10">
+                  <div className="font-semibold mb-1">Konteks lokal</div>
+                  <div>{kbPreview.sample.context.join(' · ')}</div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* API key warning */}
       {!hasApiKey && (
         <div className="flex items-center gap-2 px-4 py-3 bg-accent/10 border border-accent/20 rounded-xl text-sm text-accent">
@@ -332,7 +403,7 @@ export const Step1Input: React.FC<Props> = ({
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
         <button
-          onClick={() => onGenerateVariantsOnly(selectedChannel, writingStyle, text, fileContents, keywords, language)}
+          onClick={() => onGenerateVariantsOnly(selectedChannel, writingStyle, text, fileContents, keywords, language, useKnowledgeBase)}
           disabled={!canSubmit}
           className="bg-primary hover:bg-primary-hover text-on-primary px-6 py-3.5 rounded-xl text-sm font-semibold transition-flat shadow-sm hover:shadow-md active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
@@ -343,7 +414,7 @@ export const Step1Input: React.FC<Props> = ({
         </button>
 
         <button
-          onClick={() => onNext(selectedChannel, writingStyle, text, fileContents, keywords, targetWordCount, language)}
+          onClick={() => onNext(selectedChannel, writingStyle, text, fileContents, keywords, targetWordCount, language, useKnowledgeBase)}
           disabled={!canSubmit}
           className="bg-foreground hover:bg-foreground/90 text-white px-8 py-3.5 rounded-xl text-sm font-bold transition-flat shadow-sm hover:shadow-md active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >

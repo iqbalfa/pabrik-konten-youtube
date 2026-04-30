@@ -22,6 +22,11 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
     return text.replace(/\*\*/g, '').trim();
   };
 
+  const extractMarker = (part: string, marker: string) => {
+    const escaped = marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return cleanText(part.match(new RegExp(`\\[${escaped}:\\s*([^\\]]*)\\]`, 'i'))?.[1] || '');
+  };
+
   const parseContent = (text: string) => {
     const summaryMatch = text.match(/\[RANGKUMAN REFERENSI\]([\s\S]*?)(\[TINGKAT MODIFIKASI|$)/);
     const summary = summaryMatch ? summaryMatch[1].trim() : '';
@@ -79,7 +84,14 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
         title: cleanText(part.match(/Judul Video:\s*(.*)/)?.[1] || 'Untitled'),
         hook: cleanText(part.match(/Narasi Hook:\s*([\s\S]*?)Poin-Poin/)?.[1] || ''),
         points: points,
-        closing: `[TINGKAT MODIFIKASI${part}`
+        closing: `[TINGKAT MODIFIKASI${part}`,
+        angle: extractMarker(part, 'ANGLE'),
+        uniqueValue: extractMarker(part, 'UNIK'),
+        literalTopic: extractMarker(part, 'TOPIK LITERAL'),
+        hiddenAnxiety: extractMarker(part, 'HIDDEN ANXIETY'),
+        creativeTechnique: extractMarker(part, 'TEKNIK TRANSFORMASI'),
+        transformedConcept: extractMarker(part, 'KONSEP TRANSFORMASI'),
+        whyNotParaphrase: extractMarker(part, 'BUKAN PARAFRASE KARENA'),
       };
     });
 
@@ -100,7 +112,7 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
       <div className="border-b pb-6 flex justify-between items-start">
         <div>
             <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              {t.title} <span className="ml-3 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded font-mono border border-yellow-200">v6.3</span>
+              {t.title} <span className="ml-3 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded font-mono border border-yellow-200">v6.4 Creative</span>
             </h2>
             <p className="text-gray-600 mt-1">{t.subtitle}</p>
         </div>
@@ -160,6 +172,56 @@ export const Step2Ideas: React.FC<Props> = ({ ideasText, onNext, onBack, onRegen
                 </h3>
                 
                 <div className="space-y-5">
+
+                    {(idea.creativeTechnique || idea.hiddenAnxiety || idea.transformedConcept || idea.whyNotParaphrase) && (
+                      <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-xl shadow-sm border border-slate-700">
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {idea.creativeTechnique && (
+                            <span className="px-3 py-1 rounded-full bg-yellow-300 text-slate-950 text-[10px] font-black uppercase tracking-widest">
+                              {idea.creativeTechnique}
+                            </span>
+                          )}
+                          {idea.angle && (
+                            <span className="px-3 py-1 rounded-full bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest border border-white/15">
+                              Angle: {idea.angle}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4 text-xs">
+                          {idea.literalTopic && (
+                            <div>
+                              <span className="block text-slate-400 font-bold uppercase tracking-widest mb-1">Input Literal</span>
+                              <p className="text-slate-100 leading-relaxed">{idea.literalTopic}</p>
+                            </div>
+                          )}
+                          {idea.hiddenAnxiety && (
+                            <div>
+                              <span className="block text-slate-400 font-bold uppercase tracking-widest mb-1">Hidden Anxiety</span>
+                              <p className="text-slate-100 leading-relaxed">{idea.hiddenAnxiety}</p>
+                            </div>
+                          )}
+                          {idea.transformedConcept && (
+                            <div className="md:col-span-2">
+                              <span className="block text-slate-400 font-bold uppercase tracking-widest mb-1">Transformasi Konsep</span>
+                              <p className="text-slate-100 leading-relaxed">{idea.transformedConcept}</p>
+                            </div>
+                          )}
+                          {idea.whyNotParaphrase && (
+                            <div className="md:col-span-2 border-t border-white/10 pt-3">
+                              <span className="block text-slate-400 font-bold uppercase tracking-widest mb-1">Kenapa Bukan Parafrase</span>
+                              <p className="text-slate-100 leading-relaxed">{idea.whyNotParaphrase}</p>
+                            </div>
+                          )}
+                          {idea.uniqueValue && (
+                            <div className="md:col-span-2 border-t border-white/10 pt-3">
+                              <span className="block text-slate-400 font-bold uppercase tracking-widest mb-1">Value Unik</span>
+                              <p className="text-slate-100 leading-relaxed">{idea.uniqueValue}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     {useHook && (
                     <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
