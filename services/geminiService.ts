@@ -763,9 +763,14 @@ Jika gambar referensi mengandung tulisan lain, anggap tulisan itu hanya contoh s
 [BACKGROUND REFERENCE RULES - ATURAN KETAT]:
 - Background hasil akhir WAJIB mengikuti gambar referensi background yang diunggah.
 - Jangan ganti background jadi putih polos, kosong, atau generik kecuali referensinya memang seperti itu.
-- Pertahankan tone, pola, tekstur, rasa, dan struktur background dari referensi.
-- Area kiri boleh aman untuk text overlay, tetapi tetap harus memakai background dari referensi.
-- Jangan menciptakan background baru yang tidak perlu.
+- Pertahankan tone, warna dominan, dan struktur dasar background dari referensi.
+- AREA KIRI (0%-50%): dikosongkan dari objek utama untuk text overlay, tapi background tetap dipakai.
+- AREA KANAN (50%-100%): semua elemen visual utama. Background di sini WAJIB SIMPLIFIED:
+  * Hapus detail lingkungan yang tidak relevan (pabrik, kota, interior lengkap, elemen distracting).
+  * Pertahankan HANYA: warna dominan, pola/tekstur utama, dan nuansa umum.
+  * JANGAN tambahkan scene baru (jendela, meja, kursi, tanaman, orang-orang di background).
+  * Background yang ramai (banyak elemen) HARUS dikurangi density-nya — cukup 1-2 elemen environmental dominan.
+  * Maksimal 1 layer environmental depth di area kanan. Tidak boleh layer berlapis.
 - Jika background referensi putih atau polos, barulah hasil boleh putih atau polos.
 - Jika background referensi punya pola, ikon, tekstur, gradasi, atau nuansa tertentu, hasil akhir harus mengikuti itu.
 
@@ -858,7 +863,8 @@ DETAIL SUSUNAN TEXT:
 - Jangan fallback ke putih.
 - Jangan fallback ke background kosong.
 - Jangan invent background baru.
-- Sisi kiri hanya dikosongkan dari objek utama untuk kebutuhan overlay text, BUKAN dikosongkan dari background.`;
+- Sisi kiri hanya dikosongkan dari objek utama untuk kebutuhan overlay text, BUKAN dikosongkan dari background.
+- WAJIB SIMPLIFY BACKGROUND: Kurangi density elemen lingkungan di area kanan. Maksimal 1-2 elemen environmental utama. Tidak boleh layer berlapis. Hapus detail distracting (orang di background, furniture detail, tekstur kompleks yang tidak mendukung adegan).`;
 };
 
 export const generateTitleAndThumbnailPairs = async (
@@ -1072,6 +1078,8 @@ export const generateRealThumbnailImage = async (
     const bgBase64 = await fileToBase64(referenceBackground);
     parts.push({ text: "USE THIS BACKGROUND COMPOSITION:" });
     parts.push({ inlineData: { data: bgBase64, mimeType: referenceBackground.type } });
+    // IMPORTANT: Force simplification of the background
+    parts.push({ text: "IMPORTANT: SIMPLIFY THIS BACKGROUND. Reduce environmental clutter. Keep only dominant colors and main texture. Max 1-2 environmental elements on the right side. Remove distracting details (people in background, complex textures, layered depth). Maintain the general tone but make it MINIMAL, not busy." });
   }
 
   // 3. Characters
