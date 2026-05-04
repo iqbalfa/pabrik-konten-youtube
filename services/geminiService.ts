@@ -751,120 +751,41 @@ export const constructThumbnailPrompt = (
     : getGenericPromptLocks(channelName);
   const globalSafetyLocks = getGlobalThumbnailSafetyLocks();
   
-  return `ROLE: Seniman Thumbnail YouTube Profesional.
+  return `ROLE: Thumbnail Artist for YouTube.
 
 [VISUAL STYLE]:
 ${visualStyle}
 
+[CHANNEL STYLE LOCK]:
 ${channelPresetLocks}
 
+[GLOBAL SAFETY LOCK]:
 ${globalSafetyLocks}
 
-[REFERENCE USAGE - ATURAN KETAT]:
-Jika ada dua jenis referensi, pisahkan perannya dengan tegas:
-- Referensi background/typography: HANYA untuk background, nuansa layout, treatment tipografi, hirarki visual text, gaya block/shadow/emphasis typography sesuai preset channel.
-- Referensi karakter: HANYA untuk identitas karakter, proporsi, outfit, wajah, pose style, dan konsistensi maskot.
-JANGAN mencampur style background ke desain karakter. JANGAN mengubah karakter mengikuti typography reference.
+[REFERENCE IMAGES]:
+Background & typography → gunakan untuk style dan referensi visual, bukan untuk menyalin teks/konten yang ada.
+Karakter reference → gunakan untuk identitas, proporsi, dan pose style karakter.
 
-JANGAN menyalin, merender ulang, atau mempertahankan teks yang ada di gambar referensi.
-JANGAN memasukkan kata, huruf, angka, atau frasa apa pun dari gambar referensi ke hasil akhir, kecuali kata tersebut memang identik dengan overlay text yang tertulis di prompt ini.
-Jika gambar referensi mengandung tulisan lain, anggap tulisan itu hanya contoh style, BUKAN konten final.
+[BACKGROUND]:
+Ikuti reference image yang diunggah. Area kiri kosong untuk teks overlay. Area kanan untuk subjek utama — simplify, tidak crowded.
 
-[BACKGROUND REFERENCE RULES - ATURAN KETAT]:
-- Background hasil akhir WAJIB mengikuti gambar referensi background yang diunggah.
-- Jangan ganti background jadi putih polos, kosong, atau generik kecuali referensinya memang seperti itu.
-- Pertahankan tone, warna dominan, dan struktur dasar background dari referensi.
-- AREA KIRI (0%-50%): dikosongkan dari objek utama untuk text overlay, tapi background tetap dipakai.
-- AREA KANAN (50%-100%): semua elemen visual utama. Background di sini WAJIB SIMPLIFIED:
-  * Hapus detail lingkungan yang tidak relevan (pabrik, kota, interior lengkap, elemen distracting).
-  * Pertahankan HANYA: warna dominan, pola/tekstur utama, dan nuansa umum.
-  * JANGAN tambahkan scene baru (jendela, meja, kursi, tanaman, orang-orang di background).
-  * Background yang ramai (banyak elemen) HARUS dikurangi density-nya — cukup 1-2 elemen environmental dominan.
-  * Maksimal 1 layer environmental depth di area kanan. Tidak boleh layer berlapis.
-- Jika background referensi putih atau polos, barulah hasil boleh putih atau polos.
-- Jika background referensi punya pola, ikon, tekstur, gradasi, atau nuansa tertentu, hasil akhir harus mengikuti itu.
-
-[TEXT STYLE REFERENCE RULES - ATURAN KETAT]:
-- Style teks WAJIB sepenuhnya dari reference image yang diunggah.
-- JANGAN deskripsikan jenis font, warna font, bold/italic, ukuran, efek (drop shadow, glow, bevel, outline), atau gaya typography dalam prompt ini.
-- Ambil hanya referensi visual: komposisi teks, hirarki visual, dan tata letak.
-- Isi teks final HARUS hanya memakai kata-kata yang ditentukan dalam prompt ini.
-- Abaikan seluruh kata pada reference image.
-- Reference text adalah STYLE REFERENCE ONLY, NOT CONTENT REFERENCE.
-
-[SCENE DESCRIPTION]:
+[SCENE]:
 ${sceneDescription}
-- Tulis dalam Bahasa Indonesia
-- Ringkas tapi jelas
-- Fokus pada:
-  - objek utama
-  - aksi atau situasi utama
-  - konflik visual
-  - rasa visual
-- Jangan deskripsikan background secara detail
-- Jangan tulis parameter kamera
-- Jangan menulis prompt yang terlalu puitis atau abstrak
-- Adegan harus cepat kebaca dalam sekali lihat
+${actionDescription ? `Aksi: ${actionDescription}` : ''}
 
-[NO PLACE/LOCATION DESCRIPTION - WAJIB]:
-DILARANG keras menyebutkan tempat, lokasi, atau setting dalam prompt ini.
-TIDAK BOLEH ada deskripsi seperti:
-- "di kantor", "di rumah", "di kamar tidur", "di dapur", "di supermarket", "di restoran"
-- "di pinggir jalan", "di taman kota", "di dalam mobil", "di atas motor"
-- "di pasar", "di minimarket", "di pinggir pantai", "di dalam lift"
-- "di ruang meeting", "di rumah sakit", "di sekolah", "di studio"
-- "di depan komputer", "di meja belajar", "di kasur", "di sofa"
-- "berlatar", "dengan latar", "background:"
+[SUBJEK UTAMA]:
+Karakter utama adalah figur visual yang paling menonjol di scene ini.
 
-CUKUP tulis:
-- SUBJEK: siapa klasifikasi subjek utama
-- AKSI: apa yang sedang dilakukan subjek
-- OBJEK YANG ADA: objek apa saja yang terlibat/muncul (maksimal 3 objek utama)
-- KONFLIK: kenapa subjek terasa terancam/ketegangan
+[TEXT OVERLAY - FINAL]:
+• FULL: "${phraseToRender.toUpperCase()}"
+• Emphasis: "${safeEmphasisText.toUpperCase()}" → posisi: ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'} kalimat
+• Hanya teks ini yang boleh muncul. Huruf KAPITAL. Style dari reference typography.
+• JANGAN render teks lain (timestamp, label, nama objek, kata Inggris BILL/DEBT/MONEY dll).
 
-Contoh BURUK: "seorang pria berdiri di kantor dengan meja kerja dan komputer"
-Contoh BAIK: "Karakter kita mendorong meja berat yang jatuh ke arahnya, ekspresi panik, ada calculator besar dan struk menumpuk
-
-[CHARACTER ACTION - WAJIB]:
-Karakter utama WAJIB melakukan aksi ini:
-"${actionDescription}"
-- Pose dan emosi harus benar-benar sesuai dengan konflik utama
-- Aksi harus konkret, bukan abstrak
-- Aksi harus membantu thumbnail terasa hidup dan langsung kebaca
-
-[COMPOSITION - ATURAN KETAT]:
-0. DILARANG split-screen, before-after, kiri-vs-kanan, VS layout, atau comparison dua panel. Gunakan satu scene bersih: teks di kiri, karakter/objek di kanan.
-1. ABSOLUTE SPLIT LAYOUT:
-   - SISI KIRI (0% sampai 50% lebar): disediakan untuk text overlay final
-   - Tidak boleh ada karakter, objek utama, atau aksi penting di area ini
-   - Background di sisi kiri tetap mengikuti reference image
-   - SISI KANAN (50% sampai 100% lebar): semua elemen visual utama wajib ditempatkan di sini
-2. TIMESTAMP SAFETY:
-   - SUDUT KANAN BAWAH harus aman
-   - Jangan taruh wajah, objek utama, atau detail paling penting di sana
-
-[SUBJECT / CHARACTER - WAJIB IKUTI characterStrategy]:
-- Jika character_strategy='famous_character' DAN famous_character_name terisi:
-  → TOKOH INILAH YANG MENJADI SUBJEK UTAMA. Gambarkan figur tersebut secara literal — penampilan, era, ciri khas yang dikenali.
-  → Contoh: "Charles Darwin" → pria berjenggot dengan jas Victorian era.
-  → Maskot/channel identity (jika diunggah) -> BOLEH muncul sebagai karakter sekunder/observer di sudut frame, tapi BUKAN subjek utama.
-- Jika character_strategy='mascot_as_main' atau famous_character_name kosong:
-  → Maskot/channel identity ADALAH subjek utama. Gambarkan sesuai reference visual.
-- JANGAN mengarang desain karakter kalau sudah ada referensi visual.
-- Kalau ada reference image karakter, WAJIB ikuti ciri visual dari reference image tersebut.
-
-[TEXT OVERLAY - FINAL DAN MENGIKAT]:
- Satu-satunya teks yang boleh muncul di thumbnail final adalah:
- • FULL OVERLAY: "${phraseToRender.toUpperCase()}"
- • Emphasis: "${safeEmphasisText.toUpperCase()}" → posisi: ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'} frasa
- • Normal: "${safeNormalText.toUpperCase()}"
- Rules:
- - WAJIB HURUF KAPITAL, hanya 2-5 kata
- - JANGAN render teks lain (timestamp, label, nama objek)
- - JANGAN render kata Inggris: BILL, DEBT, MONEY, LOAN, SALE, SAVE, RICH, POOR
- - Style WAJIB dari reference typography image, bukan dari deskripsi prompt ini
- - Emphasis word di AWAL atau AKHIR, JANGAN di tengah`;
-};
+[COMPOSITION]:
+Teks di kiri. Subjek utama di kanan. Sudut kanan bawah bersih.
+DILARANG split-screen, VS layout, atau dua panel.
+`;};
 
 export const generateTitleAndThumbnailPairs = async (
     context: string, 
