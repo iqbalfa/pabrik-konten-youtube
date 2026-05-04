@@ -181,12 +181,16 @@ export const VISUAL_STYLE_PRESETS: Record<ChannelName, string> = {
 - Mood: Serius, gelap, ada urgensi — "lo harus tonton sekarang"`,
 
   'Ilmu Nyantuy': `VISUAL STYLE — ILMU NYANTUY
-- Warna dominan: Campuran ungu, biru gelap, oranye hangat — neon aksen untuk elemen spooky
-- Gaya thumbnail: Split contrast — satu sisi normal, satu sisi "aneh/seram"
-- Komposisi: Unbalanced asymmetry, elemen mengejutkan di sisi yang tidak terduga
-- Typography: Mix bold + handwritten style, kadang font horror/vintage
-- Aksen: Glitch effect, noise grain, siluet misterius — soft horror tanpa jumpscare
-- Mood: "Serem tapi lucu", bikin penasaran — "wait, kok jadi aneh gini?"`,
+- Warna dominan: Putih bersih sebagai background utama — aksen warna pada teks overlay (merah untuk elemen bahaya/urgensi, biru untuk elemen informasi). Karakter pakai warna tenang (navy, cokelat, biru muda) agar tidak berebut perhatian dengan teks.
+- Gaya thumbnail: Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis (memegang dagu berpikir, menunjuk ke objek).pose karakter harus konkret dan langsung terbaca: LOPI (seseorang sedang menganalisis atau menunjuk sesuatu). Ekspresi fokus,好奇, atau微微 terkejut — bukan ekspresi horror/seram.
+- Komposisi: Rule of thirds — teks overlay di sisi kiri (maksimal 40% lebar), karakter + objek utama di sisi kanan. Area bawah untuk objek-objek konkret yang mendukung topik (benda sehari-hari relate dengan konteks Indonesia: panci tergores, styrofoam, obat nyamuk, minumam manis, hp.retak, struk paylater, dll).
+- Typography: Bold sans-serif tebal, bersih, mudah dibaca di mobile. Hirarki tajam: kata kunci (biasanya 1 kata) pakai warna aksen (merah/hijaum untuk urgency), sisanya putih/hitam. Tanpa efek 3D atau bevel — flat dan kontras.
+- Aksen: Efek glow kecil pada kata yang perlu menonjol. Benda sehari-hari sebagai curiosity object — objek yang langsung bikin penonton pikir "oh ini kan..." dan merasa relate.
+- Mood: Informatif dan curious — "lo perlu tahu ini", "ini bahaya tapi lo mungkin gak sadar". Bukan horror/seram. Karakter adalah teman yang lagi kasih tahu fakta menarik, bukan hauntis.
+- Latar: Putih polos atau sangat minimal (gradasi sangat halus). JANGAN latar gelap, glitch, noise grain, atau elemen misterius. Fokus pada objek dan karakter, bukan atmosphere.
+- Branding: Karakter pakai hoodie/kupluk dengan branding "ILMU NYANTUY" — ini identitas channel yang harus konsisten.
+- Elemen penting: Karakter harus MENUNJUK ke arah objek curiosity dengan tangan atau jari. Pose pointing ini crucial untuk storytelling visual.
+- Dilarang: Split-screen, VS layout, before-after comparison, glitch effect, font horror/vintage, latar gelap, siluet misterius, noise grain, elemen spooky.`,
 
   'Ilmu Psikologi Diri': `VISUAL STYLE — ILMU PSIKOLOGI DIRI
 |- Warna dominan: Warm & calming — biru muda, lavender, krem, putih bersih
