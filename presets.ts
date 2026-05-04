@@ -181,16 +181,13 @@ export const VISUAL_STYLE_PRESETS: Record<ChannelName, string> = {
 - Mood: Serius, gelap, ada urgensi — "lo harus tonton sekarang"`,
 
   'Ilmu Nyantuy': `VISUAL STYLE — ILMU NYANTUY
-- Warna dominan: Putih bersih sebagai background utama — aksen warna pada teks overlay (merah untuk elemen bahaya/urgensi, biru untuk elemen informasi). Karakter pakai warna tenang (navy, cokelat, biru muda) agar tidak berebut perhatian dengan teks.
-- Gaya thumbnail: Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis (memegang dagu berpikir, menunjuk ke objek). Pose karakter harus konkret dan langsung terbaca: LOPI (seseorang sedang menganalisis atau menunjuk sesuatu). Ekspresi fokus,好奇, atau微微 terkejut — bukan ekspresi horror/seram.
-- Komposisi: Rule of thirds — teks overlay di sisi kiri (maksimal 40% lebar), karakter + objek utama di sisi kanan. Area bawah untuk objek-objek konkret yang mendukung topik (benda sehari-hari relate dengan konteks Indonesia: panci tergores, styrofoam, obat nyamuk, minumam manis, hp.retak, struk paylater, dll).
-- Aksen: Efek glow kecil pada kata yang perlu menonjol. Benda sehari-hari sebagai curiosity object — objek yang langsung bikin penonton pikir "oh ini kan..." dan merasa relate.
-- Mood: Informatif dan curious — "lo perlu tahu ini", "ini bahaya tapi lo mungkin gak sadar". Bukan horror/seram. Karakter adalah teman yang lagi kasih tahu fakta menarik, bukan hauntis.
-- Latar: Putih polos atau sangat minimal (gradasi sangat halus). JANGAN latar gelap, glitch, noise grain, atau elemen misterius. Fokus pada objek dan karakter, bukan atmosphere.
+- Warna dominan: Putih bersih sebagai background utama — aksen warna pada teks overlay (merah untuk elemen bahaya/urgensi, biru untuk elemen informasi). Karakter pakai warna tenang (navy, cokelat, biru muda).
+- Gaya thumbnail: Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis (memegang dagu berpikir, menunjuk ke objek). Ekspresi fokus,好奇, atau微微 terkejut — bukan ekspresi horror/seram.
+- Mood: Informatif dan curious — "lo perlu tahu ini", "ini bahaya tapi lo mungkin gak sadar". Karakter adalah teman yang lagi kasih tahu fakta menarik, bukan hauntis.
 - Branding: Karakter pakai hoodie/kupluk仙魔 — ini identitas channel yang harus konsisten.
-- Elemen penting: Karakter harus MENUNJUK ke arah objek curiosity dengan tangan atau jari. Pose pointing ini crucial untuk storytelling visual.
-- Typography/font/color: SEPENUHNYA dari reference image yang diunggah oleh user. JANGAN gunakan deskripsi tipografi dalam teks preset ini. Biarkan reference image menentukan gaya font, warna, hirarki, dan efek teks.
-- Dilarang: Split-screen, VS layout, before-after comparison, glitch effect, font horror/vintage, latar gelap, siluet misterius, noise grain, elemen spooky.`,
+- Elemen penting: Karakter harus MENUNJUK ke arah objek curiosity dengan tangan atau jari.
+- Curiosity object: Benda sehari-hari relate konteks Indonesia (panci tergores, styrofoam, obat nyamuk, minumam manis, hp.retak, struk paylater).
+- Typography/font/color: SEPENUHNYA dari reference image yang diunggah oleh user. Biarkan reference image menentukan.`,
 
   'Ilmu Psikologi Diri': `VISUAL STYLE — ILMU PSIKOLOGI DIRI
 |- Warna dominan: Warm & calming — biru muda, lavender, krem, putih bersih

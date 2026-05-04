@@ -650,23 +650,11 @@ export const getThumbnailStyle = (writingStyle: string): string => {
 const isIlmuLidiChannel = (channelName: string = ""): boolean => /ilmu\s*lidi/i.test(channelName);
 
 const getIlmuLidiPromptLocks = (): string => `
-[ILMU LIDI PRESET LOCK - KHUSUS CHANNEL ILMU LIDI]:
-Reference typography/background yang diunggah untuk preset Ilmu Lidi adalah STYLE LOCK KHUSUS ILMU LIDI, bukan style global semua channel.
-- Background: biru sangat muda / putih kebiruan, bersih, dengan pattern edukasi/finansial tipis low-opacity.
-- Emphasis: kata/angka paling penting putih di dalam banner merah terang.
-- Typography/font/color WAJIB sepenuhnya dari reference image yang diunggah — JANGAN deskripsikan jenis font, warna font, atau gaya teks dalam prompt ini.
-- Layout: teks besar di kiri, karakter/objek utama di kanan, komposisi bersih, tidak penuh.
-- Bottom-right tetap kosong/aman untuk durasi YouTube asli.
-
-[ILMU LIDI CHARACTER LOCK - WAJIB JIKA ADA REFERENSI KARAKTER]:
-Karakter utama adalah maskot anak laki-laki bernama Ilmu Lidi.
-- Usia visual 7-10 tahun, anak-anak, bukan remaja/dewasa.
-- 2D vector cartoon, semi-chibi: kepala besar, tubuh kecil, proporsi anak-anak.
-- Wajah bulat lucu, mata besar bulat ekspresif, pipi pink/blush, senyum/ekspresi penasaran.
-- Rambut hitam tebal cartoonish.
-- Outfit: kaos biru lengan pendek bertuliskan "ILMU LIDI" warna putih, celana pendek khaki, sepatu merah, ransel hijau, membawa teropong.
-- Outline hitam tebal, flat bright colors, clean playful educational mascot.
-NEGATIVE CHARACTER LOCK: no adult face, no teenager look, no mature jawline, no long nose, no broad shoulders, no tall body, no muscular/athletic body, no serious masculine expression, no realistic anatomy, no semi-realistic face, no beard, no mustache.`;
+[ILMU LIDI PRESET LOCK]:
+- Karakter utama: maskot anak laki-laki bernama Ilmu Lidi (usia visual 7-10 tahun, 2D semi-chibi).
+- NEGATIVE LOCK: no adult face, no teenage look, no mature jawline, no realistic anatomy.
+- Background & typography: SEPENUHNYA dari reference image yang diunggah — JANGAN deskripsikan dalam prompt ini.
+- Bottom-right harus bersih untuk durasi YouTube.`;
 
 const getGenericPromptLocks = (channelName: string = ""): string => `
 [CHANNEL-SPECIFIC STYLE LOCK]:
@@ -865,52 +853,17 @@ Karakter utama WAJIB melakukan aksi ini:
 - JANGAN mengarang desain karakter kalau sudah ada referensi visual.
 - Kalau ada reference image karakter, WAJIB ikuti ciri visual dari reference image tersebut.
 
-[TEXT OVERLAY INSTRUCTIONS - FINAL DAN MENGIKAT]:
-Satu-satunya teks yang boleh muncul di thumbnail final adalah teks berikut:
-
-FULL OVERLAY TEXT:
-"${phraseToRender.toUpperCase()}"
-
-DETAIL SUSUNAN TEXT:
-1. NORMAL WORD:
-   "${safeNormalText.toUpperCase()}"
-   - berfungsi sebagai teks pendamping
-   - mengikuti style sekunder dari reference typography
-   - HARUS tetap berupa frasa kontigu, tidak boleh dipecah menjadi kata sebelum + sesudah emphasis
-   - ditempatkan agar menyambung secara visual dengan emphasis word
-   - harus mengikuti urutan baca alami
-
-2. EMPHASIS WORD:
-   "${safeEmphasisText.toUpperCase()}"
-   - teks paling dominan
-   - mengikuti style emphasis dari reference typography
-   - paling menonjol secara visual
-   - posisi emphasis: ${emphasisPosition}
-   - WAJIB berada sebagai blok di awal atau akhir frasa, JANGAN di tengah kalimat
-
-[TEXT SAFETY LOCK - SANGAT PENTING]:
-- Semua overlay text wajib HURUF KAPITAL
-- Jangan ubah isi katanya
-- Jangan tambah kata baru
-- Jangan kurangi kata
-- Susunan visual harus mengikuti full overlay text. Emphasis block berada di ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'} frasa, bukan di tengah.
-- Jangan render tulisan apa pun dari reference image kecuali memang sama persis dengan overlay text final
-- Jika reference image berisi teks, abaikan isinya dan ambil hanya style visualnya
-- Thumbnail final HARUS hanya menampilkan teks yang ditentukan di prompt ini
-- Tidak boleh ada teks lain selain yang disebut di prompt ini
-- Semua teks visible harus Bahasa Indonesia; jangan render kata Inggris generik seperti BILL, DEBT, MONEY, LOAN, SALE, SAVE, RICH, POOR
-- Jangan render angka/timestamp palsu di kanan bawah atau di area mana pun
-- Overlay text adalah elemen layout atau desain, bukan objek fisik di dalam adegan
-- Komposisi visual harus mendukung keterbacaan overlay text secara maksimal
-
-[CRITICAL BACKGROUND LOCK]:
-- Jika ada reference image background, maka background hasil akhir HARUS mengikuti reference image tersebut.
-- Jangan fallback ke putih.
-- Jangan fallback ke background kosong.
-        - Jangan invent background baru — INVALID: background gelap baru, sketsa rumus/fisika, elemen baru tidak ada di referensi, warna/tekstur baru tidak dominan di referensi, atau mendeskripsikan "latar" secara eksplisit. Yang mengikat hanya reference image.
-        - Jika prompt thumbnail (system instruction) mendeskripsikan "latar" atau "background" secara eksplisit, ABAIKAN — reference image adalah satu-satunya kebenaran.
-        - Sisi kiri hanya dikosongkan dari objek utama untuk kebutuhan overlay text, BUKAN dikosongkan dari background.
-        - WAJIB SIMPLIFY BACKGROUND: Kurangi density elemen lingkungan di area kanan. Maksimal 1-2 elemen environmental utama. Tidak boleh layer berlapis. Hapus detail distracting. JANGAN GANTI background dengan yang baru — KURANGI DENSITY yang sudah ada.`;
+[TEXT OVERLAY - FINAL DAN MENGIKAT]:
+ Satu-satunya teks yang boleh muncul di thumbnail final adalah:
+ • FULL OVERLAY: "${phraseToRender.toUpperCase()}"
+ • Emphasis: "${safeEmphasisText.toUpperCase()}" → posisi: ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'} frasa
+ • Normal: "${safeNormalText.toUpperCase()}"
+ Rules:
+ - WAJIB HURUF KAPITAL, hanya 2-5 kata
+ - JANGAN render teks lain (timestamp, label, nama objek)
+ - JANGAN render kata Inggris: BILL, DEBT, MONEY, LOAN, SALE, SAVE, RICH, POOR
+ - Style WAJIB dari reference typography image, bukan dari deskripsi prompt ini
+ - Emphasis word di AWAL atau AKHIR, JANGAN di tengah`;
 };
 
 export const generateTitleAndThumbnailPairs = async (
