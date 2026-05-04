@@ -190,7 +190,7 @@ export const translations = {
       btnNext: 'Lanjut: Metadata',
       mandatoryKeyword: 'Kata yang Wajib Muncul di Judul',
       specificObject: 'Objek Wajib di Thumbnail (Opsional)',
-      thumbnailConcept: 'Konsep Thumbnail (Human-Readable)',
+      thumbnailConcept: 'Prompt Thumbnail ke AI',
       textOverlay: 'Teks di Thumbnail',
       actionDesc: 'Aksi Karakter',
       psychology: 'Psikologi Visual',

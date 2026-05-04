@@ -248,10 +248,37 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       }));
   };
 
+  const handleResetDetailedPrompt = (pairId: string) => {
+      const pair = pairs.find(p => p.id === pairId);
+      if (!pair) return;
+      const visualBrief = [
+          pair.thumbnail.visualMetaphor ? `VISUAL METAPHOR: ${pair.thumbnail.visualMetaphor}` : '',
+          pair.thumbnail.conflictObject ? `CONFLICT OBJECT: ${pair.thumbnail.conflictObject}` : '',
+          pair.thumbnail.curiosityObject ? `CURIOSITY OBJECT: ${pair.thumbnail.curiosityObject}` : '',
+          pair.thumbnail.emotionTarget ? `EMOTION TARGET: ${pair.thumbnail.emotionTarget}` : '',
+          pair.thumbnail.stopScrollReason ? `STOP-SCROLL REASON: ${pair.thumbnail.stopScrollReason}` : '',
+          pair.thumbnail.prompt ? `SCENE: ${pair.thumbnail.prompt}` : '',
+      ].filter(Boolean).join('\n');
+      const resetPrompt = constructThumbnailPrompt(
+          visualBrief || pair.thumbnail.prompt,
+          pair.thumbnail.actionDescription || '',
+          pair.thumbnail.emphasisText,
+          pair.thumbnail.normalText,
+          pair.thumbnail.fullTextOverlay,
+          visualStyle,
+          channelName || ''
+      );
+      setPairs(prev => prev.map(p =>
+          p.id === pairId
+              ? { ...p, thumbnail: { ...p.thumbnail, finalEngineeredPrompt: undefined, detailedPrompt: resetPrompt } }
+              : p
+      ));
+  };
+
   const handleDetailedPromptChange = (pairId: string, value: string) => {
       setPairs(prev => prev.map(p => {
           if (p.id !== pairId) return p;
-          return { ...p, thumbnail: { ...p.thumbnail, detailedPrompt: value, finalEngineeredPrompt: undefined } };
+          return { ...p, thumbnail: { ...p.thumbnail, finalEngineeredPrompt: value } };
       }));
   };
 
@@ -645,35 +672,28 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                               </div>
                           </div>
 
-                          {/* AREA PROMPT VISUAL EDITABLE */}
-                          <div className="pt-6 border-t border-gray-100 mt-auto">
-                               <p className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-2">
-                                   {t.thumbnailConcept}
-                               </p>
-                               <textarea
-                                   className="w-full text-xs text-gray-700 bg-amber-50 p-3 rounded-lg border border-amber-200 focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none resize-none h-20 mb-3"
-                                   value={pair.thumbnail.visualConcept || ''}
-                                   onChange={(e) => handleUpdatePairData(pair.id, 'visualConcept', e.target.value)}
-                                   placeholder="Konflik visual + reason-to-click dalam bahasa manusia..."
-                               />
-                               <p className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-2">
-                                   {t.visualPrompt}
-                               </p>
-                               <textarea
-                                   className="w-full text-[10px] font-mono text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none h-24 mb-3"
-                                   value={pair.thumbnail.prompt}
-                                   onChange={(e) => handleUpdatePairData(pair.id, 'prompt', e.target.value)}
-                               />
-
-                               <p className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2 mt-4">
-                                   {t.engineeredPrompt}
-                               </p>
-                               <textarea
-                                   className="w-full text-[10px] font-mono text-blue-800 bg-blue-50 p-3 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none h-32 mb-3"
-                                   value={pair.thumbnail.finalEngineeredPrompt || pair.thumbnail.detailedPrompt || ''}
-                                   onChange={(e) => handleDetailedPromptChange(pair.id, e.target.value)}
-                                   placeholder={t.engineeredPlaceholder}
-                               />
+                           {/* AREA PROMPT VISUAL EDITABLE */}
+                           <div className="pt-6 border-t border-gray-100 mt-auto">
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                                        {t.thumbnailConcept}
+                                    </p>
+                                    {(pair.thumbnail.finalEngineeredPrompt) && (
+                                        <button
+                                            onClick={() => handleResetDetailedPrompt(pair.id)}
+                                            className="text-[9px] text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors"
+                                        >
+                                            Reset ke Auto
+                                        </button>
+                                    )}
+                                </div>
+                                <textarea
+                                    className="w-full text-[10px] font-mono text-gray-700 bg-white p-3 rounded-lg border border-purple-200 focus:ring-2 focus:ring-purple-400 focus:border-transparent outline-none resize-none"
+                                    style={{ height: '160px' }}
+                                    value={pair.thumbnail.finalEngineeredPrompt || pair.thumbnail.detailedPrompt || ''}
+                                    onChange={(e) => handleDetailedPromptChange(pair.id, e.target.value)}
+                                    placeholder={t.engineeredPlaceholder}
+                                />
                                
                                <div className="flex flex-wrap gap-1.5 mb-3">
                                    {quickRemixActions.map((action) => (
