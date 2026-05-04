@@ -33,7 +33,9 @@ export interface TitleThumbnailPair {
      imageUrl?: string;
      status: 'idle' | 'generating' | 'success' | 'error';
      feasibilityScore?: number;
-     finalEngineeredPrompt?: string; 
+     finalEngineeredPrompt?: string;
+     characterStrategy?: 'famous_character' | 'mascot_as_main';
+     famousCharacterName?: string;
   };
 }
 

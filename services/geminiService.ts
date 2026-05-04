@@ -937,12 +937,14 @@ export const generateTitleAndThumbnailPairs = async (
              action_description: { type: Type.STRING, description: "Specific description of character pose/action." },
              emphasis_word: { type: Type.STRING, description: "STEP 2: Emphasis highlight. Must be the prefix OR suffix of full_text_overlay, never the middle words." },
              normal_word: { type: Type.STRING, description: "STEP 2: Remaining contiguous text next to emphasis_word. Must not combine separated words from before and after emphasis." },
-             trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, etc." },
+             trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, ABSURDISM, HYPERBOLIC_LITERAL, etc." },
+             character_strategy: { type: Type.STRING, description: "'famous_character' jika narasi menyebutkan tokoh nyata yang bisa divisualkan (nama, julukan, figur terkenal). 'mascot_as_main' jika narasi tidak punya tokoh populer yang jelas." },
+             famous_character_name: { type: Type.STRING, description: "Nama tokoh terkenal yang harus jadi subjek utama thumbnail. WAJIB diisi jika character_strategy='famous_character'. Contoh: 'Charles Darwin', 'Isaac Newton', 'Nikola Tesla', 'Michelangelo', 'Albert Einstein'." },
              feasibility_score: { type: Type.NUMBER },
              ctr_analysis: { type: Type.STRING, description: "Analisis singkat kenapa judul ini potensi CTR tinggi/sedang. 2-3 kalimat." },
              clickbait_risk: { type: Type.STRING, description: "LOW, MEDIUM, or HIGH" }
           },
-          required: ["title", "thumbnail_prompt", "visual_concept", "visual_metaphor", "conflict_object", "curiosity_object", "emotion_target", "stop_scroll_reason", "thumbnail_weakness", "visual_ctr_score", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "ctr_analysis", "clickbait_risk"]
+          required: ["title", "thumbnail_prompt", "visual_concept", "visual_metaphor", "conflict_object", "curiosity_object", "emotion_target", "stop_scroll_reason", "thumbnail_weakness", "visual_ctr_score", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "ctr_analysis", "clickbait_risk", "character_strategy", "famous_character_name"]
         }
       }
     },
@@ -1050,6 +1052,8 @@ export const generateTitleAndThumbnailPairs = async (
                 triggerType: safeTrigger,
                 status: 'idle',
                 feasibilityScore: p.feasibility_score || 85,
+                characterStrategy: p.character_strategy || "mascot_as_main",
+                famousCharacterName: p.famous_character_name || "",
                 // Automatically construct detailed prompt on creation
                 detailedPrompt: constructThumbnailPrompt(
                     visualBrief || p.thumbnail_prompt, 
