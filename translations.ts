@@ -37,6 +37,11 @@ export const translations = {
     step1: {
       title: 'Input Referensi',
       subtitle: 'Masukkan materi mentah untuk diolah menjadi Naskah Viral atau Judul Clickbait.',
+      ideationModeLabel: 'Mode Ideasi',
+      ideationModeCreative: 'Creative Transformation',
+      ideationModeCreativeDesc: 'Transformasi radikal: domain swap, villain creation, hidden anxiety',
+      ideationModeStyleOnly: 'Channel Style Only',
+      ideationModeStyleOnlyDesc: 'Adaptasi gaya channel + localize saja, tanpa reframe perspektif',
       channelLabel: '0. Nama Channel',
       channelPlaceholder: 'Masukkan nama channel Anda...',
       refLabel: 'Text / Link Referensi Utama',

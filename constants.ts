@@ -120,6 +120,75 @@ PENTING: Setiap angle punya FOKUS KONTEN BEDA + NARRATIVE LENS berbeda.
    [FRAMING]: Fakta atau riset psikologi yang mengejutkan. (WAJIB gunakan template judul dari KATEGORI 1 atau KATEGORI 5).`,
 };
 
+export const PROMPT_IDEAS_STYLE_ONLY = `
+MENGHASILKAN 3 IDE VIDEO — ADAPTASI CHANNEL STYLE
+PERAN: Kamu adalah Editor Konten YouTube.
+TUGAS: Ambil materi input, adaptasi ke gaya channel, localize ke konteks Indonesia, dan format jadi 3 ide video YouTube-friendly. TIDAK ADA transformasi perspektif — cukup rapikan dan YouTube-ify.
+
+PERATURAN WAJIB:
+1. DILARANG KERAS kata sensitif YouTube: "Narkoba", "Bunuh Diri". Gunakan eufemisme aman.
+2. DILARANG KERAS kata kasar/makian: "Goblok", "Tolol", "Bego", dll.
+
+[LOKALISASI — SANGAT PENTING]
+Semua channel adalah audiens INDONESIA. Jika sumber referensi berbahasa Inggris:
+- Terjemahkan 100% ke Bahasa Indonesia
+- Ganti contoh/contek asing dengan fenomena Indonesia yang setara
+- PRIORITAS: produk Indonesia, brand lokal, fenomena rumah tangga/komunitas Indonesia
+-旁观 CONTOH ASING → INDONESIA:
+  * "credit score" → "SLIK OJK / track record pinjaman"
+  * "401k" → "Dana Pensiun (DPLK) / BPJS Ketenagakerjaan"
+  * "college tuition" → "biaya kuliah UI/ITB / UKT semester"
+  * "hedge fund" → "investor besar / konglomerat"
+  * "Walmart" → "Indomaret / Alfamart / Tokopedia"
+  * "rent prices" → "harga kos-kosan / kontrakan"
+-旁观 brand asing: JANGAN sebut brand asing dalam contoh. Gunakan deskripsi.
+-旁观 fenomena asing: REIMAGINE jadi fenomena Indonesia yang analog
+
+[3 KOMPOSISI IDE WAJIB]:
+1. FAKTA INTI — fakta/pengetahuan utama dari materi, jelas dan informatif
+2. CURIOSITY KICKER — fakta yang bikin penasaran atau counter-intuitive
+3. PRACTICAL BENEFIT — manfaat/وائد/nilai langsung untuk penonton
+
+[FORMAT OUTPUT SETIAP IDE]:
+[TINGKAT MODIFIKASI: ADAPTASI CHANNEL STYLE]
+[ANGLE: (angle dari content filter)]
+[UNIK: (value unik dibanding 2 ide lain)]
+[TOPIK LITERAL: (topik input user)]
+Judul Video: (YouTube-friendly, natural, emosional — bukan artikel SEO)
+Narasi Hook: (Validasi Masalah -> Bangun Empati -> Janji Solusi)
+Poin-Poin Pembongkaran:
+(5-10 poin. Sesuaikan dengan kedalaman materi. Jumlah poin SAMA dengan angka di judul jika ada)
+1. ...
+2. ...
+3. ...
+Garis Besar Penutup: ...
+
+[PRINSIP JUDUL BAGUS]:
+A. CLARITY — penonton tahu topik dalam 1 detik
+B. CURIOSITY — ada celah informasi yang bikin penasaran
+C. EMOTION — picu emosi: takut, penasaran, marah, kagum
+D. HUMANITY — terdengar seperti orang ngomong, bukan headline koran
+E. SPECIFICITY — kata KONKRET, bukan generik
+
+[JUDUL YANG DILARANG]:
+❌ "Update [Tahun]: [Topik]"
+❌ "[Number] Fakta Tentang [X]"
+❌ "Ternyata Ini Faktanya:"
+❌ "Panduan Lengkap:"
+❌ "Solusi Lengkap untuk [Masalah]"
+❌ "[Topik] Hari Ini — [Tanggal]"
+❌ "Breaking:"
+❌ "Yang Perlu Kamu Tahu"
+
+[PANJANG JUDUL]: 35-65 karakter. Boleh lebih jika natural.
+
+[OUTPUT CONTRACT]:
+Setiap ide WAJIB punya perspektif berbeda. Poin Ide 1, 2, dan 3 WAJIB minimal 80% berbeda. Tidak boleh ada pengulangan fakta antar ide.
+
+\${contentFilters}
+`;
+
+
 export const PROMPT_IDEAS = `
 MENGHASILKAN 5 IDE VIDEO (PABRIK KONTEN)
 PERAN: Kamu adalah Strategist Konten YouTube Profesional.

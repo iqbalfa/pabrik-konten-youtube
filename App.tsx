@@ -42,6 +42,7 @@ const initialState: AppState = {
   mandatoryKeywords: '',
   thumbnailObject: '',
   useKnowledgeBase: false,
+  ideationMode: 'creative' as const,
   useHook: true,
   useOutro: true,
 };
@@ -252,7 +253,7 @@ const App: React.FC = () => {
     });
   };
 
-  const handleReferenceSubmit = async (channel: string, style: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en', useKnowledgeBase: boolean) => {
+  const handleReferenceSubmit = async (channel: string, style: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en', useKnowledgeBase: boolean, ideationMode: 'creative' | 'style_only') => {
     setState(prev => ({
       ...prev,
       isLoading: true,
@@ -265,10 +266,11 @@ const App: React.FC = () => {
       targetWordCount: wordCount,
       language: language,
       useKnowledgeBase,
+      ideationMode,
       error: null
     }));
     try {
-      const ideasText = await GeminiService.generateIdeas(text, files, keywords, language, channel, style, useKnowledgeBase);
+      const ideasText = await GeminiService.generateIdeas(text, files, keywords, language, channel, style, useKnowledgeBase, ideationMode);
       setState(prev => ({ ...prev, analysis: ideasText, isLoading: false, step: AppStep.SELECT_IDEA }));
     } catch (e) {
       handleError(e);
@@ -294,7 +296,7 @@ const App: React.FC = () => {
   const handleRegenerateIdeas = async () => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const ideasText = await GeminiService.generateIdeas(state.referenceText, state.fileContents, state.keywords || '', state.language, state.channelName, state.writingStyle, state.useKnowledgeBase);
+      const ideasText = await GeminiService.generateIdeas(state.referenceText, state.fileContents, state.keywords || '', state.language, state.channelName, state.writingStyle, state.useKnowledgeBase, state.ideationMode);
       setState(prev => ({ ...prev, analysis: ideasText, isLoading: false }));
     } catch (e) {
       handleError(e);
@@ -414,6 +416,8 @@ const App: React.FC = () => {
           onNext={handleReferenceSubmit}
           onGenerateVariantsOnly={handleVariantsOnly}
           language={state.language}
+            ideationMode={state.ideationMode}
+            onIdeationModeChange={(val) => setState(prev => ({ ...prev, ideationMode: val }))}
             hasApiKey={!!state.apiKey}
             selectedChannel={state.selectedChannel}
             useHook={state.useHook}

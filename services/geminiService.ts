@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
-import { PROMPT_IDEAS, PROMPT_TITLES, PROMPT_DESCRIPTION, PROMPT_TAGS, PROMPT_FULL_SCRIPT, PROMPT_HOOK_GUIDELINES, PROMPT_RETENTION_GUIDELINES, CONTENT_FILTERS } from "../constants";
+import { PROMPT_IDEAS, PROMPT_IDEAS_STYLE_ONLY, PROMPT_TITLES, PROMPT_DESCRIPTION, PROMPT_TAGS, PROMPT_FULL_SCRIPT, PROMPT_HOOK_GUIDELINES, PROMPT_RETENTION_GUIDELINES, CONTENT_FILTERS } from "../constants";
 import { VideoIdea, TitleThumbnailPair } from "../types";
 import { buildKnowledgeBaseContext } from "./knowledgeBaseService";
 
@@ -164,7 +164,7 @@ const formatIdeasJsonToLegacyText = (json: any): string => {
   return `[RANGKUMAN REFERENSI]\n${summary || 'Ringkasan tidak tersedia.'}\n\n${blocks.join('\n\n')}`;
 };
 
-export const generateIdeas = async (referenceText: string, fileContents: string[], keywords: string, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useKnowledgeBase: boolean = true) => {
+export const generateIdeas = async (referenceText: string, fileContents: string[], keywords: string, language: 'id' | 'en' = 'id', channelName: string = '', writingStyle: string = '', useKnowledgeBase: boolean = true, ideationMode: 'creative' | 'style_only' = 'creative') => {
   const currentYear = new Date().getFullYear();
   const timeContext = `\n\n[KONTEKS WAKTU]: Saat ini adalah tahun ${currentYear}. Jika Anda menggunakan angka tahun di judul atau naskah, WAJIB gunakan tahun ${currentYear} atau setelahnya. JANGAN gunakan tahun 2023, 2024, atau 2025.`;
   
@@ -183,7 +183,11 @@ export const generateIdeas = async (referenceText: string, fileContents: string[
   // Inject content filters based on preset name
   const presetName = detectPresetName(writingStyle);
   const contentFilters = CONTENT_FILTERS[presetName] || CONTENT_FILTERS['Ilmu Lidi'];
-  const systemPrompt = `${PROMPT_IDEAS.replace('${contentFilters}', contentFilters)}\n\n[OUTPUT CONTRACT — STRICT JSON]\nReturn only JSON that matches the response schema. Do not output markdown, code fences, or legacy text markers. Keep exactly 3 ideas: 1 Faithful Upgrade, 1 Radical Reframe, 1 Audience Identity/System Reframe. Each idea must contain 5-10 concrete points and the creative transformation metadata fields. Reject your own draft if any title is only a paraphrase of the user input.`;
+  const activePrompt = ideationMode === 'creative' ? PROMPT_IDEAS : PROMPT_IDEAS_STYLE_ONLY;
+  const outputContract = ideationMode === 'creative'
+    ? '[OUTPUT CONTRACT — STRICT JSON]\nReturn only JSON that matches the response schema. Do not output markdown, code fences, or legacy text markers. Keep exactly 3 ideas: 1 Faithful Upgrade, 1 Radical Reframe, 1 Audience Identity/System Reframe. Each idea must contain 5-10 concrete points and the creative transformation metadata fields. Reject your own draft if any title is only a paraphrase of the user input.'
+    : '[OUTPUT CONTRACT — STRICT JSON]\nReturn only JSON that matches the response schema. Do not output markdown, code fences, or legacy text markers. Keep exactly 3 ideas with different perspectives: Fakta Inti, Curiosity Kicker, Practical Benefit.';
+  const systemPrompt = `${activePrompt.replace('${contentFilters}', contentFilters)}\n\n${outputContract}`;
   const ideasSchema: Schema = {
     type: Type.OBJECT,
     properties: {
@@ -193,12 +197,12 @@ export const generateIdeas = async (referenceText: string, fileContents: string[
         items: {
           type: Type.OBJECT,
           properties: {
-            modification_level: { type: Type.STRING, description: 'One of: FAITHFUL UPGRADE, RADICAL REFRAME, AUDIENCE IDENTITY / SYSTEM REFRAME.' },
+            modification_level: { type: Type.STRING, description: 'For creative mode: FAITHFUL UPGRADE, RADICAL REFRAME, AUDIENCE IDENTITY / SYSTEM REFRAME. For style_only mode: ADAPTASI CHANNEL STYLE.' },
             angle: { type: Type.STRING, description: 'Nama angle content filter/channel yang dipakai.' },
             unique_value: { type: Type.STRING, description: 'Satu kalimat: value unik ide ini dibanding ide lain.' },
             literal_topic: { type: Type.STRING, description: 'Topik literal mentah dari input user.' },
-            hidden_anxiety: { type: Type.STRING, description: 'Ketakutan, konflik, rasa malu, atau tekanan sosial di balik topik.' },
-            creative_technique: { type: Type.STRING, description: 'Teknik transformasi: DOMAIN SWAP, VILLAIN CREATION, IDENTITY SHIFT, EMOTIONAL AMPLIFICATION, METAPHOR LAYERING, TIMELINE DRAMATIZATION, SYSTEM BETRAYAL, STATUS ANXIETY.' },
+            hidden_anxiety: { type: Type.STRING, description: 'Ketakutan/konflik/tekanan sosial. Kosongkan untuk mode style_only.' },
+            creative_technique: { type: Type.STRING, description: 'Teknik transformasi (creative mode) atau kosong (style_only mode).' },
             transformed_concept: { type: Type.STRING, description: 'Konsep video baru hasil reframe, bukan parafrase.' },
             why_not_paraphrase: { type: Type.STRING, description: 'Alasan singkat kenapa ide ini bukan sekadar parafrase input.' },
             title: { type: Type.STRING },

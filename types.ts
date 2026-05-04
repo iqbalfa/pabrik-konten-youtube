@@ -88,4 +88,5 @@ export interface AppState {
   useKnowledgeBase: boolean;
   useHook: boolean;
   useOutro: boolean;
+  ideationMode: 'creative' | 'style_only';
 }

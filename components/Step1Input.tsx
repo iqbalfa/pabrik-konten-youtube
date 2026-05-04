@@ -4,9 +4,11 @@ import { WRITING_STYLE_PRESETS } from '../presets';
 import { getKBIntelligencePreview } from '../services/knowledgeBaseService';
 
 interface Props {
-  onNext: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en', useKnowledgeBase: boolean) => void;
-  onGenerateVariantsOnly: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, language: 'id' | 'en', useKnowledgeBase: boolean) => void;
+  onNext: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, wordCount: number, language: 'id' | 'en', useKnowledgeBase: boolean, ideationMode: 'creative' | 'style_only') => void;
+  onGenerateVariantsOnly: (channelName: string, writingStyle: string, text: string, files: string[], keywords: string, language: 'id' | 'en', useKnowledgeBase: boolean, ideationMode: 'creative' | 'style_only') => void;
   language: 'id' | 'en';
+  ideationMode: 'creative' | 'style_only';
+  onIdeationModeChange: (val: 'creative' | 'style_only') => void;
   hasApiKey: boolean;
   selectedChannel: string;
   useHook: boolean;
@@ -41,7 +43,7 @@ const Toggle: React.FC<{ checked: boolean; onChange: (val: boolean) => void; lab
 );
 
 export const Step1Input: React.FC<Props> = ({
-  onNext, onGenerateVariantsOnly, language, hasApiKey, selectedChannel,
+  onNext, onGenerateVariantsOnly, language, ideationMode, onIdeationModeChange, hasApiKey, selectedChannel,
   useHook, useOutro, onUseHookChange, onUseOutroChange,
   onToast, onLoadStrategyReport
 }) => {
@@ -245,12 +247,80 @@ export const Step1Input: React.FC<Props> = ({
           />
         </div>
 
-        {/* 3. Settings bar + 5. File Upload */}
+        {/* 3. Mode Ideasi */}
+        <div className="pt-2 border-t border-border">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              3. {t.ideationModeLabel}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Creative Transformation Engine */}
+            <button
+              type="button"
+              onClick={() => onIdeationModeChange('creative')}
+              className={`p-4 rounded-xl border-2 text-left transition-all ${
+                ideationMode === 'creative'
+                  ? 'border-primary bg-primary/5 shadow-sm'
+                  : 'border-border bg-surface hover:border-primary/40 hover:bg-primary/5'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                  ideationMode === 'creative' ? 'border-primary bg-primary' : 'border-gray-300'
+                }`}>
+                  {ideationMode === 'creative' && (
+                    <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+                <span className={`text-xs font-bold ${ideationMode === 'creative' ? 'text-primary' : 'text-gray-700'}`}>
+                  {t.ideationModeCreative}
+                </span>
+              </div>
+              <p className={`text-[10px] leading-relaxed ${ideationMode === 'creative' ? 'text-primary/70' : 'text-gray-400'}`}>
+                {t.ideationModeCreativeDesc}
+              </p>
+            </button>
+
+            {/* Channel Style Only */}
+            <button
+              type="button"
+              onClick={() => onIdeationModeChange('style_only')}
+              className={`p-4 rounded-xl border-2 text-left transition-all ${
+                ideationMode === 'style_only'
+                  ? 'border-primary bg-primary/5 shadow-sm'
+                  : 'border-border bg-surface hover:border-primary/40 hover:bg-primary/5'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                  ideationMode === 'style_only' ? 'border-primary bg-primary' : 'border-gray-300'
+                }`}>
+                  {ideationMode === 'style_only' && (
+                    <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+                <span className={`text-xs font-bold ${ideationMode === 'style_only' ? 'text-primary' : 'text-gray-700'}`}>
+                  {t.ideationModeStyleOnly}
+                </span>
+              </div>
+              <p className={`text-[10px] leading-relaxed ${ideationMode === 'style_only' ? 'text-primary/70' : 'text-gray-400'}`}>
+                {t.ideationModeStyleOnlyDesc}
+              </p>
+            </button>
+          </div>
+        </div>
+
+        {/* 4. Settings bar + 6. File Upload */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-2 border-t border-border">
           {/* Word count */}
           <div className="flex items-center gap-2">
             <label htmlFor="wordCount" className="text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
-              3. {t.wordCountLabel}
+              4. {t.wordCountLabel}
             </label>
             <select
               id="wordCount"
@@ -269,7 +339,7 @@ export const Step1Input: React.FC<Props> = ({
           {/* Keywords */}
           <div className="flex items-center gap-2 flex-1 min-w-[200px]">
             <label htmlFor="keywords" className="text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
-              4. {t.keywordLabel}
+              5. {t.keywordLabel}
             </label>
             <input
               id="keywords"
@@ -403,7 +473,7 @@ export const Step1Input: React.FC<Props> = ({
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
         <button
-          onClick={() => onGenerateVariantsOnly(selectedChannel, writingStyle, text, fileContents, keywords, language, useKnowledgeBase)}
+          onClick={() => onGenerateVariantsOnly(selectedChannel, writingStyle, text, fileContents, keywords, language, useKnowledgeBase, ideationMode)}
           disabled={!canSubmit}
           className="bg-primary hover:bg-primary-hover text-on-primary px-6 py-3.5 rounded-xl text-sm font-semibold transition-flat shadow-sm hover:shadow-md active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
@@ -414,7 +484,7 @@ export const Step1Input: React.FC<Props> = ({
         </button>
 
         <button
-          onClick={() => onNext(selectedChannel, writingStyle, text, fileContents, keywords, targetWordCount, language, useKnowledgeBase)}
+          onClick={() => onNext(selectedChannel, writingStyle, text, fileContents, keywords, targetWordCount, language, useKnowledgeBase, ideationMode)}
           disabled={!canSubmit}
           className="bg-foreground hover:bg-foreground/90 text-white px-8 py-3.5 rounded-xl text-sm font-bold transition-flat shadow-sm hover:shadow-md active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
