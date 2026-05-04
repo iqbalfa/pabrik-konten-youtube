@@ -886,9 +886,10 @@ DETAIL SUSUNAN TEXT:
 - Jika ada reference image background, maka background hasil akhir HARUS mengikuti reference image tersebut.
 - Jangan fallback ke putih.
 - Jangan fallback ke background kosong.
-- Jangan invent background baru.
-- Sisi kiri hanya dikosongkan dari objek utama untuk kebutuhan overlay text, BUKAN dikosongkan dari background.
-- WAJIB SIMPLIFY BACKGROUND: Kurangi density elemen lingkungan di area kanan. Maksimal 1-2 elemen environmental utama. Tidak boleh layer berlapis. Hapus detail distracting (orang di background, furniture detail, tekstur kompleks yang tidak mendukung adegan).`;
+        - Jangan invent background baru — INVALID: background gelap baru, sketsa rumus/fisika, elemen baru tidak ada di referensi, warna/tekstur baru tidak dominan di referensi, atau mendeskripsikan "latar" secara eksplisit. Yang mengikat hanya reference image.
+        - Jika prompt thumbnail (system instruction) mendeskripsikan "latar" atau "background" secara eksplisit, ABAIKAN — reference image adalah satu-satunya kebenaran.
+        - Sisi kiri hanya dikosongkan dari objek utama untuk kebutuhan overlay text, BUKAN dikosongkan dari background.
+        - WAJIB SIMPLIFY BACKGROUND: Kurangi density elemen lingkungan di area kanan. Maksimal 1-2 elemen environmental utama. Tidak boleh layer berlapis. Hapus detail distracting. JANGAN GANTI background dengan yang baru — KURANGI DENSITY yang sudah ada.`;
 };
 
 export const generateTitleAndThumbnailPairs = async (
@@ -1103,7 +1104,7 @@ export const generateRealThumbnailImage = async (
     parts.push({ text: "USE THIS BACKGROUND COMPOSITION:" });
     parts.push({ inlineData: { data: bgBase64, mimeType: referenceBackground.type } });
     // IMPORTANT: Force simplification of the background
-    parts.push({ text: "IMPORTANT: SIMPLIFY THIS BACKGROUND. Reduce environmental clutter. Keep only dominant colors and main texture. Max 1-2 environmental elements on the right side. Remove distracting details (people in background, complex textures, layered depth). Maintain the general tone but make it MINIMAL, not busy." });
+    parts.push({ text: "IMPORTANT: PRESERVE AND MINIMALIZE — Keep the original background as-is in terms of colors and general layout. Do NOT replace it with a new background. Simplification means: reduce clutter by removing distracting details (people in background, complex textures, layered depth), NOT by substituting with a new background. Max 1-2 dominant environmental elements. INVALID outputs: dark background, formula sketches, new textures, colors not in reference, or explicit descriptions of \"background\" or \"latar\" in the prompt itself. The only source of truth is the reference image." });
   }
 
   // 3. Characters
