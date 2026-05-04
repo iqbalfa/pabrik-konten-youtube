@@ -636,9 +636,8 @@ const getIlmuLidiPromptLocks = (): string => `
 [ILMU LIDI PRESET LOCK - KHUSUS CHANNEL ILMU LIDI]:
 Reference typography/background yang diunggah untuk preset Ilmu Lidi adalah STYLE LOCK KHUSUS ILMU LIDI, bukan style global semua channel.
 - Background: biru sangat muda / putih kebiruan, bersih, dengan pattern edukasi/finansial tipis low-opacity.
-- Typography: headline uppercase bold sans-serif hitam pekat, sangat besar dan mudah dibaca.
 - Emphasis: kata/angka paling penting putih di dalam banner merah terang.
-- Efek teks: soft drop shadow halus, high contrast, tidak memakai gradient/neon/warna random/font tipis.
+- Typography/font/color WAJIB sepenuhnya dari reference image yang diunggah — JANGAN deskripsikan jenis font, warna font, atau gaya teks dalam prompt ini.
 - Layout: teks besar di kiri, karakter/objek utama di kanan, komposisi bersih, tidak penuh.
 - Bottom-right tetap kosong/aman untuk durasi YouTube asli.
 
@@ -657,7 +656,8 @@ const getGenericPromptLocks = (channelName: string = ""): string => `
 Gunakan referensi gambar sesuai preset/channel "${channelName || 'channel ini'}". Jangan menganggap style Ilmu Lidi sebagai standar global.
 - Jika referensi background/typography berasal dari channel lain, ikuti style channel tersebut, bukan palette biru muda + banner merah Ilmu Lidi.
 - Pertahankan identitas visual channel yang sedang dipilih.
-- Jangan memaksakan headline hitam + banner merah kecuali memang diminta user atau memang muncul di referensi channel tersebut.`;
+- Jangan memaksakan headline hitam + banner merah kecuali memang diminta user atau memang muncul di referensi channel tersebut.
+- Typography/font/color WAJIB sepenuhnya dari reference image yang diunggah — JANGAN deskripsikan jenis font, warna font, atau gaya typography dalam prompt ini.`;
 
 const getGlobalThumbnailSafetyLocks = (): string => `
 [NO FAKE YOUTUBE UI - FINAL LOCK]:
@@ -780,8 +780,9 @@ Jika gambar referensi mengandung tulisan lain, anggap tulisan itu hanya contoh s
 - Jika background referensi punya pola, ikon, tekstur, gradasi, atau nuansa tertentu, hasil akhir harus mengikuti itu.
 
 [TEXT STYLE REFERENCE RULES - ATURAN KETAT]:
-- Style teks harus TERINSPIRASI dari referensi, BUKAN menyalin isi teks referensi.
-- Ambil hanya gaya visualnya: ukuran relatif, block merah, warna teks, bayangan, penekanan, hirarki, dan komposisi.
+- Style teks WAJIB sepenuhnya dari reference image yang diunggah.
+- JANGAN deskripsikan jenis font, warna font, bold/italic, ukuran, efek (drop shadow, glow, bevel, outline), atau gaya typography dalam prompt ini.
+- Ambil hanya referensi visual: komposisi teks, hirarki visual, dan tata letak.
 - Isi teks final HARUS hanya memakai kata-kata yang ditentukan dalam prompt ini.
 - Abaikan seluruh kata pada reference image.
 - Reference text adalah STYLE REFERENCE ONLY, NOT CONTENT REFERENCE.
@@ -1119,7 +1120,7 @@ export const generateRealThumbnailImage = async (
   // 4. Text Style Reference
   if (referenceTextStyle) {
       const textBase64 = await fileToBase64(referenceTextStyle);
-      parts.push({ text: "REFERENCE BACKGROUND + TEXT:" });
+      parts.push({ text: "REFERENCE TYPOGRAPHY & STYLE (USE EXACTLY):" });
       parts.push({ inlineData: { data: textBase64, mimeType: referenceTextStyle.type } });
   }
 
