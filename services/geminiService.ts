@@ -855,12 +855,15 @@ Karakter utama WAJIB melakukan aksi ini:
    - SUDUT KANAN BAWAH harus aman
    - Jangan taruh wajah, objek utama, atau detail paling penting di sana
 
-[SUBJECT / CHARACTER]:
-- Karakter utama merepresentasikan entitas/channel: "${channelName || 'Karakter Utama'}"
-- Gunakan karakter atau subjek sesuai brief
-- JANGAN mengarang desain karakter kalau sudah ada referensi visual
-- Kalau ada reference image karakter, WAJIB ikuti ciri visual dari reference image tersebut
-- Kalau tidak ada reference karakter, buat subjek visual yang jelas, kuat, dan cocok dengan sudut video
+[SUBJECT / CHARACTER - WAJIB IKUTI characterStrategy]:
+- Jika character_strategy='famous_character' DAN famous_character_name terisi:
+  → TOKOH INILAH YANG MENJADI SUBJEK UTAMA. Gambarkan figur tersebut secara literal — penampilan, era, ciri khas yang dikenali.
+  → Contoh: "Charles Darwin" → pria berjenggot dengan jas Victorian era.
+  → Maskot/channel identity (jika diunggah) -> BOLEH muncul sebagai karakter sekunder/observer di sudut frame, tapi BUKAN subjek utama.
+- Jika character_strategy='mascot_as_main' atau famous_character_name kosong:
+  → Maskot/channel identity ADALAH subjek utama. Gambarkan sesuai reference visual.
+- JANGAN mengarang desain karakter kalau sudah ada referensi visual.
+- Kalau ada reference image karakter, WAJIB ikuti ciri visual dari reference image tersebut.
 
 [TEXT OVERLAY INSTRUCTIONS - FINAL DAN MENGIKAT]:
 Satu-satunya teks yang boleh muncul di thumbnail final adalah teks berikut:
@@ -1028,6 +1031,7 @@ export const generateTitleAndThumbnailPairs = async (
             : rawTrigger;
 
         const visualBrief = [
+            `ACTOR STRATEGY: ${p.character_strategy === 'famous_character' && p.famous_character_name ? `Tokoh utama: "${p.famous_character_name}" — figur ini adalah subjek visual utama di scene, BUKAN elemen sekunder. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.` : p.character_strategy === 'famous_character' ? `Tokoh utama: figur yang disebutkan dalam narasi. Maskot boleh sekunder.` : `Tokoh utama: maskot/channel identity.`}`,
             p.visual_metaphor ? `VISUAL METAPHOR: ${p.visual_metaphor}` : '',
             p.conflict_object ? `CONFLICT OBJECT: ${p.conflict_object}` : '',
             p.curiosity_object ? `CURIOSITY OBJECT: ${p.curiosity_object}` : '',
