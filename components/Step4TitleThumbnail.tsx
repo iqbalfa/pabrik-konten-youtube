@@ -313,9 +313,14 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       try {
           // Use the detailedPrompt from state
           const fullPrompt = pair.thumbnail.detailedPrompt || "";
+          // Inject mascot observer instruction if refImages are uploaded
+          const mascotObserverNote = refImages.length > 0
+            ? "\n\n[OBSERVER IDENTITY]: Karakter observer dari referensi yang diunggah WAJIB muncul di scene ini — posisikan di sudut frame sebagai identitas channel."
+            : "";
+          const fullPromptWithObserver = fullPrompt + mascotObserverNote;
           
           const { imageUrl, engineeredPrompt } = await onGenerateImage(
-              fullPrompt,
+              fullPromptWithObserver,
               refImages,
               bgImage,
               bgImage // Pass bgImage as textStyleImage
