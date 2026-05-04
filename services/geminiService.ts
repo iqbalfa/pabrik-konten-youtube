@@ -479,23 +479,31 @@ TUGAS UTAMA: Mengubah konteks video menjadi 3 pasangan Judul + Arah Thumbnail ya
 - Gunakan objek atau simbol yang relevan dengan topik dan mudah dikenali audiens.
 
 ### VISUAL TRANSFORMATION ENGINE — WAJIB
-Tugas thumbnail BUKAN menggambar topik secara literal. Tugas thumbnail adalah membuat konflik visual yang membuat orang berhenti scroll.
-Untuk setiap variasi, lakukan proses ini sebelum menulis thumbnail_prompt:
+Tugas thumbnail BUKAN menjelaskan topik secara literal. Tugas thumbnail adalah MENUNJUKKAN HASIL TERBURUK/TERANEH/TERKEJUT dari topik secara EXTREM dan HYPERBOLIC.
+
+Untuk setiap variasi, lakukan proses ini:
 1. LITERAL TOPIC — pahami topik/judul secara sederhana.
-2. HIDDEN ANXIETY — temukan rasa takut, malu, marah, atau rasa tertipu yang bisa divisualkan.
-3. VISUAL METAPHOR — ubah anxiety itu menjadi metafora visual ekstrem tapi tetap jelas.
+2. HIDDEN ANXIETY — temukan rasa takut, marah, atau rasa tertipu yang terkecil dari topik ini.
+3. HYPERBOLIC LITERALISM — JANGAN buat metafora. TUNJUKKAN HASILNYA SECARA EXTREM SEKALI SECARA LITERALLY. Makin ekstrem dan literally, makin kuat.
 4. CONFLICT OBJECT — pilih satu objek utama yang menciptakan konflik, ancaman, atau ketegangan.
 5. CURIOSITY OBJECT — tambahkan satu elemen aneh/kontras yang bikin penonton bertanya "itu apa?".
-6. EMOTIONAL POSE — karakter/subjek harus bereaksi secara spesifik, bukan cuma wajah kaget generik.
-7. STOP-SCROLL TEST — jelaskan kenapa gambar ini kuat dalam 1 detik.
+6. EMOTIONAL PROOF — karakter/subjek harus bereaksi secara spesifik dengan ekspresi dan pose yang PROVES the emotion.
+7. STOP-SCROLL TEST — kenapa gambar ini menghentikan scroll dalam 1 detik?
 
-CONTOH TRANSFORMASI VISUAL:
-- Topik tabungan usia 50 → visual_metaphor: sistem sebagai mesin raksasa yang membuang orang keluar; conflict_object: pintu mesin "SISTEM" + dompet kosong; overlay: DIBUANG SISTEM.
-- Topik paylater → visual_metaphor: HP berubah jadi borgol yang mengikat kalender masa depan; conflict_object: rantai dari layar HP; overlay: MASA DEPAN DICICIL.
-- Topik gaji habis → visual_metaphor: rekening/dompet disedot lubang hitam cicilan; conflict_object: struk panjang + QRIS + lubang hitam; overlay: KOK HABIS?
-- Topik kurang tidur → visual_metaphor: tubuh sebagai baterai retak yang ditagih utang tidur; conflict_object: baterai bocor + tagihan tidur; overlay: UTANG TIDUR.
+PRINSIP HYPERBOLIC LITERALISM:
+- Makin literally ekstrem = makin kuat thumbnail
+- Contoh: topik "pria hamil" → TUNJUKKAN literally pria dewasa dengan perut besar hijau membusuk, bukan metafora "perut sebagai masalah"
+- Contoh: topik "makan sampah" → TUNJUKKAN literally wajah seseorang dengan sampah di mulut, bukan metafora
+- Contoh: topik "dibuang sistem" → TUNJUKKAN literally orang dilempar keluar dari pintu mesin raksasa bertulis SISTEM, bukan metafora abstrak
 
-ANTI-GENERIK: Draft gagal jika hanya berisi orang panik, uang melayang, laptop/HP biasa, tanda tanya, atau ikon abstrak tanpa konflik visual konkret.
+CONTOH TRANSFORMASI (@SingkatCeritaJuga style):
+- Topik tabungan → HYPERBOLIC: 50 tahun dilempari keluar pintu mesin raksasa bertulis SISTEM, ekspresi ketakutan, struk menumpuk beterbangan.
+- Topik paylater → HYPERBOLIC: HP berubah jadi borgol besar yang mengikat kalender, rantai dari layar menuju ke masa depan yang suram.
+- Topik makan di restoran busuk → HYPERBOLIC: makanan berbentuk toilet di atas meja, ekspresi jijik ekstrem, semua orang menutup mulut.
+- Topik tempat terlarang → HYPERBOLIC: candi runtuh dengan karakter panik berlari, teks "MASUK SINI = M4TI".
+- Topik anak di pemakaman → HYPERBOLIC: anak SD ceria tertawa di depan nisan, ekspresi normal vs latar kuburan.
+
+ANTI-GENERIK: Draft gagal jika hanya berisi orang panik biasa, uang melayang generik, laptop/HP tanpa keanehan ekstrem, tanda tanya tanpa konteks, atau ekspresi kaget tanpa situasi ekstrem konkret.
 
 ### RELASI JUDUL + THUMBNAIL (WAJIB)
 Judul dan thumbnail HARUS saling melengkapi, bukan saling mengulang.
@@ -601,6 +609,8 @@ Setiap variasi WAJIB menggunakan trigger_type yang berbeda dari variasi lain. Pi
 7. NUMBERS — Visual yang memakai angka sebagai daya tarik utama. Contoh: angka besar di tengah frame, uang/pendapatan, countdown, statistik.
 8. EMOTION — Visual yang memicu emosi kuat (haru, bangga, marah). Contoh: wajah emosional, momen dramatis, gesture penuh perasaan.
 9. HUMOR — Visual yang memicu tawa atau senyum. Contoh: situasi absurd, ekspresi lucu, meme-style, ironi visual.
+10. ABSURDISM — Visual yang menampilkan sesuatu yang sangat tidak masuk akal atau paradoks dalam 1 frame. Kontras ekstrem antara subjek dan setting. Contoh: anak ceria di pemakaman, orang makan dari toilet, situasi normal dengan elemen sangat janggal.
+11. HYPERBOLIC_LITERAL — Visual yang MENUNJUKKAN HASIL TERBURUK/TEREKSTREM dari topik SECARA LITERALLY. Bukan metafora. Makin ekstrem dan literally, makin kuat. Contoh: pria dengan perut hijau membusuk untuk "pria hamil", restoran mewah dengan makanan berbentuk poop.
 
 ATURAN TRIGGER TYPE:
 - Ketiga variasi WAJIB pakai trigger_type yang BERBEDA.
