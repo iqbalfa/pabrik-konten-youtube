@@ -560,7 +560,8 @@ Jika ada yang TIDAK, ulangi variasi yang terlalu mirip sebelum output final.
 ### ATURAN KOMPOSISI
 - Semua elemen visual utama (karakter, objek, aksi) berada di sisi kanan frame.
 - Sisi kiri disisakan untuk text overlay.
-- Jangan deskripsikan background, warna background, atau elemen lingkungan. Fokus pada karakter, aksi, dan objek foreground.
+- Jangan deskripsikan background, warna background, elemen lingkungan, atau TEMPAT/LOKASI. Fokus pada karakter, aksi, dan objek foreground.
+- TIDAK BOLEH ada deskripsi tempat: "di rumah", "di kantor", "di sekolah", "di supermarket", "berlatar", "dengan latar", dll.
 
 ### INSTRUKSI OUTPUT JSON
 Output adalah CTR package, bukan sekadar pasangan generik.
@@ -573,7 +574,7 @@ Output adalah CTR package, bukan sekadar pasangan generik.
 - Stop_scroll_reason: alasan 1 kalimat kenapa visual ini membuat orang berhenti scroll.
 - Thumbnail_weakness: risiko utama kenapa thumbnail ini bisa terasa lemah/generik.
 - Visual_ctr_score: skor visual 1-100; minimal 78, revisi jika lebih rendah.
-- Thumbnail_prompt: prompt teknis image-model yang konkret, fokus pada pesan utama, objek sentral, dan aksi. Wajib memasukkan visual_metaphor, conflict_object, dan curiosity_object secara natural.
+- Thumbnail_prompt: prompt teknis image-model yang konkret, fokus pada pesan utama, objek sentral, dan aksi. Wajib memasukkan visual_metaphor, conflict_object, dan curiosity_object secara natural. TIDAK BOLEH mengandung deskripsi tempat/lokasi/settings seperti "di kantor", "di rumah", "di supermarket", "berlatar", "dengan latar", "background:", dll. Cukup: SUBJEK + AKSI + OBJEK YANG ADA + KONFLIK VISUAL. Contoh BURUK: "seorang pria berdiri di kantor dengan latar meja kerja". Contoh BAIK: "Karakter kita mendorong meja jatuh ke arahnya, ekspresi panik, calculator besar dan struk menumpuk".
 - Full_text_overlay: 2-4 kata, punchy, bukan copy judul.
 - Action_description: aksi karakter harus spesifik dan relevan dengan pesan/topik utama.
 - emphasis_word dan normal_word harus membentuk full_text_overlay dengan urutan baca yang jelas.
@@ -794,6 +795,25 @@ ${sceneDescription}
 - Jangan tulis parameter kamera
 - Jangan menulis prompt yang terlalu puitis atau abstrak
 - Adegan harus cepat kebaca dalam sekali lihat
+
+[NO PLACE/LOCATION DESCRIPTION - WAJIB]:
+DILARANG keras menyebutkan tempat, lokasi, atau setting dalam prompt ini.
+TIDAK BOLEH ada deskripsi seperti:
+- "di kantor", "di rumah", "di kamar tidur", "di dapur", "di supermarket", "di restoran"
+- "di pinggir jalan", "di taman kota", "di dalam mobil", "di atas motor"
+- "di pasar", "di minimarket", "di pinggir pantai", "di dalam lift"
+- "di ruang meeting", "di rumah sakit", "di sekolah", "di studio"
+- "di depan komputer", "di meja belajar", "di kasur", "di sofa"
+- "berlatar", "dengan latar", "background:"
+
+CUKUP tulis:
+- SUBJEK: siapa klasifikasi subjek utama
+- AKSI: apa yang sedang dilakukan subjek
+- OBJEK YANG ADA: objek apa saja yang terlibat/muncul (maksimal 3 objek utama)
+- KONFLIK: kenapa subjek terasa terancam/ketegangan
+
+Contoh BURUK: "seorang pria berdiri di kantor dengan meja kerja dan komputer"
+Contoh BAIK: "Karakter kita mendorong meja berat yang jatuh ke arahnya, ekspresi panik, ada calculator besar dan struk menumpuk
 
 [CHARACTER ACTION - WAJIB]:
 Karakter utama WAJIB melakukan aksi ini:
