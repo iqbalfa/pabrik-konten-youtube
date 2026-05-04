@@ -505,6 +505,13 @@ CONTOH TRANSFORMASI (@SingkatCeritaJuga style):
 
 ANTI-GENERIK: Draft gagal jika hanya berisi orang panik biasa, uang melayang generik, laptop/HP tanpa keanehan ekstrem, tanda tanya tanpa konteks, atau ekspresi kaget tanpa situasi ekstrem konkret.
 
+### CHARACTER STRATEGY — WAJIB PILIH SALAH SATU
+Untuk setiap variasi, tentukan character_strategy:
+- 'famous_character': Pilih ini JIKA narasi/storyline secara eksplisit menyebutkan tokoh nyata yang bisa divisualkan. Contoh tokoh: "Charles Darwin", "Newton", "Tesla", "Michelangelo", "presiden", "selebriti", "tokoh sejarah", "tokoh dunia", "tokoh terkenal", figur dengan nama/julukan yang dikenali.
+- 'mascot_as_main': Pilih ini JIKA topik adalah konsep abstrak tanpa tokoh (misal: "tips hemat", "cara kerja X", "fenomena Y", "prilaku A").
+- Jika memilih 'famous_character', WAJIB isi famous_character_name dengan nama tokoh yang конкрет.
+- Mascot/channel identity yang diunggah user tetap bisa muncul sebagai karakter sekunder/observer di sudut frame, TAPI tokoh utama harus sesuai character_strategy.
+
 ### RELASI JUDUL + THUMBNAIL (WAJIB)
 Judul dan thumbnail HARUS saling melengkapi, bukan saling mengulang.
 - Judul membuka curiosity gap.
