@@ -657,11 +657,10 @@ const getIlmuLidiPromptLocks = (): string => `
 - Bottom-right harus bersih untuk durasi YouTube.`;
 
 const getGenericPromptLocks = (channelName: string = ""): string => `
-[CHANNEL-SPECIFIC STYLE LOCK]:
-Gunakan referensi gambar sesuai preset/channel "${channelName || 'channel ini'}". Jangan menganggap style Ilmu Lidi sebagai standar global.
-- Jika referensi background/typography berasal dari channel lain, ikuti style channel tersebut, bukan palette biru muda + banner merah Ilmu Lidi.
-- Pertahankan identitas visual channel yang sedang dipilih.
-- Jangan memaksakan headline hitam + banner merah kecuali memang diminta user atau memang muncul di referensi channel tersebut.
+[CHANNEL STYLE LOCK]:
+Gunakan referensi gambar sesuai preset/channel "${channelName || 'channel ini'}" yang sudah dipilih.
+- Pertahankan identitas visual dan style yang sudah di-set oleh preset channel tersebut.
+- Jangan memaksakan elemen style dari channel lain.
 - Typography/font/color WAJIB sepenuhnya dari reference image yang diunggah — JANGAN deskripsikan jenis font, warna font, atau gaya typography dalam prompt ini.`;
 
 const getGlobalThumbnailSafetyLocks = (): string => `
