@@ -224,12 +224,12 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
           
           // Automatically regenerate detailed prompt when dependencies change
           const visualBrief = [
-              updatedThumbnail.visualMetaphor ? `VISUAL METAPHOR: ${updatedThumbnail.visualMetaphor}` : '',
-              updatedThumbnail.conflictObject ? `CONFLICT OBJECT: ${updatedThumbnail.conflictObject}` : '',
-              updatedThumbnail.curiosityObject ? `CURIOSITY OBJECT: ${updatedThumbnail.curiosityObject}` : '',
-              updatedThumbnail.emotionTarget ? `EMOTION TARGET: ${updatedThumbnail.emotionTarget}` : '',
-              updatedThumbnail.stopScrollReason ? `STOP-SCROLL REASON: ${updatedThumbnail.stopScrollReason}` : '',
-              updatedThumbnail.prompt ? `SCENE: ${updatedThumbnail.prompt}` : '',
+              updatedThumbnail.visualMetaphor ? `${updatedThumbnail.visualMetaphor}` : '',
+              updatedThumbnail.conflictObject ? `Konflik utama scene: ${updatedThumbnail.conflictObject}` : '',
+              updatedThumbnail.curiosityObject ? `Elemen penasaran: ${updatedThumbnail.curiosityObject}` : '',
+              updatedThumbnail.emotionTarget ? `Emosi yang dituju: ${updatedThumbnail.emotionTarget}` : '',
+              updatedThumbnail.stopScrollReason ? `${updatedThumbnail.stopScrollReason}` : '',
+              updatedThumbnail.prompt ? `Scene: ${updatedThumbnail.prompt}` : '',
           ].filter(Boolean).join('\n');
           updatedThumbnail.detailedPrompt = constructThumbnailPrompt(
               visualBrief || updatedThumbnail.prompt,
