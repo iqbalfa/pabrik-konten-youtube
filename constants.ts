@@ -161,15 +161,27 @@ Poin-Poin Pembongkaran:
 - MINIMAL 50% tiap ide HARUS fakta/numbers/quotes langsung dari input user (verbatim atau near-verbatim -- jangan interpretasi)
 - SISANYA boleh ditambahkan dari pengetahuan umum LLM yang relevan dengan topik
 - Tiap ide WAJIB punya jumlah poin BERBEDA (ide 1, ide 2, ide 3 tidak boleh sama jumlah poisnya)
-- PRIORITAS fakta: angka mengejutkan, keputusan bodoh yang terekam di sejarah, quote, perbandingan yang bikin kaget
-CATATAN: Rule ini HANYA untuk mode Channel Style Only. Mode Creative Transformation punya rules terpisah.
-Contoh distribusi bagus:
-  - Ide 1: 7 poin (4 dari input, 3 dari LLM knowledge)
-  - Ide 2: 9 poin (5 dari input, 4 dari LLM knowledge)
-  - Ide 3: 8 poin (4 dari input, 4 dari LLM knowledge)
-Contoh distribusi BURUK (dilarang):
-  - Semua ide 5 poin -- melanggar jumlah poin beda
-  - Semua ide 7 poin -- melanggar jumlah poin beda
+
+DISTRIBUSI PERKARA -- WAJIB DITAATI:
+- 1 POIN = 1 PERKARA (entitas/kasus) BERBEDA
+- JANGAN 2+ poin untuk perkara yang sama
+  Contoh SALAH:
+    1. Ford Pinto -- blablabla tentang Ford Pinto
+    2. Ford Pinto -- blablabla lagi tentang Ford Pinto  <- DUPLIKAT PERKARA
+    3. Ford Pinto -- lagi tentang Ford Pinto            <- DUPLIKAT PERKARA
+  Contoh BENAR:
+    1. Ford Pinto -- (semua fakta Ford Pinto dalam 1 poin)
+    2. Union Carbide -- (semua fakta UC dalam 1 poin)
+    3. VW Diesel -- (semua fakta VW dalam 1 poin)
+    4. Nestle -- (semua fakta Nestle dalam 1 poin)
+    dst.
+
+KUALITAS TIAP POIN:
+- Isi: fakta (angka, keputusan, peristiwa) -- BUKAN kimpulan
+- BUKAN closing advice atau prediksi masa depan
+- BUKAN analogi dengan fenomena modern
+- ClOSING PARAGRAPH sudah terpisah -- bukan komponen poin
+
 1. ...
 2. ...
 3. ...
