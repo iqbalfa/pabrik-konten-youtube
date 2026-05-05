@@ -821,7 +821,7 @@ export const generateTitleAndThumbnailPairs = async (
              emphasis_word: { type: Type.STRING, description: "STEP 2: Emphasis highlight. Must be the prefix OR suffix of full_text_overlay, never the middle words." },
              normal_word: { type: Type.STRING, description: "STEP 2: Remaining contiguous text next to emphasis_word. Must not combine separated words from before and after emphasis." },
              trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, ABSURDISM, HYPERBOLIC_LITERAL, etc." },
-             character_strategy: { type: Type.STRING, description: "'famous_character' jika narasi menyebutkan tokoh nyata yang bisa divisualkan (nama, julukan, figur terkenal). 'mascot_as_main' jika narasi tidak punya tokoh populer yang jelas." },
+             character_strategy: { type: Type.STRING, description: "'famous_character' jika narasi menyebutkan tokoh nyata yang bisa divisualkan (nama, julukan, figur terkenal). 'narrative_character' jika narasi menyebutkan karakter/anonymous dari cerita (bukan tokoh terkenal)." },
              famous_character_name: { type: Type.STRING, description: "Nama tokoh terkenal yang harus jadi subjek utama thumbnail. WAJIB diisi jika character_strategy='famous_character'. Contoh: 'Charles Darwin', 'Isaac Newton', 'Nikola Tesla', 'Michelangelo', 'Albert Einstein'." },
              feasibility_score: { type: Type.NUMBER },
              ctr_analysis: { type: Type.STRING, description: "Analisis singkat kenapa judul ini potensi CTR tinggi/sedang. 2-3 kalimat." },
@@ -904,7 +904,7 @@ export const generateTitleAndThumbnailPairs = async (
             : rawTrigger;
 
         const visualBrief = [
-            `ACTOR STRATEGY: ${p.character_strategy === 'famous_character' && p.famous_character_name ? `Tokoh utama: "${p.famous_character_name}" — figur ini adalah subjek visual utama di scene, BUKAN elemen sekunder. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.` : p.character_strategy === 'famous_character' ? `Tokoh utama: figur yang disebutkan dalam narasi. Maskot boleh sekunder.` : `Tokoh utama: maskot/channel identity.`}`,
+            `ACTOR STRATEGY: ${p.character_strategy === 'famous_character' && p.famous_character_name ? `Tokoh utama: "${p.famous_character_name}" — figur ini adalah subjek visual utama di scene, BUKAN elemen sekunder. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.` : p.character_strategy === 'narrative_character' ? `Tokoh utama: karakter dari narasi. Maskot WAJIB sebagai karakter sekunder di sudut frame -- BUKAN tokoh utama.` : `Tokoh utama: maskot/channel identity.`}`,
             p.visual_metaphor ? `HYPERBOLIC CONCEPT: ${p.visual_metaphor}` : '',
             p.conflict_object ? `CONFLICT OBJECT: ${p.conflict_object}` : '',
             p.curiosity_object ? `CURIOSITY OBJECT: ${p.curiosity_object}` : '',
@@ -936,7 +936,7 @@ export const generateTitleAndThumbnailPairs = async (
                 triggerType: safeTrigger,
                 status: 'idle',
                 feasibilityScore: p.feasibility_score || 85,
-                characterStrategy: p.character_strategy || "mascot_as_main",
+                characterStrategy: p.character_strategy || "narrative_character",
                 famousCharacterName: p.famous_character_name || "",
                 // Automatically construct detailed prompt on creation
                 detailedPrompt: constructThumbnailPrompt(

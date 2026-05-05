@@ -315,7 +315,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
           const fullPrompt = pair.thumbnail.detailedPrompt || "";
           // Inject mascot observer instruction if refImages are uploaded
           const mascotObserverNote = refImages.length > 0
-            ? "\n\n[OBSERVER IDENTITY]: Karakter observer dari referensi yang diunggah WAJIB muncul di scene ini — posisikan di sudut frame sebagai identitas channel."
+            ? "\n\n[OBSERVER IDENTITY]: Karakter observer dari referensi yang diunggah WAJIB muncul di scene ini -- posisikan di sudut frame sebagai identitas channel. HANYA SATU kemunculan. JANGAN duplikasi."
             : "";
           const fullPromptWithObserver = fullPrompt + mascotObserverNote;
           

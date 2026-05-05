@@ -34,7 +34,7 @@ export interface TitleThumbnailPair {
      status: 'idle' | 'generating' | 'success' | 'error';
      feasibilityScore?: number;
      finalEngineeredPrompt?: string;
-     characterStrategy?: 'famous_character' | 'mascot_as_main';
+     characterStrategy?: 'famous_character' | 'narrative_character';
      famousCharacterName?: string;
   };
 }
