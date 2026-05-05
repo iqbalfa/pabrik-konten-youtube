@@ -157,7 +157,19 @@ Semua channel adalah audiens INDONESIA. Jika sumber referensi berbahasa Inggris:
 Judul Video: (YouTube-friendly, natural, emosional — bukan artikel SEO)
 Narasi Hook: (Validasi Masalah -> Bangun Empati -> Janji Solusi)
 Poin-Poin Pembongkaran:
-(5-10 poin. Sesuaikan dengan kedalaman materi. Jumlah poin SAMA dengan angka di judul jika ada)
+(MINIMAL 7 POIN per ide, MAKSIMAL 12)
+- MINIMAL 50% tiap ide HARUS fakta/numbers/quotes langsung dari input user (verbatim atau near-verbatim -- jangan interpretasi)
+- SISANYA boleh ditambahkan dari pengetahuan umum LLM yang relevan dengan topik
+- Tiap ide WAJIB punya jumlah poin BERBEDA (ide 1, ide 2, ide 3 tidak boleh sama jumlah poisnya)
+- PRIORITAS fakta: angka mengejutkan, keputusan bodoh yang terekam di sejarah, quote, perbandingan yang bikin kaget
+CATATAN: Rule ini HANYA untuk mode Channel Style Only. Mode Creative Transformation punya rules terpisah.
+Contoh distribusi bagus:
+  - Ide 1: 7 poin (4 dari input, 3 dari LLM knowledge)
+  - Ide 2: 9 poin (5 dari input, 4 dari LLM knowledge)
+  - Ide 3: 8 poin (4 dari input, 4 dari LLM knowledge)
+Contoh distribusi BURUK (dilarang):
+  - Semua ide 5 poin -- melanggar jumlah poin beda
+  - Semua ide 7 poin -- melanggar jumlah poin beda
 1. ...
 2. ...
 3. ...
