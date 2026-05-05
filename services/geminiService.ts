@@ -905,7 +905,7 @@ export const generateTitleAndThumbnailPairs = async (
 
         const visualBrief = [
             `ACTOR STRATEGY: ${p.character_strategy === 'famous_character' && p.famous_character_name ? `Tokoh utama: "${p.famous_character_name}" — figur ini adalah subjek visual utama di scene, BUKAN elemen sekunder. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.` : p.character_strategy === 'famous_character' ? `Tokoh utama: figur yang disebutkan dalam narasi. Maskot boleh sekunder.` : `Tokoh utama: maskot/channel identity.`}`,
-            p.visual_metaphor ? `VISUAL METAPHOR: ${p.visual_metaphor}` : '',
+            p.visual_metaphor ? `HYPERBOLIC CONCEPT: ${p.visual_metaphor}` : '',
             p.conflict_object ? `CONFLICT OBJECT: ${p.conflict_object}` : '',
             p.curiosity_object ? `CURIOSITY OBJECT: ${p.curiosity_object}` : '',
             p.emotion_target ? `EMOTION TARGET: ${p.emotion_target}` : '',
