@@ -512,7 +512,10 @@ Untuk setiap variasi, tentukan character_strategy:
 - Jika memilih 'famous_character', WAJIB isi famous_character_name dengan nama tokoh yang konkret.
 - MASKOT: Selalu sebagai karakter sekunder/observer di sudut frame, BUKAN tokoh utama.
 - TOKOH UTAMA: Selalu karakter yang muncul di narasi (famous atau tidak), BUKAN maskot.
-- DESKRIPSI KARAKTER UTAMA -- WAJIB: Untuk setiap variasi, generate deskripsi visual lengkap karakter utama yang mencakup: siapa (nama/jenis karakter), penampilan fisik (usia, gender, pakaian, warna, ciri khas), ekspresi wajah spesifik, pose/action, dan konteks scene. Deskripsi ini harus cukup detail untuk image model bisa render karakter dengan akurat. Contoh deskripsi BAIK: "Pria usia 40-an berjas coklat, wajah khawatir, memegang struktagihan besar berwarna merah, di depan mesin ATM raksasa". Contoh deskripsi BURUK: "Karakter pria".
+- DESKRIPSI KARAKTER UTAMA -- WAJIB: Untuk setiap variasi, generate deskripsi visual lengkap karakter utama yang mencakup: siapa (nama/jenis karakter), penampilan fisik (usia, gender, pakaian, warna, ciri khas), ekspresi wajah spesifik, pose/action, dan konteks scene. Deskripsi ini harus cukup detail untuk image model bisa render karakter dengan akurat.
+  - Untuk 'famous_character': deskripsikan tokoh terkenal tersebut sesuai dengan perannya di narasi.
+  - Untuk 'narrative_character': WAJIB jelaskan KARAKTER UTAMA DARI NARASI/storyline sesuai dengan peran dia di cerita -- bisa pelaku, korban, saksi, atau jenis karakter lain yang muncul di narasi. Contoh: "Pria usia 40-an berjas mahal warna gelap, wajah dingin/tajam, senyum tipis menyeringai, memegang dokumen tebal dengan logo perusahaan, di depan gedung korporasi berasap" (pelaku/korporasi). Atau: "Wanita usia 30-an berpakaian sederhanalusuh, wajah ketakutan, memegang surat tagihan robek, di depan rumah kontrakan" (korban). BUKAN: maskot chibi, karakter anak-anak preset, atau karakter dari ILMU LIDI/preset lain.
+  Contoh deskripsi BAIK: "Pria usia 40-an berjas coklat, wajah khawatir, memegang struktagihan besar berwarna merah, di depan mesin ATM raksasa". Contoh deskripsi BURUK: "Karakter pria", "Anak laki-laki chibi".
 
 ### RELASI JUDUL + THUMBNAIL (WAJIB)
 Judul dan thumbnail HARUS saling melengkapi, bukan saling mengulang.
