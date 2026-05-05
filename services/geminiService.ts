@@ -770,12 +770,9 @@ Karakter reference → gunakan untuk identitas, proporsi, dan pose style karakte
 [BACKGROUND]:
 Ikuti reference image yang diunggah. Area kiri kosong untuk teks overlay. Area kanan untuk subjek utama — simplify, tidak crowded.
 
-[SCENE]:
+            [SCENE]:
 ${sceneDescription}
 ${actionDescription ? `Aksi: ${actionDescription}` : ''}
-
-[SUBJEK UTAMA]:
-Karakter utama adalah figur visual yang paling menonjol di scene ini.
 
 [TEXT OVERLAY - FINAL]:
 • FULL: "${phraseToRender.toUpperCase()}"
@@ -907,14 +904,18 @@ export const generateTitleAndThumbnailPairs = async (
             : rawTrigger;
 
         const visualBrief = [
-            `ACTOR STRATEGY: ${p.character_strategy === 'famous_character' && p.famous_character_name ? `Tokoh utama: "${p.famous_character_name}" — figur ini adalah subjek visual utama di scene, BUKAN elemen sekunder. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.` : p.character_strategy === 'narrative_character' ? `Tokoh utama: karakter dari narasi. Maskot WAJIB sebagai karakter sekunder di sudut frame -- BUKAN tokoh utama.` : `Tokoh utama: maskot/channel identity.`}`,
-            p.visual_metaphor ? `HYPERBOLIC CONCEPT: ${p.visual_metaphor}` : '',
-            p.conflict_object ? `CONFLICT OBJECT: ${p.conflict_object}` : '',
-            p.curiosity_object ? `CURIOSITY OBJECT: ${p.curiosity_object}` : '',
-            p.emotion_target ? `EMOTION TARGET: ${p.emotion_target}` : '',
-            p.stop_scroll_reason ? `STOP-SCROLL REASON: ${p.stop_scroll_reason}` : '',
-            p.thumbnail_prompt ? `SCENE: ${p.thumbnail_prompt}` : '',
-            p.main_character_description ? `MAIN SUBJECT: ${p.main_character_description}` : '',
+            p.character_strategy === 'famous_character' && p.famous_character_name
+              ? `Tokoh utama thumbnail: "${p.famous_character_name}" -- figur ini adalah subjek visual utama di scene, BUKAN elemen sekunder. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.`
+              : p.character_strategy === 'narrative_character'
+              ? `Tokoh utama thumbnail: karakter dari narasi. Maskot WAJIB sebagai karakter sekunder di sudut frame -- BUKAN tokoh utama.`
+              : `Tokoh utama thumbnail: maskot/channel identity.`,
+            p.visual_metaphor ? `${p.visual_metaphor}` : '',
+            p.conflict_object ? `Konflik utama scene: ${p.conflict_object}` : '',
+            p.curiosity_object ? `Elemen penasaran: ${p.curiosity_object}` : '',
+            p.emotion_target ? `Emosi yang dituju: ${p.emotion_target}` : '',
+            p.stop_scroll_reason ? `${p.stop_scroll_reason}` : '',
+            p.thumbnail_prompt ? `Scene: ${p.thumbnail_prompt}` : '',
+            p.main_character_description ? `Deskripsi karakter utama: ${p.main_character_description}` : '',
         ].filter(Boolean).join("\n");
 
         return {
