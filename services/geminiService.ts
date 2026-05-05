@@ -512,6 +512,7 @@ Untuk setiap variasi, tentukan character_strategy:
 - Jika memilih 'famous_character', WAJIB isi famous_character_name dengan nama tokoh yang konkret.
 - MASKOT: Selalu sebagai karakter sekunder/observer di sudut frame, BUKAN tokoh utama.
 - TOKOH UTAMA: Selalu karakter yang muncul di narasi (famous atau tidak), BUKAN maskot.
+- DESKRIPSI KARAKTER UTAMA -- WAJIB: Untuk setiap variasi, generate deskripsi visual lengkap karakter utama yang mencakup: siapa (nama/jenis karakter), penampilan fisik (usia, gender, pakaian, warna, ciri khas), ekspresi wajah spesifik, pose/action, dan konteks scene. Deskripsi ini harus cukup detail untuk image model bisa render karakter dengan akurat. Contoh deskripsi BAIK: "Pria usia 40-an berjas coklat, wajah khawatir, memegang struktagihan besar berwarna merah, di depan mesin ATM raksasa". Contoh deskripsi BURUK: "Karakter pria".
 
 ### RELASI JUDUL + THUMBNAIL (WAJIB)
 Judul dan thumbnail HARUS saling melengkapi, bukan saling mengulang.
@@ -824,6 +825,7 @@ export const generateTitleAndThumbnailPairs = async (
              trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, ABSURDISM, HYPERBOLIC_LITERAL, etc." },
              character_strategy: { type: Type.STRING, description: "'famous_character' jika narasi menyebutkan tokoh nyata yang bisa divisualkan (nama, julukan, figur terkenal). 'narrative_character' jika narasi menyebutkan karakter/anonymous dari cerita (bukan tokoh terkenal)." },
              famous_character_name: { type: Type.STRING, description: "Nama tokoh terkenal yang harus jadi subjek utama thumbnail. WAJIB diisi jika character_strategy='famous_character'. Contoh: 'Charles Darwin', 'Isaac Newton', 'Nikola Tesla', 'Michelangelo', 'Albert Einstein'." },
+             main_character_description: { type: Type.STRING, description: "Deskripsi visual lengkap karakter utama: siapa (nama/jenis karakter), penampilan fisik (usia, pakaian, warna, ciri khas), ekspresi wajah, pose/action, dan konteks scene. WAJIB konkret dan detail -- ini yang dipakai image model untuk render karakter. Contoh: 'Pria usia 40-an berjas coklat, wajah khawatir, memegang struktagihan besar, di depan mesin pencari uang'." },
              feasibility_score: { type: Type.NUMBER },
              ctr_analysis: { type: Type.STRING, description: "Analisis singkat kenapa judul ini potensi CTR tinggi/sedang. 2-3 kalimat." },
              clickbait_risk: { type: Type.STRING, description: "LOW, MEDIUM, or HIGH" }
@@ -912,6 +914,7 @@ export const generateTitleAndThumbnailPairs = async (
             p.emotion_target ? `EMOTION TARGET: ${p.emotion_target}` : '',
             p.stop_scroll_reason ? `STOP-SCROLL REASON: ${p.stop_scroll_reason}` : '',
             p.thumbnail_prompt ? `SCENE: ${p.thumbnail_prompt}` : '',
+            p.main_character_description ? `MAIN SUBJECT: ${p.main_character_description}` : '',
         ].filter(Boolean).join("\n");
 
         return {
@@ -939,6 +942,7 @@ export const generateTitleAndThumbnailPairs = async (
                 feasibilityScore: p.feasibility_score || 85,
                 characterStrategy: p.character_strategy || "narrative_character",
                 famousCharacterName: p.famous_character_name || "",
+                mainCharacterDescription: p.main_character_description || "",
                 // Automatically construct detailed prompt on creation
                 detailedPrompt: constructThumbnailPrompt(
                     visualBrief || p.thumbnail_prompt, 
