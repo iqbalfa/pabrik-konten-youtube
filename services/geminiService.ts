@@ -872,11 +872,6 @@ export const generateTitleAndThumbnailPairs = async (
             : rawTrigger;
 
         const visualBrief = [
-            p.character_strategy === 'famous_character' && p.famous_character_name
-              ? `Tokoh utama thumbnail: "${p.famous_character_name}" -- figur ini adalah subjek visual utama di scene. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.`
-              : p.character_strategy === 'narrative_character'
-              ? `Tokoh utama thumbnail: karakter dari narasi. Maskot WAJIB sebagai karakter sekunder di sudut frame -- BUKAN tokoh utama.`
-              : `Tokoh utama thumbnail: maskot/channel identity.`,
             p.main_character_description ? `Karakter utama dari narasi: ${p.main_character_description}` : '',
         ].filter(Boolean).join("\n");
 
