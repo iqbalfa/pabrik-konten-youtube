@@ -211,7 +211,6 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
           const visualBrief = [
               updatedThumbnail.prompt ? `1. Karakter utama dari narasi (usia, pakaian, ekspresi, pose/action): ${updatedThumbnail.prompt}` : '',
               updatedThumbnail.actionDescription ? `   Action: ${updatedThumbnail.actionDescription}` : '',
-              `2. Karakter maskot/pelengkap (dari reference image): maskot channel WAJIB muncul di sudut frame sebagai identitas. Deskripsikan berdasarkan reference yang diunggah.`,
           ].filter(Boolean).join('\n');
           updatedThumbnail.detailedPrompt = constructThumbnailPrompt(
               visualBrief || updatedThumbnail.prompt,
@@ -287,11 +286,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       try {
           // Use the detailedPrompt from state
           const fullPrompt = pair.thumbnail.detailedPrompt || "";
-          // Inject mascot observer instruction if refImages are uploaded
-          const mascotObserverNote = refImages.length > 0
-            ? "\n\n[OBSERVER IDENTITY]: Karakter observer dari referensi yang diunggah WAJIB muncul di scene ini -- posisikan di sudut frame sebagai identitas channel. HANYA SATU kemunculan. JANGAN duplikasi."
-            : "";
-          const fullPromptWithObserver = fullPrompt + mascotObserverNote;
+          const fullPromptWithObserver = fullPrompt;
           
           const { imageUrl, engineeredPrompt } = await onGenerateImage(
               fullPromptWithObserver,

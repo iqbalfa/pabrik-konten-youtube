@@ -510,13 +510,13 @@ DILARANG: COMPARISON, split-screen, before-after, VS layout. Satu scene bersih.
 
 // Thumbnail visual styles per channel/niche
 const THUMBNAIL_STYLES: Record<string, string> = {
-  'Ilmu Lidi': 'Modern 2D webcomic style, bold clean line art, stylized character design, flat colors with cel-shading, cinematic dramatic lighting, volumetric atmosphere, rim lighting, deep shadows, ambient occlusion, depth of field, sharp focus on subject, 8k resolution, high quality digital illustration.',
-  'Ilmu Survival': 'Dark cinematic 2D illustration style, dramatic lighting with deep shadows, muted earth tones with danger accents (red/orange), atmospheric fog or haze, gritty textured surfaces, intense character expressions, survival/preparedness aesthetic, high contrast, moody color grading.',
-  'Ilmu Nyantuy': 'Ultra-minimalist 2D cartoon style, crude MS Paint aesthetic, basic flat colors, unpolished rough outlines, intentionally simple drawing, humorous deadpan tone, solid white or basic flat color background, low-effort high-comedy internet meme vibe, lo-fi digital art.',
-  'Ilmu Psikologi Diri': '2D fast digital scribble, whiteboard doodle style, dry-erase marker texture, thick messy lines, casual character illustration, pure white background, minimal flat colors, spontaneous energetic drawing, humorous explanation style.',
+  'Ilmu Lidi': 'Modern 2D webcomic, bold clean line art, flat cel-shading, cinematic dramatic lighting, sharp focus, 8k.',
+  'Ilmu Survival': 'Dark cinematic 2D, dramatic chiaroscuro, muted earth tones, gritty textured, intense expressions, high contrast, moody.',
+  'Ilmu Nyantuy': 'Ultra-minimalist 2D cartoon, crude MS Paint aesthetic, basic flat colors, lo-fi digital art, solid white bg, deadpan humor.',
+  'Ilmu Psikologi Diri': '2D fast digital scribble, whiteboard doodle, dry-erase marker texture, thick messy lines, pure white bg, minimal flat colors.',
 };
 
-const THUMBNAIL_STYLE_DEFAULT = 'Modern 2D webcomic style, bold clean line art, stylized character design, flat colors with cel-shading, cinematic dramatic lighting, 8k resolution, high quality digital illustration.';
+const THUMBNAIL_STYLE_DEFAULT = 'Modern 2D webcomic, bold clean line art, flat cel-shading, cinematic dramatic lighting, sharp focus, 8k.';
 
 // Get thumbnail style based on writing style text
 export const getThumbnailStyle = (writingStyle: string): string => {
@@ -534,7 +534,7 @@ const getIlmuLidiPromptLocks = (): string => `
 [ILMU LIDI PRESET LOCK]:
 - Karakter utama: INVENT dari narasi channel ini (usia 20-40 tahun, gaya visual webcomic 2D).
 - Maskot Ilmu Lidi (usia visual 7-10 tahun, 2D semi-chibi): observer yang berbaur dengan karakter utama dalam scene. BUKAN tokoh utama.
-- NEGATIVE LOCK: no adult face, no teenage look, no mature jawline, no realistic anatomy.
+- Lock maskot: no adult face, no teenage look, no mature jawline, no realistic anatomy (khusus maskot). Karakter utama tetap usia dewasa.
 - Background & typography: SEPENUHNYA dari reference image yang diunggah — JANGAN deskripsikan dalam prompt ini.`;
 
 const getGenericPromptLocks = (channelName: string = ""): string => `
@@ -637,17 +637,15 @@ export const constructThumbnailPrompt = (
 ${visualStyle}
 
 [SCENE]:
+Teks besar di kiri. Karakter utama + maskot berbaur di kanan.
 ${sceneDescription || ''}
 ${actionDescription ? `Action: ${actionDescription}` : ''}
-Maskot channel (dari referensi): observer yang berbaur dengan karakter utama dalam scene.
 
 [TEXT OVERLAY]:
 "${phraseToRender.toUpperCase()}"
 Emphasis: "${safeEmphasisText.toUpperCase()}" → ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'}
 
-[COMPOSITION]:
-Teks besar di kiri. Subjek utama + maskot berbaur di kanan.
-
+[RULES]:
 ${channelPresetLocks}
 ${globalSafetyLocks}`;};
 

@@ -165,46 +165,31 @@ STANDARD OUTRO: Always the same structure: "If this changed how you think about 
 // Master Preset — Visual Style per channel (untuk thumbnail generation)
 export const VISUAL_STYLE_PRESETS: Record<ChannelName, string> = {
   'Ilmu Lidi': `VISUAL STYLE — ILMU LIDI
-- Warna dominan: Bold, kontras tinggi — kombinasi hitam, kuning neon, merah aksen
-- Gaya thumbnail: Over-the-top, ekspresi wajah kaget/marah + gesture dramatis
-- Komposisi: Simetris atau rule of thirds dengan elemen utama di tengah
-- Typography: Font tebal, sering pakai efek 3D beveled, outline putih/tipis hitam
-- Aksen: Emoji/icon spontan (money bag, fire, explode) untuk komedi
-- Mood: Chaotic energy, seperti meme yang diklik ribuan kali`,
+- 2D semi-chibi webcomic, bold clean line art
+- Over-the-top chaotic — ekspresi kaget/marah + gesture dramatis
+- Aksen Emoji/icon spontan (money bag, fire, explode) untuk komedi`,
 
   'Ilmu Survival': `VISUAL STYLE — ILMU SURVIVAL
-- Warna dominan: Dark palette — hitam, merah darah, abu-abu gelap, hijau army
-- Gaya thumbnail: Dramatis dan cinematic — pencahayaan kontras (chiaroscuro)
-- Komposisi: Terserah fokus pada karakter yang siap/was-was, latar chaos (api, kehancuran)
-- Typography: Font sans-serif tebal, warna putih dengan shadow/drop shadow kuat
-- Aksen: Simbol warning (segitiga peringatan, biohazard, target) — minimalis tapi impactful
-- Mood: Serius, gelap, ada urgensi — "lo harus tonton sekarang"`,
+- Dramatis dan cinematic, pencahayaan kontras (chiaroscuro)
+- Gritty textured, intense expressions, survival-preparedness aesthetic
+- Simbol warning minimalis (segitiga peringatan, biohazard, target) — impactful`,
 
   'Ilmu Nyantuy': `VISUAL STYLE — ILMU NYANTUY
-- Warna dominan: Putih bersih sebagai background utama — aksen warna pada teks overlay (merah untuk elemen bahaya/urgensi, biru untuk elemen informasi). Karakter pakai warna tenang (navy, cokelat, biru muda).
-- Gaya thumbnail: Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis (memegang dagu berpikir, menunjuk ke objek). Ekspresi fokus,好奇, atau微微 terkejut — bukan ekspresi horror/seram.
-- Mood: Informatif dan curious — "lo perlu tahu ini", "ini bahaya tapi lo mungkin gak sadar". Karakter adalah teman yang lagi kasih tahu fakta menarik, bukan hauntis.
-- Branding: Karakter pakai hoodie/kupluk仙魔 — ini identitas channel yang harus konsisten.
-- Elemen penting: Karakter harus MENUNJUK ke arah objek curiosity dengan tangan atau jari.
-- Curiosity object: Benda sehari-hari relate konteks Indonesia (panci tergores, styrofoam, obat nyamuk, minumam manis, hp.retak, struk paylater).
-- Typography/font/color: SEPENUHNYA dari reference image yang diunggah oleh user. Biarkan reference image menentukan.`,
+- Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis
+- Karakter memegang dagu berpikir/menunjuk ke arah objek curiosity
+- Ekspresi fokus/hwan/terkejut — bukan horror/seram
+- Objek curiosity: benda sehari-hari konteks Indonesia (panci tergores, styrofoam, struk paylater, dll)`,
 
   'Ilmu Psikologi Diri': `VISUAL STYLE — ILMU PSIKOLOGI DIRI
-|- Warna dominan: Warm & calming — biru muda, lavender, krem, putih bersih
-|- Gaya thumbnail: Ekspresi reflektif/introspektif — bukan kaget, tapi "oke, gue relate"
-|- Komposisi: Clean, ruang kosong untuk text overlay, depth of field halus
-|- Typography: Font sans-serif modern, minimalis, warna solid tanpa efek berlebih
-|- Aksen: Subtle gradient, soft shadow, elemen simbolis (jantung, otak, muncul/desapare)
-|- Mood: Empatik, hangat — seperti thumbnail podcast personal yang bikin penonton berhenti scroll
-|- VISUAL THUMBNAIL: 2D fast digital scribble, whiteboard doodle style, dry-erase marker texture, thick messy lines, casual character illustration, pure white background, minimal flat colors, spontaneous energetic drawing, humorous explanation, No text if not mentioned`,
+- Clean, ekspresi reflektif/introspektif — bukan kaget, tapi "oke, gue relate"
+- 2D fast digital scribble, whiteboard doodle, dry-erase marker texture
+- Pure white background, minimal flat colors, spontaneous energetic drawing
+- Elemen simbolis halus (jantung, otak, muncul/hilang)`,
 
   'Richwell Finance': `VISUAL STYLE — RICHWELL FINANCE
-|- Warna dominan: Bold, kontras tinggi — kombinasi hitam, kuning neon, hijau wealth (#00D47E), aksen emas/putih
-|- Gaya thumbnail: Over-the-top, angka besar bold + gesture dramatis + ekspresi kaget/menang
-|- Komposisi: Simetris atau rule of thirds, elemen utama (grafik/angka) di tengah
-|- Typography: Font tebal, efek 3D beveled, outline putih/tebal, angka jadi hero element
-|- Aksen: Emoji/icon spontaneous (dollar sign, grafik naik, money bag, fire) untuk sense of urgency
-|- Mood: Chaotic energy finance — "uang lo travaille terus tanpa lo sadari" — like a meme that got a finance degree`
+- Bold, angka besar jadi hero element
+- Gesture dramatis + ekspresi kaget/menang
+- Aksen Emoji/icon spontan (dollar sign, grafik naik, money bag, fire)`,
 };
 
 // Default Hook & Outro per channel
