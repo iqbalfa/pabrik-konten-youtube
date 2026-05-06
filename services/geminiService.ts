@@ -637,7 +637,8 @@ ${actionDescription ? `Action: ${actionDescription}` : ''}
 
 [TEXT OVERLAY]:
 "${phraseToRender.toUpperCase()}"
-Emphasis: "${safeEmphasisText.toUpperCase()}" → ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'}
+→ Emphasis "${safeEmphasisText.toUpperCase()}" ${emphasisPosition === 'START' ? '(AWAL)': '(AKHIR)'}: render LEBIH BESAR, BOLD, warna high-impact/kontras sebagai hero text.
+→ Normal word: render lebih kecil, warna solid netral (putih/hitam), sebagai support text.
 
 [RULES]:
 Komposisi: Teks besar di kiri. Subjek utama di kanan.
