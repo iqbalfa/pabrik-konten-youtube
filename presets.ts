@@ -164,30 +164,25 @@ STANDARD OUTRO: Always the same structure: "If this changed how you think about 
 
 // Master Preset — Visual Style per channel (untuk thumbnail generation)
 export const VISUAL_STYLE_PRESETS: Record<ChannelName, string> = {
-  'Ilmu Lidi': `VISUAL STYLE — ILMU LIDI
-- 2D semi-chibi webcomic, bold clean line art
+  'Ilmu Lidi': `- 2D semi-chibi webcomic, bold clean line art
 - Over-the-top chaotic — ekspresi kaget/marah + gesture dramatis
 - Aksen Emoji/icon spontan (money bag, fire, explode) untuk komedi`,
 
-  'Ilmu Survival': `VISUAL STYLE — ILMU SURVIVAL
-- Dramatis dan cinematic, pencahayaan kontras (chiaroscuro)
+  'Ilmu Survival': `- Dramatis dan cinematic, pencahayaan kontras (chiaroscuro)
 - Gritty textured, intense expressions, survival-preparedness aesthetic
 - Simbol warning minimalis (segitiga peringatan, biohazard, target) — impactful`,
 
-  'Ilmu Nyantuy': `VISUAL STYLE — ILMU NYANTUY
-- Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis
+  'Ilmu Nyantuy': `- Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis
 - Karakter memegang dagu berpikir/menunjuk ke arah objek curiosity
 - Ekspresi fokus/hwan/terkejut — bukan horror/seram
 - Objek curiosity: benda sehari-hari konteks Indonesia (panci tergores, styrofoam, struk paylater, dll)`,
 
-  'Ilmu Psikologi Diri': `VISUAL STYLE — ILMU PSIKOLOGI DIRI
-- Clean, ekspresi reflektif/introspektif — bukan kaget, tapi "oke, gue relate"
+  'Ilmu Psikologi Diri': `- Clean, ekspresi reflektif/introspektif — bukan kaget, tapi "oke, gue relate"
 - 2D fast digital scribble, whiteboard doodle, dry-erase marker texture
 - Pure white background, minimal flat colors, spontaneous energetic drawing
 - Elemen simbolis halus (jantung, otak, muncul/hilang)`,
 
-  'Richwell Finance': `VISUAL STYLE — RICHWELL FINANCE
-- Bold, angka besar jadi hero element
+  'Richwell Finance': `- Bold, angka besar jadi hero element
 - Gesture dramatis + ekspresi kaget/menang
 - Aksen Emoji/icon spontan (dollar sign, grafik naik, money bag, fire)`,
 };

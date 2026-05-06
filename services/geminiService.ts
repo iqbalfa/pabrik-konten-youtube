@@ -545,14 +545,9 @@ Gunakan referensi gambar sesuai preset/channel "${channelName || 'channel ini'}"
 - Typography/font/color WAJIB sepenuhnya dari reference image yang diunggah — JANGAN deskripsikan jenis font, warna font, atau gaya typography dalam prompt ini.`;
 
 const getGlobalThumbnailSafetyLocks = (): string => `
-[NO FAKE YOUTUBE UI - FINAL LOCK]:
-DILARANG KERAS membuat elemen UI YouTube palsu: play button, progress bar, watermark YouTube, badge channel, tombol subscribe, like/share UI, atau frame player.
-
-[INDONESIAN VISIBLE TEXT LOCK]:
-Semua teks yang terlihat di gambar final HARUS Bahasa Indonesia dan hanya teks overlay yang ditentukan. DILARANG menambahkan teks Inggris seperti Bill, Debt, Money, Loan, Save, Rich, Poor, Sale, Promo asing, kecuali brand/nama resmi yang memang diminta. Gunakan padanan Indonesia: TAGIHAN, UTANG, UANG, PINJAMAN, HEMAT, KAYA, MISKIN, PROMO.
-
-[NO INCIDENTAL TEXT LOCK]:
-DILARANG menambahkan tulisan lain pada objek, kertas, layar HP, struk, poster, papan, background, stiker, watermark, atau properti. Jika ada struk/kertas/HP, tampilkan sebagai bentuk visual tanpa tulisan terbaca, kecuali kata itu adalah overlay final.`;
+[SAFETY LOCKS]:
+- NO fake YouTube UI (play button, progress bar, subscribe, watermark, frame player).
+- Hanya teks overlay yang ditentukan — semua teks Bahasa Indonesia. DILARANG incidental text pada objek, kertas, HP, struk, poster, background, stiker, watermark, atau properti. Struk/kertas/HP: visual saja tanpa tulisan terbaca.`;
 
 const normalizeTextSpaces = (value: string = ""): string => value.replace(/\s+/g, " ").trim();
 const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -637,7 +632,6 @@ export const constructThumbnailPrompt = (
 ${visualStyle}
 
 [SCENE]:
-Teks besar di kiri. Karakter utama + maskot berbaur di kanan.
 ${sceneDescription || ''}
 ${actionDescription ? `Action: ${actionDescription}` : ''}
 
@@ -646,6 +640,7 @@ ${actionDescription ? `Action: ${actionDescription}` : ''}
 Emphasis: "${safeEmphasisText.toUpperCase()}" → ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'}
 
 [RULES]:
+Komposisi: Teks besar di kiri. Subjek utama di kanan.
 ${channelPresetLocks}
 ${globalSafetyLocks}`;};
 
