@@ -513,6 +513,10 @@ Untuk setiap variasi, tentukan character_strategy:
 - MASKOT: Selalu sebagai karakter sekunder/observer di sudut frame, BUKAN tokoh utama.
 - TOKOH UTAMA: Selalu karakter yang muncul di narasi (famous atau tidak), BUKAN maskot.
 - DESKRIPSI KARAKTER UTAMA -- WAJIB: Untuk setiap variasi, generate deskripsi visual lengkap karakter utama yang mencakup: siapa (nama/jenis karakter), penampilan fisik (usia, gender, pakaian, warna, ciri khas), ekspresi wajah spesifik, pose/action, dan konteks scene. Deskripsi ini harus cukup detail untuk image model bisa render karakter dengan akurat.
+  - MASKOT (Ilmu Lidi / karakter preset channel) SELALU sebagai observer di sudut frame -- BUKAN tokoh utama.
+  - Karakter utama WAJIB dari narasi/storyline (bisa pelaku, korban, saksi, atau jenis karakter lain yang muncul di cerita).
+  - Jika narasi TIDAK menyebutkan penampilan karakter utama secara spesifik (usia, pakaian, ekspresi), WAJIB INVENT perawakan yang SUITABLE untuk narasi tersebut dan cocok untuk thumbnail -- contoh: "Pria 35 tahun berjas murah sobek, wajah panik, memegang struk raksasa" (untuk narasi tentang keputusan bisnis).
+  - MASKOT channel TIDAK PERNAH jadi tokoh utama.
   - Untuk 'famous_character': deskripsikan tokoh terkenal tersebut sesuai dengan perannya di narasi.
   - Untuk 'narrative_character': WAJIB jelaskan KARAKTER UTAMA DARI NARASI/storyline sesuai dengan peran dia di cerita -- bisa pelaku, korban, saksi, atau jenis karakter lain yang muncul di narasi. Jika narasi MEMANG tentang Ilmu Lidi atau karakter preset channel, maka karakter tersebut adalah karakter utama dan WAJIB dideskripsikan apa adanya. Contoh: "Pria usia 40-an berjas mahal warna gelap, wajah dingin/tajam, senyum tipis menyeringai, memegang dokumen tebal dengan logo perusahaan" (pelaku). Contoh: "Anak laki-laki 8 tahun semi-chibi, ekspresi marah, memegang kalkulator raksasa retak" (karakter utama dari narasi tentang Ilmu Lidi).
   Contoh deskripsi BAIK: "Pria usia 40-an berjas coklat, wajah khawatir, memegang struktagihan besar berwarna merah, di depan mesin ATM raksasa". Contoh deskripsi BURUK: "Karakter pria", "Anak laki-laki chibi".
