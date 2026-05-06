@@ -490,6 +490,16 @@ Objek familiar: dompet kosong, struk Indomaret, QRIS, paylater, pinjol, tagihan 
 - JANGAN deskripsikan background/tempat/lokasi. Fokus pada karakter, aksi, dan objek foreground.
 - DILARANG: komposisi simetris, elemen di tengah, split-screen, before-after, VS layout.
 
+### CLICKABILITY ENGINE — WAJIB
+Tujuan: scene di kanan frame membuat orang BERHENTI SCROLL <0.5 detik.
+Setiap thumbnail_prompt WAJIB memiliki 6 elemen ini:
+1. **CONFLICT OBJECT** — benda visual sumber konflik yang dominan. BOTOL RACUN, STRUK MERAH, PISAU, HP RETAK. Bukan kata abstrak seperti "masalah" atau "tekanan".
+2. **FOCAL POINT** — satu elemen paling menarik mata, di kanan frame (eye-path natural setelah teks kiri).
+3. **MOMEN KRITIS** — aksi SEDANG terjadi, bukan sebelum atau sesudah. "Sedang menuang" (bukan "sudah tumpah"). "Tangan meraih" (bukan "telah mengambil").
+4. **EKSPRESI SPESIFIK** — bukan "wajah kaget". Tapi "melotot ngeri, mulut setengah terbuka, alis naik asimetris, keringat dingin di pelipis".
+5. **IMPLIED STORY** — setelah lihat, penonton bertanya "kok bisa?"/"terus?"/"serius?"
+6. **CONTRAST** — dramatic scale/status contrast dalam 1 frame: kaya vs miskin, besar vs kecil, bersih vs kotor, sehat vs sakit.
+
 ### TRIGGER TYPES (pilih untuk tiap variasi, WAJIB berbeda)
 1. FEAR — ancaman, bahaya, wajah takut
 2. CURIOSITY — objek tertutup/blur, misteri
@@ -642,6 +652,7 @@ ${actionDescription ? `Action: ${actionDescription}` : ''}
 
 [RULES]:
 Komposisi: Teks besar di kiri. Subjek utama di kanan.
+Clickability: Conflict object dominan + momen kritis + ekspresi spesifik kuat + contrast dalam 1 frame.
 ${channelPresetLocks}
 ${globalSafetyLocks}`;};
 
@@ -666,7 +677,7 @@ export const generateTitleAndThumbnailPairs = async (
           type: Type.OBJECT,
           properties: {
              title: { type: Type.STRING },
-             thumbnail_prompt: { type: Type.STRING, description: "Prompt teknis image-model. WAJIB berisi: siapa karakter utama (usia, pakaian, ekspresi) + apa yang sedang dilakukan (aksi/pose) + objek utama di scene. TIDAK BOLEH ada deskripsi tempat/lokasi. Contoh BAIK: 'Pria usia 40-an berjas coklat, wajah khawatir, mendorong meja ke arahnya, calculator besar dan struk menumpuk'." },
+             thumbnail_prompt: { type: Type.STRING, description: "Prompt teknis image-model. WAJIB: conflict object dominan + focal point jelas di kanan frame + momen KRITIS sedang terjadi + ekspresi spesifik kuat + contrast dalam 1 frame. WAJIB siapa karakter utama (usia, pakaian, ekspresi) + aksi/pose + objek. TIDAK BOLEH deskripsi tempat. Contoh: 'Pria 40-an berjas coklat, wajah khawatir, melotot ke struk tagihan raksasa MERAH yang disobek, kalkulator hancur di sampingnya'." },
              full_text_overlay: { type: Type.STRING, description: "Teks overlay thumbnail, 2-4 kata, punchy, bukan copy judul." },
              action_description: { type: Type.STRING, description: "Aksi/pose spesifik karakter utama yang sedang dilakukan di scene." },
              emphasis_word: { type: Type.STRING, description: "Kata yang di-highlight. Harus di AWAL atau AKHIR full_text_overlay." },
