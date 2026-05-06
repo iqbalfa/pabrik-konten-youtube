@@ -543,19 +543,7 @@ Jika konteks audience Indonesia, pilih objek visual yang langsung familiar bagi 
 - Contoh sukses lama hanya benchmark kreativitas, bukan template tetap.
 
 ### SCORING CTR
-Untuk setiap variasi yang dihasilkan, berikan juga field "ctr_analysis" berisi analisis singkat (2-3 kalimat) kenapa judul ini berpotensi CTR tinggi atau sedang. Analisis harus menyebutkan:
-- Apakah ada curiosity gap yang kuat?
-- Apakah ada emosi spesifik yang terpicu?
-- Apakah judul cukup jelas dalam 1 detik?
-- Apakah judul terasa clickbait murahan atau cerdas?
-
-Tambahkan juga scoring visual:
-- visual_ctr_score: angka 1-100 untuk kekuatan visual thumbnail, bukan kualitas judul.
-- stop_scroll_reason: alasan konkret kenapa penonton berhenti scroll.
-- thumbnail_weakness: risiko utama yang bisa membuat thumbnail gagal diklik.
-Skor visual minimal 78. Kalau di bawah itu, revisi konsep sebelum output.
-
-Contoh format ctr_analysis: "Judul ini kuat karena ada kontras antara ekspektasi dan kenyataan yang memicu rasa penasaran. Kata 'bukan yang kamu kira' menciptakan curiosity gap. Cukup jelas dalam 1 detik bahwa ini bahas topik [X]. Terasa cerdas, bukan clickbait murahan."
+Tidak wajib ada scoring di dalam prompt image.
 
 ### DIVERSITY ENFORCEMENT (SANGAT PENTING)
 Ketiga variasi yang dihasilkan WAJIB benar-benar berbeda secara STRATEGI, bukan cuma beda kata.
@@ -598,20 +586,17 @@ Output adalah CTR package, bukan sekadar pasangan generik.
 - Stop_scroll_reason: alasan 1 kalimat kenapa visual ini membuat orang berhenti scroll.
 - Thumbnail_weakness: risiko utama kenapa thumbnail ini bisa terasa lemah/generik.
 - Visual_ctr_score: skor visual 1-100; minimal 78, revisi jika lebih rendah.
-- Thumbnail_prompt: prompt teknis image-model yang konkret, fokus pada pesan utama, objek sentral, dan aksi. Wajib memasukkan visual_metaphor, conflict_object, dan curiosity_object secara natural. TIDAK BOLEH mengandung deskripsi tempat/lokasi/settings seperti "di kantor", "di rumah", "di supermarket", "berlatar", "dengan latar", "background:", dll. Cukup: SUBJEK + AKSI + OBJEK YANG ADA + KONFLIK VISUAL. Contoh BURUK: "seorang pria berdiri di kantor dengan latar meja kerja". Contoh BAIK: "Karakter kita mendorong meja jatuh ke arahnya, ekspresi panik, calculator besar dan struk menumpuk".
+- Thumbnail_prompt: prompt teknis image-model yang konkret. WAJIB berisi: siapa karakter utama (usia, pakaian, ekspresi) + apa yang sedang dilakukan (aksi/pose) + objek utama di scene. TIDAK BOLEH mengandung deskripsi tempat/lokasi/settings seperti "di kantor", "di rumah", "di supermarket", "berlatar", "dengan latar", "background:", dll. Cukup: SUBJEK + AKSI + OBJEK YANG ADA. Contoh BURUK: "seorang pria berdiri di kantor dengan latar meja kerja". Contoh BAIK: "Pria usia 40-an berjas coklat, wajah khawatir, mendorong meja ke arahnya, calculator besar dan struk menumpuk".
 - Full_text_overlay: 2-4 kata, punchy, bukan copy judul.
 - Action_description: aksi karakter harus spesifik dan relevan dengan pesan/topik utama.
 - emphasis_word dan normal_word harus membentuk full_text_overlay dengan urutan baca yang jelas.
 - ATURAN WAJIB EMPHASIS: emphasis_word HANYA boleh berada di AWAL atau AKHIR full_text_overlay, tidak boleh di tengah kalimat.
-- normal_word adalah sisa frasa yang menyambung dengan emphasis_word, bukan gabungan kata yang terpisah.
+- emphasis_word dan normal_word harus membentuk full_text_overlay dengan urutan baca yang jelas.
 - Format valid hanya: "{emphasis_word} {normal_word}" ATAU "{normal_word} {emphasis_word}".
 - Contoh BURUK: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="GAK HARUS", normal_word="RUMAH KPR" karena emphasis di tengah dan normal terpecah.
 - Contoh BAIK: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="KPR", normal_word="RUMAH GAK HARUS" ATAU emphasis_word="RUMAH", normal_word="GAK HARUS KPR".
-- clickbait_risk: LOW, MEDIUM, atau HIGH. HIGH jika terlalu menyesatkan atau terlalu bombastis.
 
 ### TRIGGER TYPES (WAJIB PILIH SALAH SATU)
-Setiap variasi WAJIB menggunakan trigger_type yang berbeda dari variasi lain. Pilih dari kategori berikut:
-
 1. FEAR — Visual yang memicu rasa takut atau waswas. Contoh: ancaman mendekat, bahaya mengintai, wajah ketakutan, objek menyeramkan.
 2. CURIOSITY — Visual yang memicu rasa penasaran. Contoh: objek tertutup/blur, tanda tanya besar, sesuatu yang "tersembunyi" atau belum terbuka.
 3. SHOCK — Visual yang memicu keterkejutan. Contoh: ekspresi kaget ekstrem, angka besar yang mengejutkan, objek utama yang tampak tidak wajar.
@@ -801,28 +786,17 @@ export const generateTitleAndThumbnailPairs = async (
           type: Type.OBJECT,
           properties: {
              title: { type: Type.STRING },
-             thumbnail_prompt: { type: Type.STRING },
-             visual_concept: { type: Type.STRING, description: "Human-readable thumbnail concept separate from technical prompt." },
-             visual_metaphor: { type: Type.STRING, description: "The main visual metaphor that turns the topic into a clickable conflict." },
-             conflict_object: { type: Type.STRING, description: "The single object creating visual threat, tension, or contradiction." },
-             curiosity_object: { type: Type.STRING, description: "The unusual or contrast element that makes viewers ask what is happening." },
-             emotion_target: { type: Type.STRING, description: "Primary emotion targeted by the thumbnail." },
-             stop_scroll_reason: { type: Type.STRING, description: "Why this visual stops viewers in under one second." },
-             thumbnail_weakness: { type: Type.STRING, description: "Main risk that could make this thumbnail weak or generic." },
-             visual_ctr_score: { type: Type.NUMBER, description: "Visual clickability score from 1 to 100. Minimum target is 78." },
-             full_text_overlay: { type: Type.STRING, description: "STEP 1: Short 2-4 words text overlay." },
-             action_description: { type: Type.STRING, description: "Specific description of character pose/action." },
-             emphasis_word: { type: Type.STRING, description: "STEP 2: Emphasis highlight. Must be the prefix OR suffix of full_text_overlay, never the middle words." },
-             normal_word: { type: Type.STRING, description: "STEP 2: Remaining contiguous text next to emphasis_word. Must not combine separated words from before and after emphasis." },
-             trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, ABSURDISM, HYPERBOLIC_LITERAL, etc." },
-             character_strategy: { type: Type.STRING, description: "'famous_character' jika narasi menyebutkan tokoh nyata yang bisa divisualkan (nama, julukan, figur terkenal). 'narrative_character' jika narasi menyebutkan karakter/anonymous dari cerita (bukan tokoh terkenal)." },
-             famous_character_name: { type: Type.STRING, description: "Nama tokoh terkenal yang harus jadi subjek utama thumbnail. WAJIB diisi jika character_strategy='famous_character'. Contoh: 'Charles Darwin', 'Isaac Newton', 'Nikola Tesla', 'Michelangelo', 'Albert Einstein'." },
-             main_character_description: { type: Type.STRING, description: "Deskripsi visual lengkap karakter utama: siapa (nama/jenis karakter), penampilan fisik (usia, pakaian, warna, ciri khas), ekspresi wajah, pose/action, dan konteks scene. WAJIB konkret dan detail -- ini yang dipakai image model untuk render karakter. Contoh: 'Pria usia 40-an berjas coklat, wajah khawatir, memegang struktagihan besar, di depan mesin pencari uang'." },
-             feasibility_score: { type: Type.NUMBER },
-             ctr_analysis: { type: Type.STRING, description: "Analisis singkat kenapa judul ini potensi CTR tinggi/sedang. 2-3 kalimat." },
-             clickbait_risk: { type: Type.STRING, description: "LOW, MEDIUM, or HIGH" }
+             thumbnail_prompt: { type: Type.STRING, description: "Prompt teknis image-model. WAJIB berisi: siapa karakter utama (usia, pakaian, ekspresi) + apa yang sedang dilakukan (aksi/pose) + objek utama di scene. TIDAK BOLEH ada deskripsi tempat/lokasi. Contoh BAIK: 'Pria usia 40-an berjas coklat, wajah khawatir, mendorong meja ke arahnya, calculator besar dan struk menumpuk'." },
+             full_text_overlay: { type: Type.STRING, description: "Teks overlay thumbnail, 2-4 kata, punchy, bukan copy judul." },
+             action_description: { type: Type.STRING, description: "Aksi/pose spesifik karakter utama yang sedang dilakukan di scene." },
+             emphasis_word: { type: Type.STRING, description: "Kata yang di-highlight. Harus di AWAL atau AKHIR full_text_overlay." },
+             normal_word: { type: Type.STRING, description: "Sisa kata selain emphasis_word, harus kontigu/berurutan." },
+             trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, ABSURDISM, HYPERBOLIC_LITERAL, dll." },
+             character_strategy: { type: Type.STRING, description: "'famous_character' jika narasi menyebutkan tokoh nyata yang bisa divisualkan. 'narrative_character' jika narasi menyebutkan karakter/anonymous dari cerita." },
+             famous_character_name: { type: Type.STRING, description: "Nama tokoh terkenal yang harus jadi subjek utama. WAJIB jika character_strategy='famous_character'." },
+             main_character_description: { type: Type.STRING, description: "Deskripsi visual lengkap karakter utama: siapa, penampilan fisik (usia, pakaian, ekspresi), pose/action, objek utama di scene. Ini yang langsung dipakai image model." }
           },
-          required: ["title", "thumbnail_prompt", "visual_concept", "visual_metaphor", "conflict_object", "curiosity_object", "emotion_target", "stop_scroll_reason", "thumbnail_weakness", "visual_ctr_score", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "ctr_analysis", "clickbait_risk", "character_strategy", "famous_character_name"]
+          required: ["title", "thumbnail_prompt", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "character_strategy", "main_character_description"]
         }
       }
     },
@@ -840,7 +814,6 @@ export const generateTitleAndThumbnailPairs = async (
       extraContext += `\n\n[STYLE PENULISAN]: ${writingStyle}`;
   }
   extraContext += `\n\n[ATURAN WAJIB TEXT OVERLAY]: full_text_overlay harus 2-4 kata. emphasis_word HARUS berupa kata/frasa di AWAL atau AKHIR full_text_overlay, tidak boleh mengambil kata tengah. normal_word adalah sisa frasa yang kontigu. Format valid hanya: "emphasis_word + normal_word" atau "normal_word + emphasis_word". Contoh buruk: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="GAK HARUS", normal_word="RUMAH KPR".`;
-  extraContext += `\n\n[ATURAN WAJIB VISUAL CTR]: thumbnail_prompt harus berupa konflik visual, bukan gambar literal topik. Sertakan visual_metaphor, conflict_object, curiosity_object, emotion_target, stop_scroll_reason, thumbnail_weakness, dan visual_ctr_score. Hindari visual generik seperti orang panik + uang/HP tanpa metafora. Minimal visual_ctr_score 78.`;
   if (isIlmuLidiChannel(channelName)) {
       extraContext += `\n\n[ATURAN KHUSUS ILMU LIDI UNTUK THUMBNAIL]: Typography/background reference biru muda + headline hitam + banner merah adalah KHUSUS preset Ilmu Lidi. Thumbnail_prompt harus menjaga karakter Ilmu Lidi sebagai anak laki-laki 7-10 tahun semi-chibi, bukan remaja/dewasa. DILARANG COMPARISON, split-screen, VS layout, before-after, overlay durasi palsu, teks Inggris, dan incidental text pada objek.`;
   } else {
@@ -858,7 +831,7 @@ export const generateTitleAndThumbnailPairs = async (
   const currentYear = new Date().getFullYear();
   const timeContext = `\n\n[KONTEKS WAKTU]: Saat ini adalah tahun ${currentYear}. Jika menggunakan angka tahun di judul atau teks, WAJIB gunakan tahun ${currentYear}. JANGAN gunakan tahun 2023, 2024, atau 2025.`;
   const targetLanguage = language === 'en' ? 'ENGLISH' : 'BAHASA INDONESIA';
-  const langInstruction = `\n\n[CRITICAL LANGUAGE REQUIREMENT]: The user has explicitly set the system language to "${targetLanguage}". You MUST generate ALL text fields in the JSON output (title, thumbnail_prompt, visual_concept, visual_metaphor, conflict_object, curiosity_object, emotion_target, stop_scroll_reason, thumbnail_weakness, full_text_overlay, action_description, emphasis_word, normal_word) ENTIRELY in ${targetLanguage}. DO NOT output Indonesian if the language is set to 'en'. Translate all slang and concepts appropriately.`;
+  const langInstruction = `\n\n[CRITICAL LANGUAGE REQUIREMENT]: The user has explicitly set the system language to "${targetLanguage}". You MUST generate ALL text fields in the JSON output (title, thumbnail_prompt, full_text_overlay, action_description, emphasis_word, normal_word, main_character_description) ENTIRELY in ${targetLanguage}. DO NOT output Indonesian if the language is set to 'en'. Translate all slang and concepts appropriately.`;
   systemInstruction += langInstruction + timeContext + `\n\n[PANDUAN JUDUL TAMBAHAN]\n${PROMPT_TITLES}`;
 
   const userPrompt = language === 'en' 
@@ -900,54 +873,36 @@ export const generateTitleAndThumbnailPairs = async (
 
         const visualBrief = [
             p.character_strategy === 'famous_character' && p.famous_character_name
-              ? `Tokoh utama thumbnail: "${p.famous_character_name}" -- figur ini adalah subjek visual utama di scene, BUKAN elemen sekunder. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.`
+              ? `Tokoh utama thumbnail: "${p.famous_character_name}" -- figur ini adalah subjek visual utama di scene. Maskot/channel identity (jika diunggah) BOLEH muncul sebagai karakter sekunder di sudut frame.`
               : p.character_strategy === 'narrative_character'
               ? `Tokoh utama thumbnail: karakter dari narasi. Maskot WAJIB sebagai karakter sekunder di sudut frame -- BUKAN tokoh utama.`
               : `Tokoh utama thumbnail: maskot/channel identity.`,
-            p.visual_metaphor ? `${p.visual_metaphor}` : '',
-            p.conflict_object ? `Konflik utama scene: ${p.conflict_object}` : '',
-            p.curiosity_object ? `Elemen penasaran: ${p.curiosity_object}` : '',
-            p.emotion_target ? `Emosi yang dituju: ${p.emotion_target}` : '',
-            p.stop_scroll_reason ? `${p.stop_scroll_reason}` : '',
-            p.thumbnail_prompt ? `Scene: ${p.thumbnail_prompt}` : '',
-            p.main_character_description ? `Deskripsi karakter utama: ${p.main_character_description}` : '',
+            p.main_character_description ? `Karakter utama dari narasi: ${p.main_character_description}` : '',
         ].filter(Boolean).join("\n");
 
         return {
             id: `pair-${Date.now()}-${idx}`,
             title: safeTitle,
-            ctrAnalysis: p.ctr_analysis || "Tidak ada analisis.",
-            clickbaitRisk: p.clickbait_risk || "MEDIUM",
             thumbnail: {
                 prompt: p.thumbnail_prompt,
-                visualConcept: p.visual_concept || p.thumbnail_prompt,
-                visualMetaphor: p.visual_metaphor,
-                conflictObject: p.conflict_object,
-                curiosityObject: p.curiosity_object,
-                emotionTarget: p.emotion_target,
-                stopScrollReason: p.stop_scroll_reason,
-                thumbnailWeakness: p.thumbnail_weakness,
-                visualCtrScore: Number(p.visual_ctr_score) || 75,
                 fullTextOverlay: safeOverlay,
                 actionDescription: p.action_description,
-                suggestedText: safeOverlay, // Fallback
                 emphasisText: safeEmphasis,
                 normalText: safeNormal,
                 triggerType: safeTrigger,
                 status: 'idle',
-                feasibilityScore: p.feasibility_score || 85,
                 characterStrategy: p.character_strategy || "narrative_character",
                 famousCharacterName: p.famous_character_name || "",
                 mainCharacterDescription: p.main_character_description || "",
                 // Automatically construct detailed prompt on creation
                 detailedPrompt: constructThumbnailPrompt(
-                    visualBrief || p.thumbnail_prompt, 
-                    p.action_description, 
-                    safeEmphasis, 
+                    visualBrief || p.thumbnail_prompt,
+                    p.action_description,
+                    safeEmphasis,
                     safeNormal,
-                    safeOverlay, // Pass this
+                    safeOverlay,
                     visualStyle,
-                    channelName // Pass channelName
+                    channelName
                 )
             }
         };
