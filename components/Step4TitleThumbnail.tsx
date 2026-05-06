@@ -224,12 +224,9 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
           
           // Automatically regenerate detailed prompt when dependencies change
           const visualBrief = [
-              updatedThumbnail.visualMetaphor ? `${updatedThumbnail.visualMetaphor}` : '',
-              updatedThumbnail.conflictObject ? `Konflik utama scene: ${updatedThumbnail.conflictObject}` : '',
-              updatedThumbnail.curiosityObject ? `Elemen penasaran: ${updatedThumbnail.curiosityObject}` : '',
-              updatedThumbnail.emotionTarget ? `Emosi yang dituju: ${updatedThumbnail.emotionTarget}` : '',
-              updatedThumbnail.stopScrollReason ? `${updatedThumbnail.stopScrollReason}` : '',
-              updatedThumbnail.prompt ? `Scene: ${updatedThumbnail.prompt}` : '',
+              updatedThumbnail.prompt ? `1. Karakter utama dari narasi (usia, pakaian, ekspresi, pose/action): ${updatedThumbnail.prompt}` : '',
+              updatedThumbnail.actionDescription ? `   Action: ${updatedThumbnail.actionDescription}` : '',
+              `2. Karakter maskot/pelengkap (dari reference image): maskot channel WAJIB muncul di sudut frame sebagai identitas. Deskripsikan berdasarkan reference yang diunggah.`,
           ].filter(Boolean).join('\n');
           updatedThumbnail.detailedPrompt = constructThumbnailPrompt(
               visualBrief || updatedThumbnail.prompt,

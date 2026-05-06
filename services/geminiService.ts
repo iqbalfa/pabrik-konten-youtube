@@ -760,32 +760,24 @@ export const constructThumbnailPrompt = (
 [VISUAL STYLE]:
 ${visualStyle}
 
-[CHANNEL STYLE LOCK]:
-${channelPresetLocks}
-
-[GLOBAL SAFETY LOCK]:
-${globalSafetyLocks}
-
 [REFERENCE IMAGES]:
-Background & typography → gunakan untuk style dan referensi visual, bukan untuk menyalin teks/konten yang ada.
-Karakter reference → gunakan untuk identitas, proporsi, dan pose style karakter.
+Karakter maskot/pelengkap → gunakan dari reference image yang diunggah user.
 
 [BACKGROUND]:
-Ikuti reference image yang diunggah. Area kiri kosong untuk teks overlay. Area kanan untuk subjek utama — simplify, tidak crowded.
+Area kiri untuk teks overlay. Area kanan untuk subjek utama — simplify, tidak crowded.
 
-            [SCENE]:
-${sceneDescription}
-${actionDescription ? `Aksi: ${actionDescription}` : ''}
+[SCENE]:
+1. Karakter utama dari narasi (usia, pakaian, ekspresi, pose/action): ${sceneDescription || 'tidak ada deskripsi spesifik -- biarkan image model的自由发挥'}
+${actionDescription ? `   Action: ${actionDescription}` : ''}
+2. Karakter maskot/pelengkap (dari reference image): maskot channel WAJIB muncul di sudut frame sebagai identitas. Deskripsikan berdasarkan reference yang diunggah.
 
 [TEXT OVERLAY - FINAL]:
 • FULL: "${phraseToRender.toUpperCase()}"
 • Emphasis: "${safeEmphasisText.toUpperCase()}" → posisi: ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'} kalimat
-• Hanya teks ini yang boleh muncul. Huruf KAPITAL. Style dari reference typography.
-• JANGAN render teks lain (timestamp, label, nama objek, kata Inggris BILL/DEBT/MONEY dll).
+• Hanya teks ini yang boleh muncul. Huruf KAPITAL.
 
 [COMPOSITION]:
 Teks di kiri. Subjek utama di kanan. Sudut kanan bawah bersih.
-DILARANG split-screen, VS layout, atau dua panel.
 `;};
 
 export const generateTitleAndThumbnailPairs = async (
