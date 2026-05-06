@@ -463,11 +463,18 @@ Contoh: topik "pria hamil" → pria dewasa perut hijau membusuk. Topik "makan sa
 ANTI-GENERIK: Gagal jika hanya orang panik biasa, uang melayang generik, laptop/HP tanpa keanehan, tanda tanya tanpa konteks.
 
 ### CHARACTER STRATEGY — WAJIB
-Setiap variasi tentukan character_strategy:
-- 'famous_character': jika narasi menyebut tokoh nyata yang bisa divisualkan. WAJIB isi famous_character_name.
-- 'narrative_character': karakter dari cerita (karyawan, pemilik restoran, dll).
-- MASKOT: karakter sekunder/observer di sudut frame, BUKAN tokoh utama.
-- Deskripsi karakter utama WAJIB lengkap: usia, gender, pakaian, ekspresi spesifik, pose/action. Contoh BAIK: "Pria 40-an berjas coklat, wajah khawatir, memegang struk tagihan besar merah". Contoh BURUK: "Karakter pria".
+DUA entitas karakter WAJIB dibedakan:
+1. KARAKTER UTAMA — tokoh dari narasi yang WAJIB di-invent AI.
+   - 'famous_character': jika narasi menyebut tokoh nyata terkenal. WAJIB isi famous_character_name.
+   - 'narrative_character': karakter fiktif dari cerita (karyawan, pemilik restoran, ibu muda, dll).
+   - Deskripsi WAJIB lengkap: usia, gender, pakaian, ekspresi spesifik, pose/action.
+   - Contoh BAIK: "Pria 40-an berjas coklat, wajah khawatir, memegang struk tagihan besar merah".
+   - Contoh BURUK: "Karakter pria".
+2. MASKOT CHANNEL — karakter tetap channel (Ilmu Lidi dll), observer yang berbaur dengan karakter utama dalam satu scene. BUKAN tokoh utama. TIDAK ADA PENGECUALIAN.
+   - Jika maskot duduk di meja yang sama dengan karakter utama → maskot di kursi sebelah.
+   - Jika karakter utama sedang berlari → maskot ikut berlari di sampingnya.
+   - Jika karakter utama memegang sesuatu → maskot melihat/menunjuk ke arah itu.
+   - DILARANG: maskot di sudut frame yang terisolasi.
 
 ### RELASI JUDUL + THUMBNAIL
 Judul buka curiosity gap. Thumbnail beri visual conflict/emotional proof. Thumbnail text TIDAK boleh copy judul — harus punchy 2-4 kata, seperti reaksi/konflik visual. Contoh bagus: Judul "Barang Murah Ini Bikin Dompet Lo Bocor" → Text "KOK HABIS?".
@@ -479,7 +486,9 @@ Objek familiar: dompet kosong, struk Indomaret, QRIS, paylater, pinjol, tagihan 
 3 variasi WAJIB beda trigger type, beda framing, beda panjang judul (30-40, 40-55, 55-65 char). DILARANG sinonim. Self-check sebelum output.
 
 ### ATURAN KOMPOSISI
-Semua elemen visual di kanan frame. Kiri untuk text overlay. JANGAN deskripsikan background/tempat/lokasi. Fokus pada karakter, aksi, dan objek foreground.
+- Teks besar di KIRI frame. Karakter utama + maskot berbaur di KANAN frame.
+- JANGAN deskripsikan background/tempat/lokasi. Fokus pada karakter, aksi, dan objek foreground.
+- DILARANG: komposisi simetris, elemen di tengah, split-screen, before-after, VS layout.
 
 ### TRIGGER TYPES (pilih untuk tiap variasi, WAJIB berbeda)
 1. FEAR — ancaman, bahaya, wajah takut
@@ -493,7 +502,7 @@ Semua elemen visual di kanan frame. Kiri untuk text overlay. JANGAN deskripsikan
 DILARANG: COMPARISON, split-screen, before-after, VS layout. Satu scene bersih.
 
 ### INSTRUKSI OUTPUT JSON
-- thumbnail_prompt: prompt teknis image-model. WAJIB berisi: karakter utama (usia, pakaian, ekspresi) + aksi/pose + objek. TIDAK BOLEH deskripsi tempat. Contoh BAIK: "Pria 40-an berjas coklat, wajah khawatir, mendorong meja, kalkulator besar dan struk menumpuk".
+- thumbnail_prompt: prompt teknis image-model. WAJIB berisi: karakter utama (usia, pakaian, ekspresi) + aksi/pose + objek + maskot berbaur sebagai observer (jika channel punya maskot). TIDAK BOLEH deskripsi tempat. Contoh BAIK: "Pria 40-an berjas coklat, wajah khawatir, mendorong meja, kalkulator besar dan struk menumpuk. Ilmu Lidi di sebelahnya menunjuk struk dengan ekspresi kaget".
 - full_text_overlay: 2-4 kata, punchy, bukan copy judul.
 - emphasis_word: di AWAL atau AKHIR full_text_overlay.
 - Format: "{emphasis_word} {normal_word}" ATAU "{normal_word} {emphasis_word}".
@@ -523,10 +532,10 @@ const isIlmuLidiChannel = (channelName: string = ""): boolean => /ilmu\s*lidi/i.
 
 const getIlmuLidiPromptLocks = (): string => `
 [ILMU LIDI PRESET LOCK]:
-- Karakter utama: maskot anak laki-laki bernama Ilmu Lidi (usia visual 7-10 tahun, 2D semi-chibi).
+- Karakter utama: INVENT dari narasi channel ini (usia 20-40 tahun, gaya visual webcomic 2D).
+- Maskot Ilmu Lidi (usia visual 7-10 tahun, 2D semi-chibi): observer yang berbaur dengan karakter utama dalam scene. BUKAN tokoh utama.
 - NEGATIVE LOCK: no adult face, no teenage look, no mature jawline, no realistic anatomy.
-- Background & typography: SEPENUHNYA dari reference image yang diunggah — JANGAN deskripsikan dalam prompt ini.
-- Bottom-right harus bersih untuk durasi YouTube.`;
+- Background & typography: SEPENUHNYA dari reference image yang diunggah — JANGAN deskripsikan dalam prompt ini.`;
 
 const getGenericPromptLocks = (channelName: string = ""): string => `
 [CHANNEL STYLE LOCK]:
@@ -537,7 +546,7 @@ Gunakan referensi gambar sesuai preset/channel "${channelName || 'channel ini'}"
 
 const getGlobalThumbnailSafetyLocks = (): string => `
 [NO FAKE YOUTUBE UI - FINAL LOCK]:
-DILARANG KERAS membuat elemen UI YouTube palsu: overlay durasi/timestamp seperti 10:23 atau 12:34, play button, progress bar, watermark YouTube, badge channel, tombol subscribe, like/share UI, atau frame player. Sudut kanan bawah HARUS bersih dari objek penting dan teks.
+DILARANG KERAS membuat elemen UI YouTube palsu: play button, progress bar, watermark YouTube, badge channel, tombol subscribe, like/share UI, atau frame player.
 
 [INDONESIAN VISIBLE TEXT LOCK]:
 Semua teks yang terlihat di gambar final HARUS Bahasa Indonesia dan hanya teks overlay yang ditentukan. DILARANG menambahkan teks Inggris seperti Bill, Debt, Money, Loan, Save, Rich, Poor, Sale, Promo asing, kecuali brand/nama resmi yang memang diminta. Gunakan padanan Indonesia: TAGIHAN, UTANG, UANG, PINJAMAN, HEMAT, KAYA, MISKIN, PROMO.
@@ -630,14 +639,14 @@ ${visualStyle}
 [SCENE]:
 ${sceneDescription || ''}
 ${actionDescription ? `Action: ${actionDescription}` : ''}
-Maskot channel dari referensi → sudut frame sebagai observer.
+Maskot channel (dari referensi): observer yang berbaur dengan karakter utama dalam scene.
 
 [TEXT OVERLAY]:
 "${phraseToRender.toUpperCase()}"
 Emphasis: "${safeEmphasisText.toUpperCase()}" → ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'}
 
 [COMPOSITION]:
-Teks besar di kiri. Subjek utama di kanan. Kanan bawah bersih.
+Teks besar di kiri. Subjek utama + maskot berbaur di kanan.
 
 ${channelPresetLocks}
 ${globalSafetyLocks}`;};
@@ -691,7 +700,7 @@ export const generateTitleAndThumbnailPairs = async (
   }
   extraContext += `\n\n[ATURAN WAJIB TEXT OVERLAY]: full_text_overlay harus 2-4 kata. emphasis_word HARUS berupa kata/frasa di AWAL atau AKHIR full_text_overlay, tidak boleh mengambil kata tengah. normal_word adalah sisa frasa yang kontigu. Format valid hanya: "emphasis_word + normal_word" atau "normal_word + emphasis_word". Contoh buruk: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="GAK HARUS", normal_word="RUMAH KPR".`;
   if (isIlmuLidiChannel(channelName)) {
-      extraContext += `\n\n[ATURAN KHUSUS ILMU LIDI UNTUK THUMBNAIL]: Typography/background reference biru muda + headline hitam + banner merah adalah KHUSUS preset Ilmu Lidi. Thumbnail_prompt harus menjaga karakter Ilmu Lidi sebagai anak laki-laki 7-10 tahun semi-chibi, bukan remaja/dewasa. DILARANG COMPARISON, split-screen, VS layout, before-after, overlay durasi palsu, teks Inggris, dan incidental text pada objek.`;
+      extraContext += `\n\n[ATURAN KHUSUS ILMU LIDI UNTUK THUMBNAIL]: Maskot Ilmu Lidi adalah observer yang berbaur dengan karakter utama dalam scene — BUKAN tokoh utama. AI WAJIB invent karakter utama dari narasi. DILARANG COMPARISON, split-screen, VS layout, before-after; teks Inggris; incidental text pada objek.`;
   } else {
       extraContext += `\n\n[ATURAN STYLE CHANNEL]: Jangan memakai style typography/background Ilmu Lidi kecuali user eksplisit memilih/mengunggahnya untuk channel ini. Thumbnail_prompt harus mengikuti identitas channel "${channelName || 'channel ini'}".`;
   }
