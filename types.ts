@@ -23,16 +23,8 @@ export interface TitleThumbnailPair {
      fullTextOverlay?: string; 
      actionDescription?: string; 
      triggerType?: string; 
-     visualMetaphor?: string;
-     conflictObject?: string;
-     curiosityObject?: string;
-     emotionTarget?: string;
-     stopScrollReason?: string;
-     thumbnailWeakness?: string;
-     visualCtrScore?: number;
      imageUrl?: string;
      status: 'idle' | 'generating' | 'success' | 'error';
-     feasibilityScore?: number;
      finalEngineeredPrompt?: string;
      characterStrategy?: 'famous_character' | 'narrative_character';
      famousCharacterName?: string;

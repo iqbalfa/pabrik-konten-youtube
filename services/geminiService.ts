@@ -445,180 +445,58 @@ export const generateTags = async (fullScript: string, videoTitle: string, langu
 
 const THUMBNAIL_SYSTEM_INSTRUCTION = `
 ### PERAN
-Anda adalah strategist packaging YouTube Profesional.
-TUGAS UTAMA: Mengubah konteks video menjadi 3 pasangan Judul + Arah Thumbnail yang kuat, tidak generik, dan menarik.
+Anda adalah strategist packaging YouTube Profesional. Tugas: ubah konteks video menjadi 3 pasangan Judul + Arah Thumbnail yang kuat dan tidak generik.
 
 ### PRINSIP JUDUL
-- Judul harus relate ke hidup nyata penonton.
-- Harus punya trigger emosi atau rasa penasaran, tapi jangan murahan.
-- Kreativitas framing lebih penting daripada formula tetap.
-- Variasi framing wajib. Jangan hasilkan 3 judul rasa sama.
-- Keyword boleh dipakai jika natural, jangan dipaksa.
-- Judul harus terdengar seperti dibuat manusia yang cerdas dan tajam.
-- Boleh memakai objek konkret atau simbol budaya jika memperkuat klik dan relevansi.
-- DILARANG KERAS menggunakan kata kasar/makian seperti "Goblok", "Tolol", "Bego", "Anjing", "Bangsat", dan sejenisnya. Gunakan bahasa yang tegas namun tetap profesional atau sesuai dengan gaya channel.
+- Harus relate ke hidup nyata, punya trigger emosi/penasaran, jangan murahan. Variasi framing wajib antar judul. Keyword natural, jangan dipaksa. DILARANG kata kasar (goblok, tolol, anjing, dll).
 
-### ANTI-PATTERN JUDUL (DILARANG)
-- "Update [Tahun]:" terlalu newsy dan template.
-- "Sedang Trending:" generic.
-- "[Number] Fakta Tentang [X]" paling overused.
-- "Ternyata Ini Faktanya:" klise.
-- "Panduan Lengkap:" terdengar textbook.
-- "Breaking:" bukan channel berita.
-- Jangan membuat judul yang cuma mengganti sinonim dari judul lama.
-
+### ANTI-PATTERN JUDUL
+"Update [Tahun]:", "Sedang Trending:", "[Number] Fakta Tentang [X]", "Ternyata Ini Faktanya:", "Panduan Lengkap:", "Breaking:". Jangan cuma ganti sinonim.
 
 ### PRINSIP THUMBNAIL
-- Thumbnail harus menonjolkan pesan utama, bukan sekadar dekorasi.
-- Harus punya objek utama yang konkret, cepat dikenali, dan simbolik.
-- Teks thumbnail harus pendek, padat, 2-4 kata, terbaca dalam <0.5 detik, dan JANGAN mengulang judul.
-- Teks dan objek harus saling melengkapi, bukan duplikasi.
-- Harus ada satu pusat perhatian yang jelas.
-- Variasi thumbnail harus beda logika, bukan beda kosmetik.
-- Hindari thumbnail generik yang hanya mengandalkan ekspresi wajah kaget atau panik.
-- Gunakan objek atau simbol yang relevan dengan topik dan mudah dikenali audiens.
+- Objek utama konkret, cepat dikenali, simbolik. Teks 2-4 kata, terbaca <0.5 detik, JANGAN mengulang judul. Satu pusat perhatian jelas. Hindari wajah kaget generik.
 
-### VISUAL TRANSFORMATION ENGINE — WAJIB
-Tugas thumbnail BUKAN menjelaskan topik secara literal. Tugas thumbnail adalah MENUNJUKKAN HASIL TERBURUK/TERANEH/TERKEJUT dari topik secara EXTREM dan HYPERBOLIC.
+### VISUAL TRANSFORMATION ENGINE
+Tugas thumbnail: MENUNJUKKAN HASIL TERBURUK/TERANEH/TERKEJUT secara HYPERBOLIC LITERAL. Bukan metafora — tunjukkan hasilnya secara ekstrem dan literally.
+Proses: LITERAL TOPIC → HIDDEN ANXIETY → HYPERBOLIC LITERALISM → CONFLICT OBJECT → CURIOSITY OBJECT → EMOTIONAL PROOF → STOP-SCROLL TEST.
+Contoh: topik "pria hamil" → pria dewasa perut hijau membusuk. Topik "makan sampah" → wajah dengan sampah di mulut. Topik "dibuang sistem" → orang dilempar pintu mesin raksasa bertulis SISTEM.
+ANTI-GENERIK: Gagal jika hanya orang panik biasa, uang melayang generik, laptop/HP tanpa keanehan, tanda tanya tanpa konteks.
 
-Untuk setiap variasi, lakukan proses ini:
-1. LITERAL TOPIC — pahami topik/judul secara sederhana.
-2. HIDDEN ANXIETY — temukan rasa takut, marah, atau rasa tertipu yang terkecil dari topik ini.
-3. HYPERBOLIC LITERALISM — JANGAN buat metafora. TUNJUKKAN HASILNYA SECARA EXTREM SEKALI SECARA LITERALLY. Makin ekstrem dan literally, makin kuat.
-4. CONFLICT OBJECT — pilih satu objek utama yang menciptakan konflik, ancaman, atau ketegangan.
-5. CURIOSITY OBJECT — tambahkan satu elemen aneh/kontras yang bikin penonton bertanya "itu apa?".
-6. EMOTIONAL PROOF — karakter/subjek harus bereaksi secara spesifik dengan ekspresi dan pose yang PROVES the emotion.
-7. STOP-SCROLL TEST — kenapa gambar ini menghentikan scroll dalam 1 detik?
+### CHARACTER STRATEGY — WAJIB
+Setiap variasi tentukan character_strategy:
+- 'famous_character': jika narasi menyebut tokoh nyata yang bisa divisualkan. WAJIB isi famous_character_name.
+- 'narrative_character': karakter dari cerita (karyawan, pemilik restoran, dll).
+- MASKOT: karakter sekunder/observer di sudut frame, BUKAN tokoh utama.
+- Deskripsi karakter utama WAJIB lengkap: usia, gender, pakaian, ekspresi spesifik, pose/action. Contoh BAIK: "Pria 40-an berjas coklat, wajah khawatir, memegang struk tagihan besar merah". Contoh BURUK: "Karakter pria".
 
-PRINSIP HYPERBOLIC LITERALISM:
-- Makin literally ekstrem = makin kuat thumbnail
-- Contoh: topik "pria hamil" → TUNJUKKAN literally pria dewasa dengan perut besar hijau membusuk, bukan metafora "perut sebagai masalah"
-- Contoh: topik "makan sampah" → TUNJUKKAN literally wajah seseorang dengan sampah di mulut, bukan metafora
-- Contoh: topik "dibuang sistem" → TUNJUKKAN literally orang dilempar keluar dari pintu mesin raksasa bertulis SISTEM, bukan metafora abstrak
+### RELASI JUDUL + THUMBNAIL
+Judul buka curiosity gap. Thumbnail beri visual conflict/emotional proof. Thumbnail text TIDAK boleh copy judul — harus punchy 2-4 kata, seperti reaksi/konflik visual. Contoh bagus: Judul "Barang Murah Ini Bikin Dompet Lo Bocor" → Text "KOK HABIS?".
 
-CONTOH TRANSFORMASI (@SingkatCeritaJuga style):
-- Topik tabungan → HYPERBOLIC: 50 tahun dilempari keluar pintu mesin raksasa bertulis SISTEM, ekspresi ketakutan, struk menumpuk beterbangan.
-- Topik paylater → HYPERBOLIC: HP berubah jadi borgol besar yang mengikat kalender, rantai dari layar menuju ke masa depan yang suram.
-- Topik makan di restoran busuk → HYPERBOLIC: makanan berbentuk toilet di atas meja, ekspresi jijik ekstrem, semua orang menutup mulut.
-- Topik tempat terlarang → HYPERBOLIC: candi runtuh dengan karakter panik berlari, teks "MASUK SINI = M4TI".
-- Topik anak di pemakaman → HYPERBOLIC: anak SD ceria tertawa di depan nisan, ekspresi normal vs latar kuburan.
+### ATURAN VISUAL INDONESIA
+Objek familiar: dompet kosong, struk Indomaret, QRIS, paylater, pinjol, tagihan listrik, paket COD, motor Supra, warung, gorengan. Hindari simbol luar negeri jika ada padanan lokal.
 
-ANTI-GENERIK: Draft gagal jika hanya berisi orang panik biasa, uang melayang generik, laptop/HP tanpa keanehan ekstrem, tanda tanya tanpa konteks, atau ekspresi kaget tanpa situasi ekstrem konkret.
-
-### CHARACTER STRATEGY — WAJIB PILIH SALAH SATU
-Untuk setiap variasi, tentukan character_strategy:
-- 'famous_character': Pilih ini JIKA narasi/storyline secara eksplisit menyebutkan tokoh nyata yang bisa divisualkan. Contoh tokoh: "Charles Darwin", "Newton", "Tesla", "Michelangelo", "presiden", "selebriti", "tokoh sejarah", "tokoh dunia", "tokoh terkenal", figur dengan nama/julukan yang dikenali.
-- 'narrative_character': Pilih ini JIKA narasi/storyline menyebutkan tokoh atau karakter yang muncul di cerita, meskipun bukan figur terkenal (misal: "karyawan", "pemilik restoran", "ibu muda", karakter spesifik dari cerita).
-- Jika memilih 'famous_character', WAJIB isi famous_character_name dengan nama tokoh yang konkret.
-- MASKOT: Selalu sebagai karakter sekunder/observer di sudut frame, BUKAN tokoh utama.
-- TOKOH UTAMA: Selalu karakter yang muncul di narasi (famous atau tidak), BUKAN maskot.
-- DESKRIPSI KARAKTER UTAMA -- WAJIB: Untuk setiap variasi, generate deskripsi visual lengkap karakter utama yang mencakup: siapa (nama/jenis karakter), penampilan fisik (usia, gender, pakaian, warna, ciri khas), ekspresi wajah spesifik, pose/action, dan konteks scene. Deskripsi ini harus cukup detail untuk image model bisa render karakter dengan akurat.
-  - MASKOT (Ilmu Lidi / karakter preset channel) SELALU sebagai observer di sudut frame -- BUKAN tokoh utama.
-  - Karakter utama WAJIB dari narasi/storyline (bisa pelaku, korban, saksi, atau jenis karakter lain yang muncul di cerita).
-  - Jika narasi TIDAK menyebutkan penampilan karakter utama secara spesifik (usia, pakaian, ekspresi), WAJIB INVENT perawakan yang SUITABLE untuk narasi tersebut dan cocok untuk thumbnail -- contoh: "Pria 35 tahun berjas murah sobek, wajah panik, memegang struk raksasa" (untuk narasi tentang keputusan bisnis).
-  - MASKOT channel TIDAK PERNAH jadi tokoh utama.
-  - Untuk 'famous_character': deskripsikan tokoh terkenal tersebut sesuai dengan perannya di narasi.
-  - Untuk 'narrative_character': WAJIB jelaskan KARAKTER UTAMA DARI NARASI/storyline sesuai dengan peran dia di cerita -- bisa pelaku, korban, saksi, atau jenis karakter lain yang muncul di narasi. Jika narasi MEMANG tentang Ilmu Lidi atau karakter preset channel, maka karakter tersebut adalah karakter utama dan WAJIB dideskripsikan apa adanya. Contoh: "Pria usia 40-an berjas mahal warna gelap, wajah dingin/tajam, senyum tipis menyeringai, memegang dokumen tebal dengan logo perusahaan" (pelaku). Contoh: "Anak laki-laki 8 tahun semi-chibi, ekspresi marah, memegang kalkulator raksasa retak" (karakter utama dari narasi tentang Ilmu Lidi).
-  Contoh deskripsi BAIK: "Pria usia 40-an berjas coklat, wajah khawatir, memegang struktagihan besar berwarna merah, di depan mesin ATM raksasa". Contoh deskripsi BURUK: "Karakter pria", "Anak laki-laki chibi".
-
-### RELASI JUDUL + THUMBNAIL (WAJIB)
-Judul dan thumbnail HARUS saling melengkapi, bukan saling mengulang.
-- Judul membuka curiosity gap.
-- Thumbnail memberi visual conflict atau emotional proof.
-- Thumbnail text tidak boleh copy-paste judul.
-- Thumbnail text harus punchy, 2-4 kata, dan lebih terasa seperti reaksi/konflik visual.
-Contoh bagus:
-Judul: "Barang Murah Ini Bikin Dompet Lo Bocor Pelan-Pelan"
-Thumbnail text: "KOK HABIS?"
-Visual: dompet kosong + struk panjang + karakter panik.
-Contoh buruk:
-Thumbnail text: "BARANG MURAH BIKIN DOMPET BOCOR" karena cuma mengulang judul.
-
-### ATURAN VISUAL RELATABLE INDONESIA
-Jika konteks audience Indonesia, pilih objek visual yang langsung familiar bagi penonton Indonesia.
-- Finance/money: dompet kosong, struk Indomaret/Alfamart, QRIS, paylater, pinjol, tagihan listrik/token, paket COD, kos-kosan.
-- Everyday objects: motor Supra, warung, minimarket, gorengan, galon, pulsa, paket Shopee/TikTok Shop.
-- Hindari simbol/brand/contoh luar negeri yang tidak relatable jika ada padanan lokal yang lebih kuat.
-
-### GAYA BERPIKIR YANG DIINGINKAN
-- Jangan terpaku pada satu emosi tunggal (seperti rasa takut atau serakah) sebagai template.
-- Jangan pakai pola clickbait pasaran yang terlalu mudah ditebak.
-- Cari angle yang terasa cerdas, kreatif, dan menarik, tapi tetap natural.
-- Contoh sukses lama hanya benchmark kreativitas, bukan template tetap.
-
-### SCORING CTR
-Tidak wajib ada scoring di dalam prompt image.
-
-### DIVERSITY ENFORCEMENT (SANGAT PENTING)
-Ketiga variasi yang dihasilkan WAJIB benar-benar berbeda secara STRATEGI, bukan cuma beda kata.
-
-ATURAN DIVERSITY:
-1. Setiap variasi WAJIB pakai template dari KATEGORI YANG BERBEDA (tidak boleh 3 variasi dari Curiosity Gap semua).
-2. Setiap variasi WAJIB pakai TRIGGER TYPE yang BERBEDA.
-3. Setiap variasi WAJIB punya FRAMING yang beda. Contoh framing berbeda untuk topik "cara hemat uang":
-   - Framing A: "Kenapa Tabungan Kamu Selalu Habis?" (Curiosity — fokus ke masalah)
-   - Framing B: "7 Cara Nabung Rp 5 Juta Per Bulan" (Numbers — fokus ke hasil)  
-   - Framing C: "Stop Boros! Gini Cara yang Benar" (Problem-Solution — fokus ke solusi)
-4. DILARANG variasi yang hanya mengganti sinonim. Contoh variasi BURUK:
-   - V1: "5 Cara Hemat Uang"
-   - V2: "5 Tips Berhemat"  
-   - V3: "5 Metode Mengatur Uang" ← Ini BUKAN variasi, ini sinonim.
-5. Panjang judul harus bervariasi: satu pendek (30-40 char), satu sedang (40-55 char), satu bisa lebih panjang (55-65 char).
-
-CEKLIST DIVERSITY (self-check sebelum output):
-- Apakah 3 judul ini dari 3 kategori template berbeda? YA/TIDAK
-- Apakah 3 trigger_type berbeda? YA/TIDAK
-- Apakah 3 framing berbeda (bukan sinonim)? YA/TIDAK
-- Apakah panjang judul bervariasi? YA/TIDAK
-
-Jika ada yang TIDAK, ulangi variasi yang terlalu mirip sebelum output final.
+### DIVERSITY ENFORCEMENT
+3 variasi WAJIB beda trigger type, beda framing, beda panjang judul (30-40, 40-55, 55-65 char). DILARANG sinonim. Self-check sebelum output.
 
 ### ATURAN KOMPOSISI
-- Semua elemen visual utama (karakter, objek, aksi) berada di sisi kanan frame.
-- Sisi kiri disisakan untuk text overlay.
-- Jangan deskripsikan background, warna background, elemen lingkungan, atau TEMPAT/LOKASI. Fokus pada karakter, aksi, dan objek foreground.
-- TIDAK BOLEH ada deskripsi tempat: "di rumah", "di kantor", "di sekolah", "di supermarket", "berlatar", "dengan latar", dll.
+Semua elemen visual di kanan frame. Kiri untuk text overlay. JANGAN deskripsikan background/tempat/lokasi. Fokus pada karakter, aksi, dan objek foreground.
+
+### TRIGGER TYPES (pilih untuk tiap variasi, WAJIB berbeda)
+1. FEAR — ancaman, bahaya, wajah takut
+2. CURIOSITY — objek tertutup/blur, misteri
+3. SHOCK — ekspresi kaget ekstrem, angka mengejutkan
+4. CONTROVERSY — simbol/opini kontroversial dominan
+5. TRANSFORMATION — metamorfosis tunggal tanpa split
+6. ABSURDISM — paradoks 1 frame, kontras ekstrem
+7. HYPERBOLIC_LITERAL — hasil terburuk secara literally
+
+DILARANG: COMPARISON, split-screen, before-after, VS layout. Satu scene bersih.
 
 ### INSTRUKSI OUTPUT JSON
-Output adalah CTR package, bukan sekadar pasangan generik.
-- Title: harus channel-fit, natural, click-enticing, dan berbeda framing antar variasi.
-- Visual_concept: konsep thumbnail human-readable, 1-2 kalimat. Jelaskan konflik visual dan kenapa mudah diklik.
-- Visual_metaphor: metafora visual utama yang mengubah topik literal menjadi konflik yang clickable.
-- Conflict_object: satu objek utama yang menciptakan ancaman/ketegangan/konflik.
-- Curiosity_object: satu elemen aneh/kontras yang membuat penonton bertanya.
-- Emotion_target: emosi utama yang ditargetkan, misalnya takut, malu, marah, kaget, lega, iri, atau absurd.
-- Stop_scroll_reason: alasan 1 kalimat kenapa visual ini membuat orang berhenti scroll.
-- Thumbnail_weakness: risiko utama kenapa thumbnail ini bisa terasa lemah/generik.
-- Visual_ctr_score: skor visual 1-100; minimal 78, revisi jika lebih rendah.
-- Thumbnail_prompt: prompt teknis image-model yang konkret. WAJIB berisi: siapa karakter utama (usia, pakaian, ekspresi) + apa yang sedang dilakukan (aksi/pose) + objek utama di scene. TIDAK BOLEH mengandung deskripsi tempat/lokasi/settings seperti "di kantor", "di rumah", "di supermarket", "berlatar", "dengan latar", "background:", dll. Cukup: SUBJEK + AKSI + OBJEK YANG ADA. Contoh BURUK: "seorang pria berdiri di kantor dengan latar meja kerja". Contoh BAIK: "Pria usia 40-an berjas coklat, wajah khawatir, mendorong meja ke arahnya, calculator besar dan struk menumpuk".
-- Full_text_overlay: 2-4 kata, punchy, bukan copy judul.
-- Action_description: aksi karakter harus spesifik dan relevan dengan pesan/topik utama.
-- emphasis_word dan normal_word harus membentuk full_text_overlay dengan urutan baca yang jelas.
-- ATURAN WAJIB EMPHASIS: emphasis_word HANYA boleh berada di AWAL atau AKHIR full_text_overlay, tidak boleh di tengah kalimat.
-- emphasis_word dan normal_word harus membentuk full_text_overlay dengan urutan baca yang jelas.
-- Format valid hanya: "{emphasis_word} {normal_word}" ATAU "{normal_word} {emphasis_word}".
-- Contoh BURUK: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="GAK HARUS", normal_word="RUMAH KPR" karena emphasis di tengah dan normal terpecah.
-- Contoh BAIK: full_text_overlay="RUMAH GAK HARUS KPR", emphasis_word="KPR", normal_word="RUMAH GAK HARUS" ATAU emphasis_word="RUMAH", normal_word="GAK HARUS KPR".
-
-### TRIGGER TYPES (WAJIB PILIH SALAH SATU)
-1. FEAR — Visual yang memicu rasa takut atau waswas. Contoh: ancaman mendekat, bahaya mengintai, wajah ketakutan, objek menyeramkan.
-2. CURIOSITY — Visual yang memicu rasa penasaran. Contoh: objek tertutup/blur, tanda tanya besar, sesuatu yang "tersembunyi" atau belum terbuka.
-3. SHOCK — Visual yang memicu keterkejutan. Contoh: ekspresi kaget ekstrem, angka besar yang mengejutkan, objek utama yang tampak tidak wajar.
-4. AUTHORITY — Visual yang memancarkan kredibilitas dan kekuasaan. Contoh: angka/data besar, simbol pencapaian, gesture "expert", podium/trophy.
-5. CONTROVERSY — Visual yang memicu perdebatan tanpa layout VS/split-screen. Contoh: satu simbol/opini kontroversial yang dominan, ekspresi tidak percaya, objek pemicu debat.
-6. TRANSFORMATION — Visual yang menunjukkan perubahan drastis tanpa split before/after. Contoh: metamorfosis tunggal, glow-up, objek berubah bentuk, timeline abstrak yang tetap satu komposisi.
-7. NUMBERS — Visual yang memakai angka sebagai daya tarik utama. Contoh: angka besar di tengah frame, uang/pendapatan, countdown, statistik.
-8. EMOTION — Visual yang memicu emosi kuat (haru, bangga, marah). Contoh: wajah emosional, momen dramatis, gesture penuh perasaan.
-9. HUMOR — Visual yang memicu tawa atau senyum. Contoh: situasi absurd, ekspresi lucu, meme-style, ironi visual.
-10. ABSURDISM — Visual yang menampilkan sesuatu yang sangat tidak masuk akal atau paradoks dalam 1 frame. Kontras ekstrem antara subjek dan setting. Contoh: anak ceria di pemakaman, orang makan dari toilet, situasi normal dengan elemen sangat janggal.
-11. HYPERBOLIC_LITERAL — Visual yang MENUNJUKKAN HASIL TERBURUK/TEREKSTREM dari topik SECARA LITERALLY. Bukan metafora. Makin ekstrem dan literally, makin kuat. Contoh: pria dengan perut hijau membusuk untuk "pria hamil", restoran mewah dengan makanan berbentuk poop.
-
-ATURAN TRIGGER TYPE:
-- Ketiga variasi WAJIB pakai trigger_type yang BERBEDA.
-- Pilih trigger_type yang paling sesuai dengan konteks materi, bukan acak.
-- DILARANG memakai trigger_type "COMPARISON".
-- DILARANG split-screen, before-after, kiri-vs-kanan, VS layout, atau komposisi perbandingan dua panel. Area kiri sudah dipakai untuk teks besar; visual utama harus tetap satu scene yang bersih.
-- Jangan pakai "PSIKOLOGI VISUAL" atau label generik lain.
+- thumbnail_prompt: prompt teknis image-model. WAJIB berisi: karakter utama (usia, pakaian, ekspresi) + aksi/pose + objek. TIDAK BOLEH deskripsi tempat. Contoh BAIK: "Pria 40-an berjas coklat, wajah khawatir, mendorong meja, kalkulator besar dan struk menumpuk".
+- full_text_overlay: 2-4 kata, punchy, bukan copy judul.
+- emphasis_word: di AWAL atau AKHIR full_text_overlay.
+- Format: "{emphasis_word} {normal_word}" ATAU "{normal_word} {emphasis_word}".
 `;
 
 // Thumbnail visual styles per channel/niche
@@ -730,9 +608,9 @@ export const constructThumbnailPrompt = (
   actionDescription: string,
   emphasisText: string,
   normalText: string,
-  fullTextOverlay: string = "", // Added support for fullTextOverlay
+  fullTextOverlay: string = "",
   visualStyle: string = THUMBNAIL_STYLE_DEFAULT,
-  channelName: string = "" // Added support for channelName
+  channelName: string = ""
 ): string => {
   const textParts = normalizeThumbnailTextParts(fullTextOverlay, emphasisText, normalText);
   const phraseToRender = textParts.fullTextOverlay;
@@ -749,25 +627,20 @@ export const constructThumbnailPrompt = (
 [VISUAL STYLE]:
 ${visualStyle}
 
-[REFERENCE IMAGES]:
-Karakter maskot/pelengkap → gunakan dari reference image yang diunggah user.
-
-[BACKGROUND]:
-Area kiri untuk teks overlay. Area kanan untuk subjek utama — simplify, tidak crowded.
-
 [SCENE]:
-1. Karakter utama dari narasi (usia, pakaian, ekspresi, pose/action): ${sceneDescription || 'tidak ada deskripsi spesifik -- biarkan image model的自由发挥'}
-${actionDescription ? `   Action: ${actionDescription}` : ''}
-2. Karakter maskot/pelengkap (dari reference image): maskot channel WAJIB muncul di sudut frame sebagai identitas. Deskripsikan berdasarkan reference yang diunggah.
+${sceneDescription || ''}
+${actionDescription ? `Action: ${actionDescription}` : ''}
+Maskot channel dari referensi → sudut frame sebagai observer.
 
-[TEXT OVERLAY - FINAL]:
-• FULL: "${phraseToRender.toUpperCase()}"
-• Emphasis: "${safeEmphasisText.toUpperCase()}" → posisi: ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'} kalimat
-• Hanya teks ini yang boleh muncul. Huruf KAPITAL.
+[TEXT OVERLAY]:
+"${phraseToRender.toUpperCase()}"
+Emphasis: "${safeEmphasisText.toUpperCase()}" → ${emphasisPosition === 'START' ? 'AWAL' : 'AKHIR'}
 
 [COMPOSITION]:
-Teks di kiri. Subjek utama di kanan. Sudut kanan bawah bersih.
-`;};
+Teks besar di kiri. Subjek utama di kanan. Kanan bawah bersih.
+
+${channelPresetLocks}
+${globalSafetyLocks}`;};
 
 export const generateTitleAndThumbnailPairs = async (
     context: string, 
@@ -797,10 +670,9 @@ export const generateTitleAndThumbnailPairs = async (
              normal_word: { type: Type.STRING, description: "Sisa kata selain emphasis_word, harus kontigu/berurutan." },
              trigger_type: { type: Type.STRING, description: "Visual strategy: FEAR, CURIOSITY, SHOCK, ABSURDISM, HYPERBOLIC_LITERAL, dll." },
              character_strategy: { type: Type.STRING, description: "'famous_character' jika narasi menyebutkan tokoh nyata yang bisa divisualkan. 'narrative_character' jika narasi menyebutkan karakter/anonymous dari cerita." },
-             famous_character_name: { type: Type.STRING, description: "Nama tokoh terkenal yang harus jadi subjek utama. WAJIB jika character_strategy='famous_character'." },
-             main_character_description: { type: Type.STRING, description: "Deskripsi visual lengkap karakter utama: siapa, penampilan fisik (usia, pakaian, ekspresi), pose/action, objek utama di scene. Ini yang langsung dipakai image model." }
+             famous_character_name: { type: Type.STRING, description: "Nama tokoh terkenal yang harus jadi subjek utama. WAJIB jika character_strategy='famous_character'." }
           },
-          required: ["title", "thumbnail_prompt", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "character_strategy", "main_character_description"]
+          required: ["title", "thumbnail_prompt", "full_text_overlay", "action_description", "emphasis_word", "normal_word", "trigger_type", "character_strategy"]
         }
       }
     },
@@ -835,7 +707,7 @@ export const generateTitleAndThumbnailPairs = async (
   const currentYear = new Date().getFullYear();
   const timeContext = `\n\n[KONTEKS WAKTU]: Saat ini adalah tahun ${currentYear}. Jika menggunakan angka tahun di judul atau teks, WAJIB gunakan tahun ${currentYear}. JANGAN gunakan tahun 2023, 2024, atau 2025.`;
   const targetLanguage = language === 'en' ? 'ENGLISH' : 'BAHASA INDONESIA';
-  const langInstruction = `\n\n[CRITICAL LANGUAGE REQUIREMENT]: The user has explicitly set the system language to "${targetLanguage}". You MUST generate ALL text fields in the JSON output (title, thumbnail_prompt, full_text_overlay, action_description, emphasis_word, normal_word, main_character_description) ENTIRELY in ${targetLanguage}. DO NOT output Indonesian if the language is set to 'en'. Translate all slang and concepts appropriately.`;
+  const langInstruction = `\\n\\n[CRITICAL LANGUAGE REQUIREMENT]: The user has explicitly set the system language to "${targetLanguage}". You MUST generate ALL text fields in the JSON output (title, thumbnail_prompt, full_text_overlay, action_description, emphasis_word, normal_word) ENTIRELY in ${targetLanguage}. DO NOT output Indonesian if the language is set to 'en'. Translate all slang and concepts appropriately.`;
   systemInstruction += langInstruction + timeContext + `\n\n[PANDUAN JUDUL TAMBAHAN]\n${PROMPT_TITLES}`;
 
   const userPrompt = language === 'en' 
@@ -875,10 +747,6 @@ export const generateTitleAndThumbnailPairs = async (
             ? "CONTRAST_WITHOUT_SPLIT"
             : rawTrigger;
 
-        const visualBrief = [
-            p.main_character_description ? `Karakter utama dari narasi: ${p.main_character_description}` : '',
-        ].filter(Boolean).join("\n");
-
         return {
             id: `pair-${Date.now()}-${idx}`,
             title: safeTitle,
@@ -892,10 +760,9 @@ export const generateTitleAndThumbnailPairs = async (
                 status: 'idle',
                 characterStrategy: p.character_strategy || "narrative_character",
                 famousCharacterName: p.famous_character_name || "",
-                mainCharacterDescription: p.main_character_description || "",
                 // Automatically construct detailed prompt on creation
                 detailedPrompt: constructThumbnailPrompt(
-                    visualBrief || p.thumbnail_prompt,
+                    p.thumbnail_prompt,
                     p.action_description,
                     safeEmphasis,
                     safeNormal,
@@ -958,7 +825,7 @@ export const generateRealThumbnailImage = async (
     parts.push({ text: "USE THIS BACKGROUND COMPOSITION:" });
     parts.push({ inlineData: { data: bgBase64, mimeType: referenceBackground.type } });
     // IMPORTANT: Force simplification of the background
-    parts.push({ text: "IMPORTANT: PRESERVE AND MINIMALIZE — Keep the original background as-is in terms of colors and general layout. Do NOT replace it with a new background. Simplification means: reduce clutter by removing distracting details (people in background, complex textures, layered depth), NOT by substituting with a new background. Max 1-2 dominant environmental elements. INVALID outputs: dark background, formula sketches, new textures, colors not in reference, or explicit descriptions of \"background\" or \"latar\" in the prompt itself. The only source of truth is the reference image." });
+    parts.push({ text: "PRESERVE reference background colors/layout, simplify by removing distracting details (people, clutter, depth layers). DO NOT replace with new background. Max 1-2 environmental elements. INVALID: dark bg, new textures/colors, or \"background\" described in prompt output." });
   }
 
   // 3. Characters

@@ -126,22 +126,11 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       const overlayOk = overlayWords >= 2 && overlayWords <= 4;
       const notDuplicate = normalizedOverlay.length > 0 && !normalizedTitle.includes(normalizedOverlay);
       const emphasisOk = isBoundaryEmphasis(overlay, pair.thumbnail.emphasisText || '');
-      const feasibility = pair.thumbnail.feasibilityScore || 0;
-      const visualCtr = pair.thumbnail.visualCtrScore || 0;
-      const hasConflict = Boolean(pair.thumbnail.visualMetaphor && pair.thumbnail.conflictObject);
-      const hasCuriosity = Boolean(pair.thumbnail.curiosityObject || pair.thumbnail.stopScrollReason);
-      const risk = (pair.clickbaitRisk || 'MEDIUM').toUpperCase();
       return [
           { label: mandatory ? 'Keyword judul' : 'Keyword opsional', ok: keywordOk, value: mandatory || 'Tidak diisi' },
           { label: 'Mobile title', ok: titleOk, value: `${title.length}/60 char` },
           { label: 'Text 2-4 kata', ok: overlayOk, value: `${overlayWords || 0} kata` },
           { label: 'Emphasis tepi', ok: emphasisOk, value: emphasisOk ? 'Awal/akhir' : 'Jangan tengah' },
-          { label: 'Tidak copy judul', ok: notDuplicate, value: notDuplicate ? 'Complementary' : 'Terlalu mirip' },
-          { label: 'Visual CTR', ok: visualCtr >= 78, value: visualCtr ? `${visualCtr}/100` : 'Belum ada' },
-          { label: 'Konflik visual', ok: hasConflict, value: hasConflict ? 'Metafora + objek' : 'Terlalu literal' },
-          { label: 'Curiosity object', ok: hasCuriosity, value: hasCuriosity ? 'Ada' : 'Kurang misteri' },
-          { label: 'Feasibility', ok: feasibility >= 70, value: `${feasibility || '-'}%` },
-          { label: 'Clickbait risk', ok: risk !== 'HIGH', value: risk },
       ];
   };
 
@@ -149,11 +138,7 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
       { label: 'Stop-scroll+', instruction: 'Buat versi yang lebih stop-scroll: satu konflik visual besar, objek utama lebih ekstrem, dan terbaca dalam 1 detik.' },
       { label: 'Konflik+', instruction: 'Perkuat konflik visual. Tambahkan ancaman/ketegangan yang konkret, bukan cuma ekspresi wajah.' },
       { label: 'Curiosity', instruction: 'Tambahkan curiosity object yang aneh/kontras sehingga penonton bertanya apa yang sedang terjadi.' },
-      { label: 'Metafora total', instruction: 'Ganti visual literal menjadi metafora visual total. Jangan sekadar orang + objek biasa.' },
-      { label: 'Lebih gelap', instruction: 'Buat versi lebih gelap, dramatis, dan punya emotional punch lebih kuat, tapi tetap tidak menyesatkan.' },
-      { label: 'Lebih absurd', instruction: 'Buat versi lebih lucu/absurd ala thumbnail viral, tapi pesan utama tetap jelas dalam sekali lihat.' },
       { label: 'Lebih lokal', instruction: 'Ganti objek visual menjadi lebih Indonesia dan sehari-hari: QRIS, struk minimarket, paket COD, kos-kosan, motor, warung, atau objek lokal relevan.' },
-      { label: 'Topik jelas', instruction: 'Buat topik lebih cepat terbaca secara visual tanpa menambah teks panjang. Fokuskan objek utama dan kurangi detail kecil.' },
   ];
 
   const handleQuickRemix = (pairId: string, instruction: string) => {
@@ -248,16 +233,8 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
   const handleResetDetailedPrompt = (pairId: string) => {
       const pair = pairs.find(p => p.id === pairId);
       if (!pair) return;
-      const visualBrief = [
-          pair.thumbnail.visualMetaphor ? `VISUAL METAPHOR: ${pair.thumbnail.visualMetaphor}` : '',
-          pair.thumbnail.conflictObject ? `CONFLICT OBJECT: ${pair.thumbnail.conflictObject}` : '',
-          pair.thumbnail.curiosityObject ? `CURIOSITY OBJECT: ${pair.thumbnail.curiosityObject}` : '',
-          pair.thumbnail.emotionTarget ? `EMOTION TARGET: ${pair.thumbnail.emotionTarget}` : '',
-          pair.thumbnail.stopScrollReason ? `STOP-SCROLL REASON: ${pair.thumbnail.stopScrollReason}` : '',
-          pair.thumbnail.prompt ? `SCENE: ${pair.thumbnail.prompt}` : '',
-      ].filter(Boolean).join('\n');
       const resetPrompt = constructThumbnailPrompt(
-          visualBrief || pair.thumbnail.prompt,
+          pair.thumbnail.prompt || '',
           pair.thumbnail.actionDescription || '',
           pair.thumbnail.emphasisText,
           pair.thumbnail.normalText,
@@ -579,58 +556,6 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                                   )}
                               </div>
 
-                              {(pair.thumbnail.visualMetaphor || pair.thumbnail.conflictObject || pair.thumbnail.stopScrollReason) && (
-                                  <div className="mb-6 bg-gradient-to-br from-gray-950 to-slate-900 border border-slate-700 p-4 rounded-xl text-white shadow-sm">
-                                      <div className="flex flex-wrap items-center gap-2 mb-3">
-                                          <span className="px-2.5 py-1 rounded-full bg-primary text-black text-[9px] font-black uppercase tracking-widest">Visual Director</span>
-                                          {pair.thumbnail.visualCtrScore && (
-                                              <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${pair.thumbnail.visualCtrScore >= 78 ? 'bg-emerald-400 text-slate-950' : 'bg-amber-300 text-slate-950'}`}>
-                                                  Stop-scroll {pair.thumbnail.visualCtrScore}/100
-                                              </span>
-                                          )}
-                                          {pair.thumbnail.emotionTarget && (
-                                              <span className="px-2.5 py-1 rounded-full bg-white/10 text-white text-[9px] font-black uppercase tracking-widest border border-white/10">
-                                                  Emosi: {pair.thumbnail.emotionTarget}
-                                              </span>
-                                          )}
-                                      </div>
-                                      <div className="grid gap-3 text-xs">
-                                          {pair.thumbnail.visualMetaphor && (
-                                              <div>
-                                                  <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Visual Metaphor</span>
-                                                  <p className="text-slate-100 leading-relaxed">{pair.thumbnail.visualMetaphor}</p>
-                                              </div>
-                                          )}
-                                          <div className="grid md:grid-cols-2 gap-3">
-                                              {pair.thumbnail.conflictObject && (
-                                                  <div>
-                                                      <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Conflict Object</span>
-                                                      <p className="text-slate-100 leading-relaxed">{pair.thumbnail.conflictObject}</p>
-                                                  </div>
-                                              )}
-                                              {pair.thumbnail.curiosityObject && (
-                                                  <div>
-                                                      <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Curiosity Object</span>
-                                                      <p className="text-slate-100 leading-relaxed">{pair.thumbnail.curiosityObject}</p>
-                                                  </div>
-                                              )}
-                                          </div>
-                                          {pair.thumbnail.stopScrollReason && (
-                                              <div className="border-t border-white/10 pt-3">
-                                                  <span className="block text-slate-400 font-black uppercase tracking-widest text-[9px] mb-1">Stop-scroll Reason</span>
-                                                  <p className="text-slate-100 leading-relaxed">{pair.thumbnail.stopScrollReason}</p>
-                                              </div>
-                                          )}
-                                          {pair.thumbnail.thumbnailWeakness && (
-                                              <div className="border-t border-white/10 pt-3">
-                                                  <span className="block text-amber-300 font-black uppercase tracking-widest text-[9px] mb-1">Risiko Lemah</span>
-                                                  <p className="text-amber-50 leading-relaxed">{pair.thumbnail.thumbnailWeakness}</p>
-                                              </div>
-                                          )}
-                                      </div>
-                                  </div>
-                              )}
-
                               <div className="space-y-4 mb-6">
                                   {/* 1. FULL PHRASE INPUT - NEW */}
                                   <div className="bg-gray-800 border border-gray-700 p-3 rounded-xl shadow-sm">
@@ -814,58 +739,9 @@ export const Step4TitleThumbnail: React.FC<Props> = ({
                                           ) : t.btnGenerateVisual}
                                       </button>
                                       {pair.thumbnail.status === 'error' && <p className="text-red-400 text-xs mt-3 font-bold">{t.errorGenerate}</p>}
-                                      {!bgImage && <p className="text-red-400 text-xs mt-3 font-bold">{t.errorBg}</p>}
+                              {!bgImage && <p className="text-red-400 text-xs mt-3 font-bold">{t.errorBg}</p>}
                                   </div>
                               )}
-                          </div>
-
-                          {/* YouTube Search Preview Mockup */}
-                          <div className="mt-6 border-t border-gray-700 pt-6 w-full">
-                              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
-                                  YouTube Search Preview
-                              </h4>
-                              <div className="bg-white border rounded-xl p-4 max-w-md shadow-sm mx-auto">
-                                  {/* Thumbnail + Info Row */}
-                                  <div className="flex gap-3">
-                                      {/* Small Thumbnail */}
-                                      <div className="w-40 h-[90px] bg-gray-800 rounded-lg overflow-hidden flex-shrink-0 relative">
-                                          {pair.thumbnail.imageUrl ? (
-                                              <img 
-                                                  src={pair.thumbnail.imageUrl} 
-                                                  className="w-full h-full object-cover" 
-                                                  alt="Thumbnail preview"
-                                              />
-                                          ) : (
-                                              <div className="w-full h-full flex items-center justify-center text-gray-500 text-xs">
-                                                  No Image
-                                              </div>
-                                          )}
-                                          {/* Duration badge placeholder */}
-                                          <span className="absolute bottom-1 right-1 bg-black/80 text-white text-[9px] font-bold px-1 rounded">
-                                              12:34
-                                          </span>
-                                      </div>
-                                      {/* Title + Meta */}
-                                      <div className="flex-1 min-w-0 text-left">
-                                          <h5 className="text-sm font-semibold text-gray-900 leading-tight line-clamp-2">
-                                              {pair.title}
-                                          </h5>
-                                          <p className="text-xs text-gray-500 mt-1">
-                                              {channelName || 'Channel Name'} • 2.5rb x ditonton • 3 hari lalu
-                                          </p>
-                                      </div>
-                                  </div>
-                                  
-                                  {/* Warning jika judul terpotong */}
-                                  {pair.title.length > 60 && (
-                                      <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-2 text-left">
-                                          <p className="text-[10px] text-amber-700">
-                                              ⚠️ Judul terpotong di mobile! Yang terlihat hanya: 
-                                              <span className="font-bold"> "{pair.title.slice(0, 60)}..."</span>
-                                          </p>
-                                      </div>
-                                  )}
-                              </div>
                           </div>
                       </div>
                   </div>
