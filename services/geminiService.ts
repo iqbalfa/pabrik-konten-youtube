@@ -522,7 +522,7 @@ DILARANG: COMPARISON, split-screen, before-after, VS layout. Satu scene bersih.
 const THUMBNAIL_STYLES: Record<string, string> = {
   'Ilmu Lidi': 'Modern 2D webcomic, bold clean line art, flat cel-shading, cinematic dramatic lighting, sharp focus, 8k.',
   'Ilmu Survival': 'Dark cinematic 2D, dramatic chiaroscuro, muted earth tones, gritty textured, intense expressions, high contrast, moody.',
-  'Ilmu Nyantuy': 'Ultra-minimalist 2D cartoon, crude MS Paint aesthetic, basic flat colors, lo-fi digital art, solid white bg, deadpan humor.',
+  'Ilmu Nyantuy': 'Ultra-minimalist 2D cartoon style, crude MS Paint aesthetic, basic flat colors, unpolished rough outlines, intentionally simple drawing, humorous deadpan tone, solid white or basic flat color background, low-effort high-comedy internet meme vibe, lo-fi digital art.',
   'Ilmu Psikologi Diri': '2D fast digital scribble, whiteboard doodle, dry-erase marker texture, thick messy lines, pure white bg, minimal flat colors.',
 };
 

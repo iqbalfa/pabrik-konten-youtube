@@ -172,10 +172,7 @@ export const VISUAL_STYLE_PRESETS: Record<ChannelName, string> = {
 - Gritty textured, intense expressions, survival-preparedness aesthetic
 - Simbol warning minimalis (segitiga peringatan, biohazard, target) — impactful`,
 
-  'Ilmu Nyantuy': `- Edutainment clean — karakter kartun anime/2D simpel dalam pose analitis
-- Karakter memegang dagu berpikir/menunjuk ke arah objek curiosity
-- Ekspresi fokus/hwan/terkejut — bukan horror/seram
-- Objek curiosity: benda sehari-hari konteks Indonesia (panci tergores, styrofoam, struk paylater, dll)`,
+  'Ilmu Nyantuy': `Ultra-minimalist 2D cartoon style, crude MS Paint aesthetic, basic flat colors, unpolished rough outlines, intentionally simple drawing, humorous deadpan tone, solid white or basic flat color background, low-effort high-comedy internet meme vibe, lo-fi digital art.`,
 
   'Ilmu Psikologi Diri': `- Clean, ekspresi reflektif/introspektif — bukan kaget, tapi "oke, gue relate"
 - 2D fast digital scribble, whiteboard doodle, dry-erase marker texture
